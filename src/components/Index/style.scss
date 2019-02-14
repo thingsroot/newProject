@@ -1,0 +1,39 @@
+
+.ant-layout-has-sider{
+    height: 100%;
+    .logo{
+        background-color: #367fa9;
+        color: #fff;
+        display: block;
+        float: left;
+        height: 50px;
+        width: 100%;
+        font-size: 20px;
+        line-height: 50px;
+        text-align: center;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        padding: 0 15px;
+        font-weight: 800;
+        overflow: hidden;
+    } 
+    .ant-layout-header>.anticon{
+        margin-left: 20px;
+        vertical-align: 0.42em;
+    }
+}
+#components-layout-demo-custom-trigger .trigger {
+    font-size: 18px;
+    line-height: 64px;
+    padding: 0 24px;
+    cursor: pointer;
+    transition: color .3s;
+  }
+  
+  #components-layout-demo-custom-trigger .trigger:hover {
+    color: #1890ff;
+  }
+  #components-layout-demo-custom-trigger .logo {
+    height: 32px;
+    background: rgba(255,255,255,.2);
+    margin: 16px;
+  }
