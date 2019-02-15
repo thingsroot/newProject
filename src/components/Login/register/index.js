@@ -51,7 +51,7 @@ class Register extends PureComponent {
                     <Form.Item>
                         {getFieldDecorator('username', {
                             rules: [{ required: true, message: '请输入用户名!'}, {
-                                pattern: /^[\w_-][\da-zA-Z~!@]{6,16}$/, message: '用户名格式6-16位字母和数字或、_'
+                                pattern: /^[\w_-][\da-zA-Z~!@]{6,16}$/, message: '用户名格式6-16位字母、数字或  - 、  _ 、  @'
                             }]
                         })(
                             <Input prefix={
