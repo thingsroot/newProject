@@ -15,7 +15,7 @@ class Siders extends PureComponent {
     }
     render (){
         return (
-            <div>
+            <div className="siders">
                 <div className="logo">
                     <b>冬
                         {

@@ -1,6 +1,4 @@
-body::-webkit-scrollbar {
-    width: 0px;
-}
+
 body{
     width: 100%;
     min-width: 1366px;
@@ -15,10 +13,4 @@ body{
             height: 100%;
         }
     }
-}
-.ant-layout-content::-webkit-scrollbar{
-    width: 0;
-}
-.ant-layout-content{
-    overflow-y: auto;
 }
