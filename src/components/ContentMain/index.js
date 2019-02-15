@@ -2,12 +2,12 @@ import React, { PureComponent } from 'react';
 import LoadableComponent from '../../utils/LoadableComponent';
 import { Switch, Redirect, withRouter} from 'react-router-dom';
 import PrivateRoute from '../PrivateRoute';
-const Home = LoadableComponent(()=>import('../Home'));
-const MyGates = LoadableComponent(()=>import('../MyGates'));
-const MyApps = LoadableComponent(()=>import('../MyApps'));
-const UserSettings = LoadableComponent(()=>import('../UserSettings'));
-const MyAccessKey = LoadableComponent(()=>import('../MyAccessKey'));
-const MyVirtualGates = LoadableComponent(()=>import('../MyVirtualGates'));
+const Home = LoadableComponent(()=>import('../../router/Home'));
+const MyGates = LoadableComponent(()=>import('../../router/MyGates'));
+const MyApps = LoadableComponent(()=>import('../../router/MyApps'));
+const UserSettings = LoadableComponent(()=>import('../../router/UserSettings'));
+const MyAccessKey = LoadableComponent(()=>import('../../router/MyAccessKey'));
+const MyVirtualGates = LoadableComponent(()=>import('../../router/MyVirtualGates'));
 class ContentMain extends PureComponent {
     render (){
         return (
