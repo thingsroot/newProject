@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import { Route, Switch, withRouter } from 'react-router-dom';
 import './App.scss';
-import Login from './components/Login';
+import Login from './router/Login';
 import Index from './components/Index';
 import PrivateRoute from './components/PrivateRoute';
 class App extends PureComponent {
