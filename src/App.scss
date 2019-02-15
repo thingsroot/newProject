@@ -13,3 +13,9 @@ body{
         }
     }
 }
+.ant-layout-content::-webkit-scrollbar{
+    width: 0;
+}
+.ant-layout-content{
+    overflow-y: auto;
+}
