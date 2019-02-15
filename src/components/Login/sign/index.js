@@ -40,19 +40,19 @@ class Sign extends PureComponent {
             <div>
                 <p className="title">密码登录</p>
                 <Form onSubmit={this.handleSubmit}
-                    className="login-form"
+                      className="login-form"
                 >
                     <Form.Item>
                         {getFieldDecorator('userName', {
                             rules: [{ required: true, message: '请输入用户名' }, {
-                                pattern: /^[\w_-][\da-zA-Z~!@]{6,16}$/, message: '用户名格式6-16位字母、数字或  - 、  _ 、  @'
+                                pattern: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/, message: '用户名格式6-16位字母、数字或  - 、  _ 、  @'
                             }]
                         })(
                             <Input prefix={
                                 <Icon type="user"
-                                    style={{ color: 'rgba(0,0,0,.25)' }}
+                                      style={{ color: 'rgba(0,0,0,.25)' }}
                                 />}
-                                placeholder="Username"
+                                   placeholder="Username"
                             />
                         )}
                     </Form.Item>
@@ -64,10 +64,10 @@ class Sign extends PureComponent {
                         })(
                             <Input prefix={
                                 <Icon type="lock"
-                                    style={{ color: 'rgba(0,0,0,.25)' }}
+                                      style={{ color: 'rgba(0,0,0,.25)' }}
                                 />}
-                                type="password"
-                                placeholder="Password"
+                                   type="password"
+                                   placeholder="Password"
                             />
                         )}
                     </Form.Item>
@@ -79,18 +79,18 @@ class Sign extends PureComponent {
                             <Checkbox>记住我！</Checkbox>
                         )}
                         <Link className="login-form-forgot"
-                            style={{float: 'right'}}
-                            to="/login/retrieve"
+                              style={{float: 'right'}}
+                              to="/login/retrieve"
                         >忘记密码</Link>
                         <Button type="primary"
-                            htmlType="submit"
-                            className="login-form-button"
-                            style={{width: '100%'}}
+                                htmlType="submit"
+                                className="login-form-button"
+                                style={{width: '100%'}}
                         >
                             登录
                         </Button>
                         <Link to="/login/register"
-                            style={{display: 'block', height: '60px'}}
+                              style={{display: 'block', height: '60px'}}
                         >注册</Link>
                     </Form.Item>
                 </Form>
