@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import './style.scss';
 import { Layout, Menu, Icon } from 'antd';
 import { Link } from 'react-router-dom';
+import ContentMain from '../ContentMain';
 const { Header, Sider, Content } = Layout;
-class App extends Component {
+class App extends PureComponent {
   state = {
     collapsed: false
   }
@@ -34,7 +35,7 @@ class App extends Component {
               defaultSelectedKeys={['1']}
           >
             <Menu.Item key="1">
-              <Link to="/dashboard">
+              <Link to="/Home">
                 <Icon
                     type="dashboard"
                     theme="twoTone"
@@ -43,13 +44,13 @@ class App extends Component {
               </Link>
             </Menu.Item>
             <Menu.Item key="2">
-              <Link to="/mygateway">
+              <Link to="/MyGates">
                 <Icon type="desktop" />
                 <span>我的网关</span>
               </Link>
             </Menu.Item>
             <Menu.Item key="3">
-                <Link to="/myapp">
+                <Link to="/MyApps">
                   <Icon type="table" />
                   <span>我的应用</span>
                 </Link>
@@ -68,7 +69,7 @@ class App extends Component {
             margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280
           }}
           >
-          123
+            <ContentMain />
           </Content>
         </Layout>
       </Layout>

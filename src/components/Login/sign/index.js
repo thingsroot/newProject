@@ -45,7 +45,7 @@ class Sign extends PureComponent {
                     <Form.Item>
                         {getFieldDecorator('userName', {
                             rules: [{ required: true, message: '请输入用户名' }, {
-                                pattern: /^[\w_-][\da-zA-Z~!@]{6,16}$/, message: '用户名格式6-16位字母、数字或  - 、  _ 、  @'
+                                pattern: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/, message: '用户名格式6-16位字母、数字或  - 、  _ 、  @'
                             }]
                         })(
                             <Input prefix={
