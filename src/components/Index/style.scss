@@ -15,10 +15,20 @@
         padding: 0 15px;
         font-weight: 800;
         overflow: hidden;
-    } 
-    .ant-layout-header>.anticon{
+    }
+    .ant-layout-header{
+      position: relative;
+      >.anticon{
         margin-left: 20px;
         vertical-align: 0.42em;
+      }
+      .headerUser{
+        height:100%;
+        position: absolute;
+        right:100px;
+        top:0;
+        line-height: 50px;
+        }
     }
 }
 #components-layout-demo-custom-trigger .trigger {

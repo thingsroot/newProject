@@ -5,6 +5,9 @@ import PrivateRoute from '../PrivateRoute';
 const Home = LoadableComponent(()=>import('../Home'));
 const MyGates = LoadableComponent(()=>import('../MyGates'));
 const MyApps = LoadableComponent(()=>import('../MyApps'));
+const UserSettings = LoadableComponent(()=>import('../UserSettings'));
+const MyAccessKey = LoadableComponent(()=>import('../MyAccessKey'));
+const MyVirtualGates = LoadableComponent(()=>import('../MyVirtualGates'));
 class ContentMain extends PureComponent {
     render () { 
         return (
@@ -20,6 +23,18 @@ class ContentMain extends PureComponent {
                 <PrivateRoute
                     path="/MyApps"
                     component={MyApps}
+                />
+                <PrivateRoute
+                    path="/UserSettings"
+                    component={UserSettings}
+                />
+                <PrivateRoute
+                    path="/MyAccessKey"
+                    component={MyAccessKey}
+                />
+                <PrivateRoute
+                    path="/MyVirtualGates"
+                    component={MyVirtualGates}
                 />
                 <Redirect
                     from="/"
