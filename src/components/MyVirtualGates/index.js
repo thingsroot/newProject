@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
- 
+
 class MyVirtualGates extends PureComponent {
-    render () { 
+    render () {
         return (
             <div>
                 MyVirtualGates
@@ -9,5 +9,5 @@ class MyVirtualGates extends PureComponent {
         );
     }
 }
- 
+
 export default MyVirtualGates;

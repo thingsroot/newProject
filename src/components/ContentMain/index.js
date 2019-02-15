@@ -9,7 +9,7 @@ const UserSettings = LoadableComponent(()=>import('../UserSettings'));
 const MyAccessKey = LoadableComponent(()=>import('../MyAccessKey'));
 const MyVirtualGates = LoadableComponent(()=>import('../MyVirtualGates'));
 class ContentMain extends PureComponent {
-    render () { 
+    render (){
         return (
             <Switch>
                 <PrivateRoute

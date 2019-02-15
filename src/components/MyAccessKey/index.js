@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
- 
+
 class MyAccessKey extends PureComponent {
-    render () { 
+    render () {
         return (
             <div>
                 MyAccessKey
@@ -9,5 +9,5 @@ class MyAccessKey extends PureComponent {
         );
     }
 }
- 
+
 export default MyAccessKey;

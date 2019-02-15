@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
- 
 class UserSettings extends PureComponent {
-    render () { 
+    render () {
         return (
             <div>
                 UserSettings
@@ -9,5 +8,4 @@ class UserSettings extends PureComponent {
         );
     }
 }
- 
 export default UserSettings;

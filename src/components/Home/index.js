@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import './index.scss'
 
 class Home extends PureComponent {
-    render () { 
+    render () {
         return (
             <div className="home">
                 <div className="main">

@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 class MyApps extends PureComponent {
-    render () { 
+    render () {
         return (
             <div>
                 MyApps
