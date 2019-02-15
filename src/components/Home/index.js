@@ -8,7 +8,7 @@ class Home extends PureComponent {
                 <div className="main">
                     <div>
                         <p>在线统计</p>
-                        
+
                     </div>
                     <div>
                         <p>故障统计</p>
