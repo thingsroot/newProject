@@ -14,3 +14,9 @@ body{
         }
     }
 }
+.ant-layout-sider-children{
+    width: 200px; flex: 0 0 200px; max-width: 200px; min-width: 200px;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
