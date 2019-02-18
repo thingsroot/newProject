@@ -18,16 +18,17 @@ class App extends PureComponent {
 
   render () {
     return (
-      <Layout>
+      <Layout style={{minHeight: '100vh'}}>
         <Sider
             trigger={null}
             collapsible
             collapsed={this.state.collapsed}
+            style={{width: '100%'}}
         >
           <Siders collapsed={this.state.collapsed}/>
         </Sider>
         <Layout>
-          <Header style={{ background: '#fff', padding: 0, height: 50 }}>
+          <Header style={{ background: '#fff', padding: 0, height: 50, position: 'fixed', top: 0, right: 0, left: '200px '}}>
             <Icon
                 className="trigger"
                 type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}

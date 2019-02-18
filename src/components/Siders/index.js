@@ -15,7 +15,7 @@ class Siders extends PureComponent {
     }
     render (){
         return (
-            <div className="siders">
+            <div className="siders" style={{width: '100%'}}>
                 <div className="logo">
                     <b>冬
                         {
