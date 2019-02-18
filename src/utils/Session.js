@@ -45,16 +45,19 @@ export function getParam (name) {
 export function logout () {
   _setCookie(LOGIN_COOKIE_NAME, '', 0)
 }
+// 获取token
 export function get_NewToken () {
   http.get('/api/method/iot_ui.iot_api.get_token?' + Date.parse(new Date())).then(res=>{
       _setCookie('T&R_auth_token', res.message)
   })
 }
+// 申请AccessKey
 export function apply_AccessKey (){
   http.get('/api/method/iot_ui.iot_api.apply_AccessKey').then(res=>{
     console.log('AccessKey', res)
   })
 }
+// 是否公司管理员
 export function isAdmin (){
   http.get('/api/method/iot_ui.iot_api.company_admin').then(res=>{
     _setCookie('T&R_isAdmin', res.message.admin)
