@@ -2,6 +2,8 @@ import React, { PureComponent } from 'react';
 import http from '../../utils/Server';
 import { Table, Divider, Tabs, Button, Popconfirm, message } from 'antd';
 import './style.scss';
+import { inject } from 'mobx-react';
+import { Link } from 'react-router-dom';
 const TabPane = Tabs.TabPane;
 
 function callback (key) {
@@ -63,31 +65,36 @@ const columns = [{
   key: 'action',
   width: '20%',
   render: (text, record, props) => {
-      console.log(props)
+      props
     return (
         <span>
-          <Button key="1" 
-              onClick={(props)=>{
-                  console.log(props)
-              }}
-          >设备</Button>
+          <Link to={`/MyGatesDevices/${record.device_sn}`}>
+          <Button key="1">设备</Button>
+          </Link>
           <Divider type="vertical" />
           <Button key="2">应用</Button>
           <Divider type="vertical" />
-          <Popconfirm title="你确定要删除这个网关吗?" onConfirm={confirm} onCancel={cancel} okText="确认" cancelText="取消">
+          <Popconfirm
+              title="你确定要删除这个网关吗?"
+              onConfirm={confirm}
+              onCancel={cancel}
+              okText="确认"
+              cancelText="取消"
+          >
             <Button key="3">删除网关</Button>
             <Divider type="vertical" />
           </Popconfirm>
-          
         </span>
       )
   }
 }];
+@inject('store')
 class MyGates extends PureComponent {
     state = {
         data: []
     }
     componentDidMount (){
+        this.props.store.appStore.conso('333')
         http.get('/api/method/iot_ui.iot_api.devices_list?filter=online').then(res=>{
            res.message.map((v)=>{
                if (v.device_status === 'ONLINE'){
@@ -101,15 +108,25 @@ class MyGates extends PureComponent {
     }
     render (){
         let { data } = this.state;
-        console.log(data)
+        console.log(this.props)
         return (
             <div>
                 {
-                    data.length > 0 && <Tabs onChange={callback} type="card">
-                                                    <TabPane tab="在线" key="1">
-                                                        <Table columns={columns}
-                                                            dataSource={data}
+                    data.length > 0 &&
+                    <Tabs onChange={callback}
+                        type="card"
+                    >
+                                                    <TabPane tab="在线"
+                                                        key="1"
+                                                    >
+                                                        <Table columns={
+                                                                    columns
+                                                                }
+                                                            dataSource={
+                                                                data
+                                                            }
                                                             bordered
+                                                            rowKey="device_sn"
                                                             size="small"
                                                             rowClassName={(record, index) => {
                                                                 let className = 'light-row';
@@ -118,18 +135,27 @@ class MyGates extends PureComponent {
                                                                 }
                                                                 return className;
                                                             }}
-                                                            onRow={(record, rowkey)=>{
-
-                                                                return {
-                                                
-                                                                    onClick: this.click.bind(this, record, rowkey)
-                                                
-                                                                }
-                                                
-                                                            }}
                                                         /></TabPane>
-                                                    <TabPane tab="离线" key="2"><Table columns={columns} dataSource={data} bordered size="small "/></TabPane>
-                                                    <TabPane tab="全部" key="3"><Table columns={columns} dataSource={data} bordered size="small "/></TabPane>
+                                                    <TabPane tab="离线"
+                                                        key="2"
+                                                    ><Table columns={columns}
+                                                        dataSource={
+                                                            data
+                                                        }
+                                                        rowKey="device_sn"
+                                                        bordered
+                                                        size="small "
+                                                     /></TabPane>
+                                                    <TabPane tab="全部"
+                                                        key="3"
+                                                    ><Table columns={columns}
+                                                        dataSource={
+                                                            data
+                                                        }
+                                                        rowKey="device_sn"
+                                                        bordered
+                                                        size="small "
+                                                     /></TabPane>
                                                 </Tabs>
                 }
             </div>

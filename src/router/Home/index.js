@@ -42,7 +42,9 @@ class Home extends PureComponent {
                 <div className="main">
                     <div>
                         <p>在线统计</p>
-                        <div id="onlineMain" style={{ width: 400, height: 400 }}></div>
+                        <div id="onlineMain"
+                            style={{ width: 400, height: 400 }}
+                        ></div>
                     </div>
                     <div>
                         <p>故障统计</p>
@@ -52,7 +54,9 @@ class Home extends PureComponent {
                     </div>
                     <div>
                         <p>故障类型统计</p>
-                        <div id="faultTypeMain" style={{ width: 600, height: 450 }}></div>
+                        <div id="faultTypeMain"
+                            style={{ width: 600, height: 450 }}
+                        ></div>
                     </div>
                 </div>
             </div>

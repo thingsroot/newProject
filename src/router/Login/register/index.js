@@ -11,7 +11,7 @@ class Register extends PureComponent {
         this.props.form.validateFields((err, values) => {
             console.log(values)
             if (!err) {
-                http.post(`/apis/?cmd=frappe.core.doctype.user.user.sign_up&email=${values.email}&full_name=${values.username}&redirect_to=`).then(res=>{
+                http.post(`/?cmd=frappe.core.doctype.user.user.sign_up&email=${values.email}&full_name=${values.username}&redirect_to=`).then(res=>{
                     if (res.message){
                         if (res.message[0] === 0){
                             message.info('此用户' + res.message[1])

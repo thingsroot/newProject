@@ -1,0 +1,28 @@
+.statusWrap{
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 50px;
+    >div{
+        padding: 10px 0;
+    }
+    .positon{
+            width: 14px;
+            height: 14px;
+            border:2px solid #ccc;
+            border-radius: 50%;
+            display: inline-block;
+            vertical-align: middle;
+            position: relative;
+        span{
+            position: absolute;
+            display: inline-block;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%,-50%);
+            width: 6px;
+            height: 6px;
+            background: #ccc;
+            border-radius: 50%;
+        }
+    }
+}
