@@ -5,12 +5,14 @@ const maxSider = {
     width: '200px',
     height: '100%',
     backgroundColor: '#001529',
+    zIndex: 1999,
     transition: 'background 0.3s, left 0.2s'
 };
 const minSider = {
     width: '80px',
     height: '100%',
     backgroundColor: '#001529',
+    zIndex: 1999,
     transition: 'background 0.3s, left 0.2s'
 }
 class Siders extends PureComponent {

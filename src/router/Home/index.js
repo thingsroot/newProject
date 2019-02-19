@@ -117,11 +117,11 @@ class Home extends PureComponent {
         return (
             <div className="home">
                 <div className="main">
-                    <div>
+                    <div className="echarts">
                         <p>在线统计</p>
-                        <div id="onlineMain" style={{width: 530, height: 400}}>  </div>
+                        <div id="onlineMain" style={{width: '45%', height: 400}}>  </div>
                     </div>
-                    <div>
+                    <div className="echarts">
                         <p>故障统计</p>
                         <div id="">
                             <Tabs onChange={callback} type="card">
@@ -132,13 +132,13 @@ class Home extends PureComponent {
                             </Tabs>
                         </div>
                     </div>
-                    <div>
+                    <div className="echarts">
                         <p>网关型号统计</p>
-                        <div id="gatesMain" style={{width: 530, height: 400}}>  </div>
+                        <div id="gatesMain" style={{width: '45%', height: 400}}>  </div>
                     </div>
-                    <div>
+                    <div className="echarts">
                         <p>故障类型统计</p>
-                        <div id="faultTypeMain" style={{width: 530, height: 400}}>  </div>
+                        <div id="faultTypeMain" style={{width: '45%', height: 400}}>  </div>
                     </div>
                 </div>
             </div>
