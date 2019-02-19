@@ -29,12 +29,27 @@ class Siders extends PureComponent {
     }
     render (){
         return (
+<<<<<<< HEAD
+            <div className="siders"
+                style={{width: '100%'}}
+            >
+                <div className="logo">
+                    <b>冬
+                        {
+                        !this.state.collapsed
+                        ? <span>笋云</span>
+                        : ''
+                        }
+                    </b>
+                </div>
+=======
             <div className="siders" style={this.props.collapsed ? minSider : maxSider}>
                 {
                     !this.props.collapsed
                         ? <div className="logo" style={{width: '200px', transition: 'background 0.3s, width 0.2s'}}><b>冬笋云</b></div>
                         : <div className="logo" style={{width: '80px', transition: 'background 0.3s, width 0.2s'}}><b>冬</b></div>
                 }
+>>>>>>> 47ab2357d4f43cf63d2c17c18fb7c92b9d342d55
                 <Menu theme="dark"
                     mode="inline"
                     defaultSelectedKeys={['1']}

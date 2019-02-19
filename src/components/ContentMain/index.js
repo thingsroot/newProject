@@ -38,7 +38,7 @@ class ContentMain extends PureComponent {
                     component={MyVirtualGates}
                 />
                 <PrivateRoute
-                    path="/MyGatesDevices"
+                    path="/MyGatesDevices/:sn"
                     component={MyGatesDevices}
                 />
                 <Redirect
