@@ -15,7 +15,8 @@ const maxHeader = {
     top: 0,
     right: 0,
     left: '200px',
-    transition: 'background 0.3s, left 0.2s'
+    transition: 'background 0.3s, left 0.2s',
+    zIndex: 1000
 };
 const minHeader = {
     width: '100%',
@@ -26,7 +27,9 @@ const minHeader = {
     top: 0,
     right: 0,
     left: '80px',
-    transition: 'background 0.3s, left 0.2s'
+    transition: 'background 0.3s, left 0.2s',
+    zIndex: 1000
+
 };
 
 class App extends PureComponent {
@@ -50,7 +53,7 @@ class App extends PureComponent {
         >
           <Siders collapsed={this.state.collapsed}/>
         </Sider>
-        <Layout style={{width: '100%'}}>
+        <Layout style={{width: '100%', overflowX: 'auto'}}>
           <Header style={this.state.collapsed ? minHeader : maxHeader}>
             <Icon
                 className="trigger"

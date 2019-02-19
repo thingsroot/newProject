@@ -1,6 +1,18 @@
 import React, { PureComponent } from 'react';
 import { Menu, Icon } from 'antd';
 import { Link } from 'react-router-dom';
+const maxSider = {
+    width: '200px',
+    height: '100%',
+    backgroundColor: '#001529',
+    transition: 'background 0.3s, left 0.2s'
+};
+const minSider = {
+    width: '80px',
+    height: '100%',
+    backgroundColor: '#001529',
+    transition: 'background 0.3s, left 0.2s'
+}
 class Siders extends PureComponent {
     constructor (props){
         super(props)
@@ -15,7 +27,7 @@ class Siders extends PureComponent {
     }
     render (){
         return (
-            <div className="siders" style={{width: '100%'}}>
+            <div className="siders" style={this.props.collapsed ? minSider : maxSider}>
                 {
                     !this.props.collapsed
                         ? <div className="logo" style={{width: '200px', transition: 'background 0.3s, width 0.2s'}}><b>冬笋云</b></div>
