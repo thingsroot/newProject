@@ -5,12 +5,14 @@ const maxSider = {
     width: '200px',
     height: '100%',
     backgroundColor: '#001529',
+    zIndex: 1999,
     transition: 'background 0.3s, left 0.2s'
 };
 const minSider = {
     width: '80px',
     height: '100%',
     backgroundColor: '#001529',
+    zIndex: 1999,
     transition: 'background 0.3s, left 0.2s'
 }
 class Siders extends PureComponent {
@@ -27,11 +29,23 @@ class Siders extends PureComponent {
     }
     render (){
         return (
-            <div className="siders" style={this.props.collapsed ? minSider : maxSider}>
+            <div className="siders"
+                style={this.props.collapsed ? minSider : maxSider}
+            >
                 {
                     !this.props.collapsed
-                        ? <div className="logo" style={{width: '200px', transition: 'background 0.3s, width 0.2s'}}><b>冬笋云</b></div>
-                        : <div className="logo" style={{width: '80px', transition: 'background 0.3s, width 0.2s'}}><b>冬</b></div>
+                        ? <div className="logo"
+                            style={{width: '200px',
+                                transition: 'background 0.3s, width 0.2s'}}
+                          >
+                              <b>冬笋云</b>
+                          </div>
+                        : <div className="logo"
+                            style={{width: '80px',
+                                transition: 'background 0.3s, width 0.2s'}}
+                          >
+                              <b>冬</b>
+                          </div>
                 }
                 <Menu theme="dark"
                     mode="inline"

@@ -6,8 +6,9 @@
     background-color: lightseagreen;
   }
   .main{
-    >div{
+    .echarts{
       float: left;
+      position: relative;
       width: 49%;
       height: 450px;
       margin-bottom: 20px;
@@ -27,8 +28,13 @@
       margin-right: 2%;
     }
   }
-}
-
-.ant-tabs-tabpane{
-  overflow-y: auto;
+  .hidden{
+    display: none;
+  }
+  .thWidth{
+    width: 10%;
+  }
+  .longWidth{
+    width: 35%;
+  }
 }
