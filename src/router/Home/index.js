@@ -34,11 +34,6 @@ const columns = [{
     dataIndex: 'today',
     className: 'thWidth',
     key: 'today'
-}, {
-    title: '序列号',
-    dataIndex: 'sn',
-    className: 'hidden',
-    key: 'sn'
 }];
 
 class Home extends PureComponent {
@@ -77,10 +72,10 @@ class Home extends PureComponent {
                     ]
                 }]
             });
-
         });
         // 在线数据
         http.get('api/method/iot_ui.iot_api.device_status_statistics').then(res=>{
+            // console.log(res);
             this.setState({
                 timeData: res.message
             });
@@ -90,6 +85,8 @@ class Home extends PureComponent {
                 online.push(v.online);
                 offline.push(v.offline);
             });
+            // console.log(online);
+            // console.log(offline);
             let myOnlineChart = echarts.init(document.getElementById('onlineMain'));
             myOnlineChart.setOption({
                 tooltip: {
@@ -204,6 +201,7 @@ class Home extends PureComponent {
         }
         // 前10网关
         http.get('api/method/iot_ui.iot_api.device_event_count_statistics').then(res=>{
+            // console.log(res.message)
             let data = [];
             let t = getBeforeDate(0);
             res.message.map((v)=>{
@@ -218,7 +216,7 @@ class Home extends PureComponent {
         });
         //一周内故障最多的网关
         http.get('/api/method/iot_ui.iot_api.device_event_count_statistics').then(res=>{
-
+            // console.log(res.message)
             let data = [];
             let t = getBeforeDate(0);
             let t1 = getBeforeDate(-1);
@@ -227,6 +225,7 @@ class Home extends PureComponent {
             let t4 = getBeforeDate(-4);
             let t5 = getBeforeDate(-5);
             let t6 = getBeforeDate(-6);
+            // console.log(res);
             res.message.map((v)=>{
                 if (v.last_updated.indexOf(t) !== -1 ||
                     v.last_updated.indexOf(t1) !== -1 ||
@@ -283,7 +282,7 @@ class Home extends PureComponent {
                                         style={{width: '100%'}}
                                         pagination={false}
                                         scroll={{ y: 280 }}
-                                        locale={{emptyText: '暂无数据'}}
+                                        locale={{emptyText: '恭喜你'}}
                                     />
                                 </TabPane>
                                 <TabPane tab="一周内故障最多"
