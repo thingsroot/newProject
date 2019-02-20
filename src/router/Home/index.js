@@ -34,11 +34,6 @@ const columns = [{
     dataIndex: 'today',
     className: 'thWidth',
     key: 'today'
-}, {
-    title: '序列号',
-    dataIndex: 'sn',
-    className: 'hidden',
-    key: 'sn'
 }];
 
 class Home extends PureComponent {
@@ -77,7 +72,6 @@ class Home extends PureComponent {
                     ]
                 }]
             });
-
         });
         // 在线数据
         http.get('api/method/iot_ui.iot_api.device_status_statistics').then(res=>{
@@ -287,7 +281,8 @@ class Home extends PureComponent {
                                         style={{width: '100%'}}
                                         pagination={false}
                                         scroll={{ y: 280 }}
-                                        locale={{emptyText: '暂无数据'}}
+                                        locale={{emptyText: '恭喜你'}}
+                                        rowKey="sn"
                                     />
                                 </TabPane>
                                 <TabPane tab="一周内故障最多"
@@ -300,6 +295,7 @@ class Home extends PureComponent {
                                         style={{width: '100%'}}
                                         pagination={false}
                                         scroll={{ y: 280 }}
+                                        rowKey="sn"
                                     />
                                 </TabPane>
                             </Tabs>
