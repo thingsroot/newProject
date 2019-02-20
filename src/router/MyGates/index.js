@@ -23,7 +23,6 @@ function getDevicesList (status){
             status,
             data: res.message
         })
-        console.log(res.message)
     })
 }
 function callback (key){

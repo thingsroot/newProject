@@ -9,6 +9,7 @@ const UserSettings = LoadableComponent(()=>import('../../router/UserSettings'));
 const MyAccessKey = LoadableComponent(()=>import('../../router/MyAccessKey'));
 const MyVirtualGates = LoadableComponent(()=>import('../../router/MyVirtualGates'));
 const MyGatesDevices = LoadableComponent(()=>import('../../router/MyGatesDevices'));
+const MyGatesAppsInstall = LoadableComponent(()=>import('../../router/MyGatesAppsInstall'));
 class ContentMain extends PureComponent {
     render (){
         return (
@@ -40,6 +41,10 @@ class ContentMain extends PureComponent {
                 <PrivateRoute
                     path="/MyGatesDevices/:sn"
                     component={MyGatesDevices}
+                />
+                <PrivateRoute
+                    path="/MyGatesAppsInstall/:sn"
+                    component={MyGatesAppsInstall}
                 />
                 <Redirect
                     from="/"

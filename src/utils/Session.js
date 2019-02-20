@@ -42,6 +42,10 @@ export function getParam (name) {
   //不存在时返回null
   return null;
 }
+export const getUrl = (url)=> {
+  console.log(url)
+  return url.split('/')[1];
+}
 export function logout () {
   _setCookie(LOGIN_COOKIE_NAME, '', 0)
 }

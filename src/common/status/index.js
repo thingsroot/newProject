@@ -1,28 +1,30 @@
-import React, { PureComponent } from 'react';
-import { inject } from 'mobx-react';
-import { Icon } from 'antd';
+import React, { Component } from 'react';
+import { inject, observer } from 'mobx-react';
+import { Icon, Button } from 'antd';
 import { Link } from 'react-router-dom';
 import './style.scss';
 @inject('store')
-class Status extends PureComponent {
+@observer
+class Status extends Component {
     render () {
+        const { status } = this.props.store.appStore;
         return (
             <div className="statusWrap">
                 <div>
-                    <div className="status"><span></span></div>
-                    &nbsp;状态: {this.props.store.appStore.status.status}
+                    <div className="status"></div>
+                    &nbsp; <span className={status.status === 'ONLINE' ? 'online' : 'offline'}>{status.status}</span>
                 </div>
                 <div>
                     <div className="positon"><span></span></div>
-                    &nbsp;名称: {this.props.store.appStore.status.name}
+                    &nbsp;名称: {status.name}
                 </div>
                 <div>
                     <div className="positon"><span></span></div>
-                    &nbsp;描述: {this.props.store.appStore.status.describe}
+                    &nbsp;描述: {status.desc}
                 </div>
                 <div>
                     <div className="positon"><span></span></div>
-                    &nbsp;序号: {this.props.store.appStore.status.sn}
+                    &nbsp;序号: {status.sn}
                 </div>
                 <div>
                     
@@ -31,6 +33,11 @@ class Status extends PureComponent {
                     >   <Icon type="ordered-list"
                         style={{color: 'blue'}}
                         />日志</Link>
+                </div>
+                <div>
+                    <Button href={`/MyGatesAppsInstall/${status.sn}`}>
+                        安装新应用
+                    </Button>
                 </div>
             </div>
         );
