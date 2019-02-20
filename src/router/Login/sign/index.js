@@ -25,6 +25,7 @@ class Sign extends PureComponent {
                         })
                     }
                 }).catch(function (error){
+                    console.log(error)
                     if (error){
                         message.info('账号密码错误，请重新输入')
                         console.log(get_NewToken())

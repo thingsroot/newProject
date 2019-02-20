@@ -1,0 +1,21 @@
+.leftnav{
+    width: 200px;
+    .navlist{
+        margin-top: 15px;
+        border:1px solid #ccc;
+        line-height: 40px;
+        p{
+            text-indent: 15px;
+        }
+        .active{
+            border-left: 2px solid blue;
+        }
+        li{
+            border-top: 1px solid #ccc;
+            text-indent: 12px;
+            &:hover{
+                background:#f9f9f9;
+            }
+        }
+    }
+}

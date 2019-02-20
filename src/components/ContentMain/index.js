@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
-import LoadableComponent from '../../utils/LoadableComponent';
 import { Switch, Redirect, withRouter} from 'react-router-dom';
+import LoadableComponent from '../../utils/LoadableComponent';
 import PrivateRoute from '../PrivateRoute';
 const Home = LoadableComponent(()=>import('../../router/Home'));
 const MyGates = LoadableComponent(()=>import('../../router/MyGates'));

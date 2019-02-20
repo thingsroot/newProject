@@ -1,8 +1,10 @@
-import React from 'react';
+import React, {PureComponent} from 'react';
 import {
     Table, Menu, Dropdown, Icon
   } from 'antd';
+import { withRouter } from 'react-router-dom';
 import http from '../../../utils/Server';
+
   const menu = (
     <Menu>
       <Menu.Item>
@@ -38,25 +40,37 @@ import http from '../../../utils/Server';
       )
     }
   ];
-  let data = [];
-  function ExpandedRowRender (props) {
-        function conso (){
-            http.get('/api/method/iot_ui.iot_api.gate_device_data_array?sn=' + props.sn + '&vsn=' + props.sn).then(res=>{
-                data = res.message;
-                if (data.length > 0){
-                    console.log('success')
-                }
-            })
-        }
-        conso()
+
+  class ExpandedRowRender extends PureComponent {
+    state = {
+      data: [],
+      flag: true
+    }
+    componentDidMount (){
+      const { sn } = this.props.match.params;
+      http.get('/api/method/iot_ui.iot_api.gate_device_data_array?sn=' + sn + '&vsn=' + this.props.sn).then(res=>{
+        let data = res.message;
+        data.map((item)=>{
+          if (item.vt === null){
+            item.vt = 'float';
+          }
+        })
+          this.setState({
+            data,
+            flag: false
+          })
+      })
+    }
+    render () {
       return (
         <Table
             size="small"
-            loading={false}
+            loading={this.state.flag}
             columns={columns}
-            dataSource={data}
+            dataSource={this.state.data}
             pagination={false}
         />
       );
+    }
   }
-    export default ExpandedRowRender ;
+export default withRouter(ExpandedRowRender) ;

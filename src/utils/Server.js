@@ -67,7 +67,8 @@ var post = function (url, data) {
           headers: {
               Accept: 'application/json; charset=utf-8',
               'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
-              'dataType': 'json'
+              'dataType': 'json',
+              'X-Frappe-CSRF-Token': _getCookie('T&R_auth_token') || ''
           }
       }).then(res=>{
           resolve(res.data)
