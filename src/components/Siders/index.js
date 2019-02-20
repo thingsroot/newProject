@@ -72,6 +72,18 @@ class Siders extends PureComponent {
                         <span>我的应用</span>
                         </Link>
                     </Menu.Item>
+                    <Menu.Item key="4">
+                        <Link to="/PlatformMessage">
+                            <Icon type="desktop" />
+                            <span>平台消息</span>
+                        </Link>
+                    </Menu.Item>
+                    <Menu.Item key="5">
+                        <Link to="/DeviceMessage">
+                            <Icon type="message" />
+                            <span>设备消息</span>
+                        </Link>
+                    </Menu.Item>
                 </Menu>
             </div>
         );
