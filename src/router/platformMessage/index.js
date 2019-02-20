@@ -58,9 +58,7 @@ class PlatformMessage extends PureComponent {
         platformData: [],
         searchText: ''
     };
-    onChange = (pagination, filters, sorter)=>{
-        console.log('params', pagination, filters, sorter)
-    };
+
     componentDidMount (){
         http.get('api/method/iot.user_api.device_activity').then(res=>{
             console.log(res.message);
