@@ -10,7 +10,7 @@ class Status extends PureComponent {
             <div className="statusWrap">
                 <div>
                     <div className="status"><span></span></div>
-                    &nbsp;名称: {this.props.store.appStore.status.name}
+                    &nbsp;状态: {this.props.store.appStore.status.status}
                 </div>
                 <div>
                     <div className="positon"><span></span></div>
@@ -25,12 +25,12 @@ class Status extends PureComponent {
                     &nbsp;序号: {this.props.store.appStore.status.sn}
                 </div>
                 <div>
-                    <Icon type="ordered-list"
-                        style={{color: 'blue'}}
-                    />
+                    
                     <Link to="/MyGatesLogviewer"
                         style={{color: 'blue'}}
-                    >日志</Link>
+                    >   <Icon type="ordered-list"
+                        style={{color: 'blue'}}
+                        />日志</Link>
                 </div>
             </div>
         );
