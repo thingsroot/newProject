@@ -55,7 +55,9 @@ class PlatformMessage extends PureComponent {
         platformData: [],
         searchText: ''
     };
-
+    onChange = (pagination, filters, sorter)=>{
+        console.log('params', pagination, filters, sorter)
+    }
     componentDidMount (){
         http.get('api/method/iot.user_api.device_activity').then(res=>{
             console.log(res.message);
@@ -65,9 +67,7 @@ class PlatformMessage extends PureComponent {
         });
 
     }
-    onChange = (pagination, filters, sorter)=>{
-        console.log('params', pagination, filters, sorter)
-    }
+
     render () {
         let platformData = this.state.platformData;
 
@@ -80,7 +80,7 @@ class PlatformMessage extends PureComponent {
                     rowSelection={rowSelection}
                     columns={columns}
                     dataSource={platformData}
-                    onChange={{onChange}}
+                    onChange={onChange}
                     rowKey="name"
                 />
             </div>
