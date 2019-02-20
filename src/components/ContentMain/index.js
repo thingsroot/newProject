@@ -9,6 +9,7 @@ const UserSettings = LoadableComponent(()=>import('../../router/UserSettings'));
 const MyAccessKey = LoadableComponent(()=>import('../../router/MyAccessKey'));
 const MyVirtualGates = LoadableComponent(()=>import('../../router/MyVirtualGates'));
 const MyGatesDevices = LoadableComponent(()=>import('../../router/MyGatesDevices'));
+const MyGatesAppsInstall = LoadableComponent(()=>import('../../router/MyGatesAppsInstall'));
 const PlatformMessage = LoadableComponent(()=>import('../../router/platformMessage'))
 const DeviceMessage = LoadableComponent(()=>import('../../router/deviceMessage'))
 class ContentMain extends PureComponent {
@@ -44,6 +45,10 @@ class ContentMain extends PureComponent {
                     component={MyGatesDevices}
                 />
                 <PrivateRoute
+                    path="/MyGatesAppsInstall/:sn"
+                    component={MyGatesAppsInstall}
+                />
+                <PrivateRoute 
                     path="/PlatformMessage"
                     component={PlatformMessage}
                 />

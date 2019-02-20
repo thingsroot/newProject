@@ -45,8 +45,21 @@ class GatesList extends PureComponent {
         data: []
     }
     componentDidMount (){
-        console.log(this.props)
         let { sn } = this.props.match.params;
+        http.get('/api/method/iot_ui.iot_api.gate_devs_list?sn=' + sn).then(res=>{
+            let data = [];
+            data = res.message;
+            data.map((item)=>{
+                item.ioc = '' + (item.inputs ? item.inputs : '0') + '/' + (item.outputs ? item.outputs : '0') + '/' + (item.commands ? item.commands : '0');
+            })
+            this.setState({
+                data
+            })
+        })
+    }
+    UNSAFE_componentWillReceiveProps (){
+      let { sn } = this.props.match.params;
+      console.log(sn)
         http.get('/api/method/iot_ui.iot_api.gate_devs_list?sn=' + sn).then(res=>{
             let data = [];
             data = res.message;

@@ -7,14 +7,17 @@ class AppStore {
   @observable loginUser = {}  //当前登录用户信息
   @observable gateList = []
   @observable status = {
-      status: 'online',
-      name: '华为UPS采集器',
-      describe: '采集华为UPS',
-      sn: 'EFC43C54-6A34-11E8-8C76-00163E06DD4A'
+    status: '',
+    sn: '',
+    name: '',
+    desc: ''
   }
   @action setGatelist (values) {
-    console.log(values)
       this.gateList = [...values];
+  }
+  @action setStatus (values){
+    console.log(values)
+      this.status = {...values}
   }
   @action toggleLogin (flag, info = {}) {
     this.loginUser = info  //设置登录用户信息

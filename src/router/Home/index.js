@@ -275,6 +275,7 @@ class Home extends PureComponent {
                                     key="1"
                                 >
                                     <Table
+                                        rowKey="sn"
                                         columns={columns}
                                         dataSource={todayData}
                                         size="small"
@@ -282,20 +283,19 @@ class Home extends PureComponent {
                                         pagination={false}
                                         scroll={{ y: 280 }}
                                         locale={{emptyText: '恭喜你'}}
-                                        rowKey="sn"
                                     />
                                 </TabPane>
                                 <TabPane tab="一周内故障最多"
                                     key="2"
                                 >
                                     <Table
+                                        rowKey="sn"
                                         columns={columns}
                                         dataSource={weekData}
                                         size="small"
                                         style={{width: '100%'}}
                                         pagination={false}
                                         scroll={{ y: 280 }}
-                                        rowKey="sn"
                                     />
                                 </TabPane>
                             </Tabs>

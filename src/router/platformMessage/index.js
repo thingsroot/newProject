@@ -31,8 +31,8 @@ const columns = [{
         value: ''
     }],
     filterMultiple: false,
-    onFilter: (value, record) => record.address.indexOf(value) === 0,
-    sorter: (a, b) => a.address.length - b.address.length,
+    onFilter: (value, record) => record.operation.indexOf(value) === 0,
+    sorter: (a, b) => a.creation.length - b.creation.length,
     sortDirections: ['descend', 'ascend']
 }, {
     title: '是否已读',
@@ -40,6 +40,9 @@ const columns = [{
     className: 'hidden'
 }];
 
+const onChange = (pagination, filters, sorter)=>{
+    console.log('params', pagination, filters, sorter)
+}
 const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
         console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
@@ -57,7 +60,7 @@ class PlatformMessage extends PureComponent {
     };
     onChange = (pagination, filters, sorter)=>{
         console.log('params', pagination, filters, sorter)
-    }
+    };
     componentDidMount (){
         http.get('api/method/iot.user_api.device_activity').then(res=>{
             console.log(res.message);
@@ -67,7 +70,6 @@ class PlatformMessage extends PureComponent {
         });
 
     }
-
     render () {
         let platformData = this.state.platformData;
 

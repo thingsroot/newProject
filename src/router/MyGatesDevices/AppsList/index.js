@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Table, Icon, Switch } from 'antd';
 import http from '../../../utils/Server';
+import { inject } from 'mobx-react';
 const columns = [{
     title: '',
     dataIndex: 'img',
@@ -39,21 +40,31 @@ const columns = [{
     title: '开机自启',
     dataIndex: 'info.auto',
     render: (props)=>{
-        console.log(props);
         return (<Switch checkedChildren="ON" unCheckedChildren="OFF" defaultChecked={props}/>)
     }
   }, {
     title: '操作',
     dataIndex: ''
   }];
+  @inject('store')
 class AppsList extends PureComponent {
     state = {
         data: [],
         pagination: {},
-        loading: false
+        loading: false,
+        url: window.location.pathname
     }
+    
     componentDidMount () {
         this.fetch();
+      }
+      UNSAFE_componentWillReceiveProps (){
+        const pathname = window.location.pathname
+        if (pathname === this.state.url){
+          return false
+        } else {
+          this.fetch();
+        }
       }
       handleTableChange = (pagination, filters, sorter) => {
         const pager = { ...this.state.pagination };
@@ -71,7 +82,7 @@ class AppsList extends PureComponent {
       }
     
       fetch = () => {
-        console.log('params:', this.props.match.params.sn);
+        console.log('1')
         this.setState({ loading: true });
         http.get('/api/method/iot_ui.iot_api.gate_applist?sn=' + this.props.match.params.sn).then((res) => {
             let data = res.message;
@@ -97,10 +108,12 @@ class AppsList extends PureComponent {
           });
         });
       }
+      
     render () {
         return (
             <div>
                 <Table
+                    rowKey="info.inst"
                     columns={columns}
                     dataSource={this.state.data}
                     pagination={this.state.pagination}
