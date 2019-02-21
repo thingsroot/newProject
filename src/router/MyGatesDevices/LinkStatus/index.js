@@ -10,18 +10,21 @@ import http from '../../../utils/Server';
 class LinkList extends PureComponent {
     state = {
         data: [],
+        loading: true,
         sn: this.props.match.params.sn
     }
     componentDidMount (){
       this.getData(this.state.sn);
     }
     UNSAFE_componentWillReceiveProps (nextProps){
-      const sn = nextProps.match.params.sn;
-      this.setState({
-          sn
-      }, ()=>{
-          this.getData(sn);
-      });
+      if (nextProps.location.pathname !== this.props.location.pathname){
+        const sn = nextProps.match.params.sn;
+        this.setState({
+            loading: true
+        }, ()=>{
+            this.getData(sn);
+        });
+      }
     }
     getData (sn){
       http.get('/api/method/iot_ui.iot_api.gate_info?sn=' + this.props.match.params.sn).then(res=>{
@@ -34,12 +37,14 @@ class LinkList extends PureComponent {
             item.ioc = '' + (item.inputs ? item.inputs : '0') + '/' + (item.outputs ? item.outputs : '0') + '/' + (item.commands ? item.commands : '0');
         })
         this.setState({
-            data
+            data,
+            loading: false
         })
     })
     }
     render () {
-        const { status, config } = this.props.store.appStore
+        const { status, config } = this.props.store.appStore;
+        const { loading } = this.state;
         return (
             <div className="linkstatuswrap">
                 <div style={{ background: '#ECECEC', padding: '30px' }}
@@ -52,6 +57,7 @@ class LinkList extends PureComponent {
                         <Card title="| 基本信息"
                             bordered={false}
                             style={{ width: '100%' }}
+                            loading={loading}
                         >
                         <p><b>序列号：</b>{status.sn}</p>
                         <p><b>位置：</b> -- </p>
@@ -62,6 +68,7 @@ class LinkList extends PureComponent {
                         <Card title="| 配置信息"
                             bordered={false}
                             style={{ width: '100%' }}
+                            loading={loading}
                         >
                         <p><b>CPU:</b>{config.cpu}</p>
                         <p><b>内存:</b>{config.ram}</p>

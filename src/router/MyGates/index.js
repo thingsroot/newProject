@@ -21,19 +21,23 @@ function getDevicesList (status){
         }
         this.setState({
             status,
-            data: res.message
+            data: res.message,
+            loading: false
         })
     })
 }
 function callback (key){
     switch (key) {
         case '1':
+                this.setState({loading: true})
                 this.getDevicesList('online')
             break;
         case '2':
+                this.setState({loading: true})
                 this.getDevicesList('offline')
             break;
         case '3':
+                this.setState({loading: true})
                 this.getDevicesList('all')
             break;
         default:
@@ -64,6 +68,7 @@ class MyGates extends PureComponent {
         this.state = {
             data: [],
             status: 'online',
+            loading: true,
             columns: [{
                 title: '名称',
                 dataIndex: 'device_name',
@@ -75,23 +80,27 @@ class MyGates extends PureComponent {
               }, {
                 title: '上线时间',
                 dataIndex: 'last_updated',
-                key: 'last_updated'
+                key: 'last_updated',
+                width: '180px'
               }, {
                 title: '状态',
                 key: 'device_status',
-                dataIndex: 'device_status'
+                dataIndex: 'device_status',
+                width: '80px'
               }, {
                 title: '应用数',
                 key: 'device_apps_num',
-                dataIndex: 'device_apps_num'
+                dataIndex: 'device_apps_num',
+                width: '70px'
                 }, {
                 title: '设备数',
                 key: 'device_devs_num',
-                dataIndex: 'device_devs_num'
+                dataIndex: 'device_devs_num',
+                width: '70px'
                 }, {
                 title: 'Action',
                 key: 'action',
-                width: '20%',
+                width: '23%',
                 render: (text, record, props) => {
                     props
                   return (
@@ -143,6 +152,7 @@ class MyGates extends PureComponent {
                                                                 data
                                                             }
                                                             bordered
+                                                            loading={this.state.loading}
                                                             rowKey="device_sn"
                                                             size="small"
                                                             rowClassName={(record, index) => {
@@ -168,6 +178,7 @@ class MyGates extends PureComponent {
                                                             return className;
                                                         }}
                                                         bordered
+                                                        loading={this.state.loading}
                                                         size="small "
                                                      /></TabPane>
                                                     <TabPane tab="全部"
@@ -185,6 +196,7 @@ class MyGates extends PureComponent {
                                                         }}
                                                         rowKey="device_sn"
                                                         bordered
+                                                        loading={this.state.loading}
                                                         size="small "
                                                      /></TabPane>
                                                 </Tabs>
