@@ -58,8 +58,6 @@ const rowSelection = {
         name: record.name
     })
 };
-
-
 class PlatformMessage extends PureComponent {
     state = {
         tableData: [],
@@ -213,16 +211,21 @@ class PlatformMessage extends PureComponent {
             selectValue: text
         })
     };
-
-    search = (inpVal)=>{
-        let a = event.target.value;
-        clearTimeout();
-        setTimeout( ()=>{
+    tick = (a)=>{
+        if (this.timer){
+            clearTimeout(this.timer)
+        }
+        this.timer = setTimeout(() => {
             this.setState({
                 text: a
+            }, ()=>{
+                console.log(this.state.text)
             })
-        }, 100);
-        console.log(this.state.text);
+        }, 500);
+    }
+    search = (inpVal)=>{
+        let a = event.target.value;
+        this.tick(a)
         console.log(inpVal)
         // let newData = [];
         // this.state.platformData.map((v)=>{
