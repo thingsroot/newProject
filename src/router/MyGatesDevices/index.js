@@ -7,10 +7,10 @@ import PrivateRoute from '../../components/PrivateRoute';
 import './style.scss';
 import http from '../../utils/Server';
 import { inject, observer } from 'mobx-react';
-import { Drawer, Button } from 'antd';
+import { Drawer, Button, Icon } from 'antd';
 const GatesList = LoadableComponent(()=>import('./GatesList'));
 const AppsList = LoadableComponent(()=>import('./AppsList'));
-const LinkList = LoadableComponent(()=>import('./LinkList'));
+const LinkStatus = LoadableComponent(()=>import('./LinkStatus'));
 @inject('store')
 @observer
 @withRouter
@@ -20,26 +20,14 @@ class MyGatesDevices extends PureComponent {
     visible: false,
     url: window.location.pathname
   }
-  
   componentDidMount (){
     this.sendAjax()
   }
-  componentWillReceiveProps (){
-    const pathname = window.location.pathname
-    if (pathname === this.state.url){
-      return false
-    } else {
-      
-      this.sendAjax()
-      console.log('1')
-    }
-  }
   sendAjax = () => {
     http.get('/api/method/iot_ui.iot_api.gate_info?sn=' + this.props.match.params.sn).then(res=>{
-      this.props.store.appStore.setStatus(res.message.basic)
+      this.props.store.appStore.setStatus(res.message)
     })
     http.get('/api/method/iot_ui.iot_api.devices_list?filter=online').then(res=>{
-      console.log(res)
       this.props.store.appStore.setGatelist(res.message);
     })
   }
@@ -59,19 +47,23 @@ class MyGatesDevices extends PureComponent {
     return arr.join('/')
   }
     render () {
-      let { path } = this.props.match;
-      const { gateList } = this.props.store.appStore;
+      const { path } = this.props.match;
+      const { gateList, status } = this.props.store.appStore;
         return (
             <div >
                 <Status />
                 <div className="mygatesdevices">
                   <LeftNav />
-                  <Button type="primary" onClick={this.showDrawer}>
+                  <Button type="primary"
+                      onClick={this.showDrawer}
+                      className="listbutton"
+                  >
+                      <Icon type="swap"/><br />
                       网关列表
                   </Button>
                   <Drawer
                       title="网关列表"
-                      placement="right"
+                      placement="left"
                       closable={false}
                       onClose={this.onClose}
                       visible={this.state.visible}
@@ -80,10 +72,17 @@ class MyGatesDevices extends PureComponent {
                     {
                       gateList && gateList.length > 0 && gateList.map((v, i)=>{
                         return (
-                        <Link key={i} to={
+                        <Link key={i}
+                            to={
                           this.setUrl(v.device_sn)
-                        }>
-                            <p>{v.device_name}</p>
+                        }
+                        >
+                            <li onClick={this.onClose}
+                                className={status.sn === v.device_sn ? 'gateslist gateslistactive' : 'gateslist'}
+                            >
+                              <span></span>
+                              <p>{v.device_name}</p>
+                            </li>
                         </Link>
                         )
                       })
@@ -98,8 +97,8 @@ class MyGatesDevices extends PureComponent {
                       <PrivateRoute path={`${path}/AppsList`}
                           component={AppsList}
                       />
-                      <PrivateRoute path={`${path}/LinkList`}
-                          component={LinkList}
+                      <PrivateRoute path={`${path}/LinkStatus`}
+                          component={LinkStatus}
                       />
                       <Redirect from={path}
                           to={`${path}/GatesList`}

@@ -15,10 +15,10 @@ class AdvancedSearchForm extends PureComponent {
     state = {
         expand: false,
         a: 1
-      }
+    }
     componentDidMount (){
         this.smde = new SimpleMDE({
-            element: document.getElementById('editor').childElementCount,  
+            element: document.getElementById('editor').childElementCount,
             autofocus: true,
             autosave: true,
             previewRender: function (plainText) {
@@ -38,11 +38,9 @@ class AdvancedSearchForm extends PureComponent {
             }
     })
     }
-     
     componentWillUnmount (){
         clearInterval(window.set)
     }
-    
     getFields () {
         let list = [{
             name: '应用名称',
@@ -56,7 +54,7 @@ class AdvancedSearchForm extends PureComponent {
             type: 'select',
             children: ['罗克菲尔', '西门子', '中达电通', '旋思科技', '冬笋科技', 'Other', '华为', '三菱电机']
         }, {
-            name: '设备型号', 
+            name: '设备型号',
             type: 'input'
         }, {
             name: '协议',
@@ -74,7 +72,10 @@ class AdvancedSearchForm extends PureComponent {
         list.map((item, key)=>{
             if (item.type === 'input'){
                 children.push(
-                    <Col span={8} key={key} style={{ display: key < count ? 'block' : 'none' }}>
+                    <Col span={8}
+                        key={key}
+                        style={{ display: key < count ? 'block' : 'none' }}
+                    >
                       <Form.Item label={`${item.name}`}>
                         {getFieldDecorator(`field-${key}`, {
                           rules: [{
@@ -89,13 +90,27 @@ class AdvancedSearchForm extends PureComponent {
                   );
             } else {
                 children.push(
-                    <Col span={8} key={key} style={{ display: key < count ? 'block' : 'none' }}>
+                    <Col span={8}
+                        key={key}
+                        style={{ display: key < count ? 'block' : 'none' }}
+                    >
                     <Form.Item label={`${item.name}`}>
                       {(
-                        <Select labelInValue defaultValue={{ key: item.children[0] }} style={{ width: 302 }} onChange={handleChange} key={key}>
-                            {   
+                        <Select labelInValue
+                            defaultValue={{ key: item.children[0] }}
+                            style={{ width: 302 }}
+                            onChange={handleChange}
+                            key={key}
+                        >
+                            {
                                 item.children && item.children.map((val, ind)=>{
-                                    return <Option value={val} key={ind}>{val}</Option>
+                                    return (
+                                      <Option value={val}
+                                          key={ind}
+                                      >
+                                        {val}
+                                      </Option>
+                                    )
                                 })
                             }
                         </Select>
@@ -108,12 +123,12 @@ class AdvancedSearchForm extends PureComponent {
         })
         return children;
       }
-      handleSearch = (e) => {
-        e.preventDefault();
-        this.props.form.validateFields((err, values) => {
-          console.log('Received values of form: ', values);
-        });
-      }
+    handleSearch = (e) => {
+      e.preventDefault();
+      this.props.form.validateFields((err, values) => {
+        console.log('Received values of form: ', values);
+      });
+    }
     handleReset = () => {
         this.props.form.resetFields();
       }
@@ -130,15 +145,19 @@ class AdvancedSearchForm extends PureComponent {
                 <Form
                     className="ant-advanced-search-form"
                     onSubmit={this.handleSearch}
-            >
+                >
                     <Row gutter={24}>{this.getFields()}</Row>
                     <Row>
-                    <Col span={24} style={{ textAlign: 'right' }}>
+                    <Col span={24}
+                        style={{ textAlign: 'right' }}
+                    >
                     </Col>
                     </Row>
                     <p>描述</p>
                     <textarea id="editor"></textarea>
-                    <Button type="primary" htmlType="submit">创建</Button>
+                    <Button type="primary"
+                        htmlType="submit"
+                    >创建</Button>
                 </Form>
             </div>
         )

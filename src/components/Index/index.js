@@ -66,7 +66,7 @@ class App extends PureComponent {
             margin: '68px 16px 24px 16px', padding: 24, background: '#fff', minHeight: 280
           }}
           >
-            <ContentMain />
+            <ContentMain className="border"/>
           </Content>
         </Layout>
       </Layout>

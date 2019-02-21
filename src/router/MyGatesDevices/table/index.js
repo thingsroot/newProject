@@ -1,20 +1,20 @@
 import React, {PureComponent} from 'react';
 import {
-    Table, Menu, Dropdown, Icon
+    Table
   } from 'antd';
 import { withRouter } from 'react-router-dom';
 import http from '../../../utils/Server';
 
-  const menu = (
-    <Menu>
-      <Menu.Item>
-        Action 1
-      </Menu.Item>
-      <Menu.Item>
-        Action 2
-      </Menu.Item>
-    </Menu>
-  );
+  // const menu = (
+  //   <Menu>
+  //     <Menu.Item>
+  //       Action 1
+  //     </Menu.Item>
+  //     <Menu.Item>
+  //       Action 2
+  //     </Menu.Item>
+  //   </Menu>
+  // );
   const columns = [
     { title: '类型', dataIndex: 'vt', key: 'vt' },
     { title: '名称', dataIndex: 'name', key: 'name' },
@@ -24,18 +24,18 @@ import http from '../../../utils/Server';
     { title: '时间', dataIndex: 'tm', key: 'tm' },
     { title: '质量戳', dataIndex: 'q', key: 'q' },
     {
-      title: 'Action',
+      title: '操作',
       dataIndex: 'operation',
       key: 'operation',
       render: () => (
         <span className="table-operation">
-          <a href="javascript:;">Pause</a>
-          <a href="javascript:;">Stop</a>
+          <a href="javascript:;">历史浏览</a>
+          {/* <a href="javascript:;">Stop</a>
           <Dropdown overlay={menu}>
             <a href="javascript:;">
               More <Icon type="down" />
             </a>
-          </Dropdown>
+          </Dropdown> */}
         </span>
       )
     }

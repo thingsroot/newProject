@@ -242,5 +242,4 @@ class PlatformMessage extends PureComponent {
         );
     }
 }
-
 export default PlatformMessage;

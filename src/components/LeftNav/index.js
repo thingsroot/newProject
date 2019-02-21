@@ -16,20 +16,19 @@ class LeftNav extends PureComponent {
                 href: '/AppsList'
             }, {
                 icon: 'table',
-                text: '网关列表',
-                href: '/LinkList'
+                text: '网关状态',
+                href: '/LinkStatus'
             }
         ],
         index: 0
     }
-    
     componentDidMount (){
         const { pathname } = this.props.location;
         if (pathname.indexOf('/AppsList') !== -1){
             this.setState({
                 index: 1
             });
-        } else if (pathname.indexOf('/LinkList') !== -1){
+        } else if (pathname.indexOf('/LinkStatus') !== -1){
             this.setState({
                 index: 2
             });
@@ -51,9 +50,12 @@ class LeftNav extends PureComponent {
                         {
                             list.map((v, i)=>{
                                 return (
-                                    <Link to={`${url}${v.href}`} key={i} onClick={()=>{
+                                    <Link to={`${url}${v.href}`}
+                                        key={i}
+                                        onClick={()=>{
                                         this.setIndex(i)
-                                    }}><li className={index === i ? 'active' : ''}><Icon type={v.icon}/>&nbsp;&nbsp;{v.text}</li></Link>
+                                        }}
+                                    ><li className={index === i ? 'active' : ''}><Icon type={v.icon}/>&nbsp;&nbsp;{v.text}</li></Link>
                                 )
                             })
                         }
@@ -69,5 +71,4 @@ class LeftNav extends PureComponent {
         );
     }
 }
- 
 export default LeftNav;

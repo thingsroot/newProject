@@ -12,7 +12,7 @@ const columns = [{
     sorter: true,
     render: name => `${name} ${name}`,
     width: '20%'
-  }, 
+  },
 //   {
 //     title: 'Gender',
 //     dataIndex: 'gender',
@@ -40,7 +40,11 @@ const columns = [{
     title: '开机自启',
     dataIndex: 'info.auto',
     render: (props)=>{
-        return (<Switch checkedChildren="ON" unCheckedChildren="OFF" defaultChecked={props}/>)
+        return (
+        <Switch checkedChildren="ON"
+            unCheckedChildren="OFF"
+            defaultChecked={props}
+        />)
     }
   }, {
     title: '操作',
@@ -48,23 +52,22 @@ const columns = [{
   }];
   @inject('store')
 class AppsList extends PureComponent {
-    state = {
-        data: [],
-        pagination: {},
-        loading: false,
-        url: window.location.pathname
-    }
-    
-    componentDidMount () {
-        this.fetch();
+      state = {
+          data: [],
+          pagination: {},
+          loading: false,
+          url: window.location.pathname
       }
-      UNSAFE_componentWillReceiveProps (){
-        const pathname = window.location.pathname
-        if (pathname === this.state.url){
-          return false
-        } else {
-          this.fetch();
-        }
+      componentDidMount () {
+        this.fetch(this.props.match.params.sn);
+      }
+      UNSAFE_componentWillReceiveProps (nextProps){
+        const sn = nextProps.match.params.sn;
+        this.setState({
+          sn
+        }, ()=>{
+          this.fetch(sn);
+        })
       }
       handleTableChange = (pagination, filters, sorter) => {
         const pager = { ...this.state.pagination };
@@ -80,11 +83,12 @@ class AppsList extends PureComponent {
           ...filters
         });
       }
-    
-      fetch = () => {
-        console.log('1')
+      fetch = (sn) => {
         this.setState({ loading: true });
-        http.get('/api/method/iot_ui.iot_api.gate_applist?sn=' + this.props.match.params.sn).then((res) => {
+        http.get('/api/method/iot_ui.iot_api.gate_info?sn=' + this.props.match.params.sn).then(res=>{
+          this.props.store.appStore.setStatus(res.message)
+        })
+        http.get('/api/method/iot_ui.iot_api.gate_applist?sn=' + sn).then((res) => {
             let data = res.message;
             data.map((item)=>{
                 item.img = <span><Icon type="table" /></span>
@@ -96,6 +100,7 @@ class AppsList extends PureComponent {
                 } else {
                     item.info.auto = false
                 }
+                item.sn = item.info.sn;
             })
           const pagination = { ...this.state.pagination };
           // Read total count from server
@@ -108,12 +113,14 @@ class AppsList extends PureComponent {
           });
         });
       }
-      
     render () {
+      const { data } = this.state;
         return (
+            data &&
+            data.length > 0 &&
             <div>
                 <Table
-                    rowKey="info.inst"
+                    rowKey="sn"
                     columns={columns}
                     dataSource={this.state.data}
                     pagination={this.state.pagination}
