@@ -49,7 +49,6 @@ class MyGatesDevices extends PureComponent {
     render () {
       const { path } = this.props.match;
       const { gateList, status } = this.props.store.appStore;
-      console.log(status.sn)
         return (
             <div >
                 <Status />
@@ -78,7 +77,9 @@ class MyGatesDevices extends PureComponent {
                           this.setUrl(v.device_sn)
                         }
                         >
-                            <li onClick={this.onClose} className={status.sn === v.device_sn ? 'gateslist gateslistactive' : 'gateslist'}>
+                            <li onClick={this.onClose}
+                                className={status.sn === v.device_sn ? 'gateslist gateslistactive' : 'gateslist'}
+                            >
                               <span></span>
                               <p>{v.device_name}</p>
                             </li>

@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import http from '../../../utils/Server';
-import { Button, Divider, Table } from 'antd';
+import { Table } from 'antd';
 import ExpandedRowRender from '../table';
 import { inject, observer} from 'mobx-react';
 import { withRouter } from 'react-router-dom';
@@ -31,16 +31,18 @@ const columns = [{
     key: 'app_inst',
     dataIndex: 'app_inst',
     sorter: true
-    }, {
-    title: 'Action',
-    key: 'action',
-    render: () => {
-      return (<span>
-        <Button key="1">浏览</Button>
-        <Divider type="vertical" />
-      </span>)
     }
-  }];
+  //   , {
+  //   title: 'Action',
+  //   key: 'action',
+  //   render: () => {
+  //     return (<span>
+  //       <Button key="1">浏览</Button>
+  //       <Divider type="vertical" />
+  //     </span>)
+  //   }
+  // }
+  ];
   @inject('store')
   @observer
   @withRouter
@@ -94,7 +96,6 @@ class GatesList extends PureComponent {
                               data
                           }
                           rowKey="sn"
-                          size="small"
                           expandedRowRender={ExpandedRowRender}
                       />
                   }

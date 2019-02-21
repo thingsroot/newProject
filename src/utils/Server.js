@@ -67,8 +67,7 @@ var post = function (url, data) {
           headers: {
               Accept: 'application/json; charset=utf-8',
               'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
-              'dataType': 'json',
-              'X-Frappe-CSRF-Token': _getCookie('T&R_auth_token') || ''
+              'dataType': 'json'
           }
       }).then(res=>{
           resolve(res.data)
@@ -77,4 +76,23 @@ var post = function (url, data) {
       })
   });
 };
-export default { get, post };
+var postToken = function (url, data) {
+  return new Promise((resolve, reject) => {
+    // qs.stringify(data)
+    axios(url, {
+          method: 'post',
+          data: data,
+          headers: {
+              Accept: 'application/json; charset=utf-8',
+              'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+              'dataType': 'json',
+              'X-Frappe-CSRF-Token': _getCookie('T&R_auth_token')
+          }
+      }).then(res=>{
+          resolve(res.data)
+      }).catch(err=>{
+        reject(err)
+      })
+  });
+};
+export default { get, post, postToken };

@@ -48,7 +48,7 @@ class ContentMain extends PureComponent {
                     path="/MyGatesAppsInstall/:sn"
                     component={MyGatesAppsInstall}
                 />
-                <PrivateRoute 
+                <PrivateRoute
                     path="/PlatformMessage"
                     component={PlatformMessage}
                 />

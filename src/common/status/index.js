@@ -27,7 +27,6 @@ class Status extends Component {
                     &nbsp;序号: {status.sn}
                 </div>
                 <div>
-                    
                     <Link to="/MyGatesLogviewer"
                         style={{color: 'blue'}}
                     >   <Icon type="ordered-list"

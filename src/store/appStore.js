@@ -12,7 +12,6 @@ class AppStore {
       this.gateList = [...values];
   }
   @action setStatus (values){
-    console.log(values)
       this.status = {...values.basic}
       this.config = {...values.config}
   }

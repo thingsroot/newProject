@@ -41,21 +41,28 @@ class LinkList extends PureComponent {
     render () {
         const { status, config } = this.props.store.appStore
         return (
-            
             <div className="linkstatuswrap">
-               <div style={{ background: '#ECECEC', padding: '30px' }} className="linkstatus">
+                <div style={{ background: '#ECECEC', padding: '30px' }}
+                    className="linkstatus"
+                >
                     <div className="setbutton">
                         <Button>高级设置</Button>
                     </div>
                     <div className="border">
-                        <Card title="| 基本信息" bordered={false} style={{ width: '100%' }}>
+                        <Card title="| 基本信息"
+                            bordered={false}
+                            style={{ width: '100%' }}
+                        >
                         <p><b>序列号：</b>{status.sn}</p>
                         <p><b>位置：</b> -- </p>
                         <p><b>名称：</b>{status.name}</p>
                         <p><b>描述：</b>{status.desc}</p>
                         <p><b>型号：</b>{status.model ? status.model : 'unknown'}</p>
                         </Card>
-                        <Card title="| 配置信息" bordered={false} style={{ width: '100%' }}>
+                        <Card title="| 配置信息"
+                            bordered={false}
+                            style={{ width: '100%' }}
+                        >
                         <p><b>CPU:</b>{config.cpu}</p>
                         <p><b>内存:</b>{config.ram}</p>
                         <p><b>存储:</b>{config.rom}</p>
