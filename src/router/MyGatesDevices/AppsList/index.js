@@ -55,19 +55,21 @@ class AppsList extends PureComponent {
       state = {
           data: [],
           pagination: {},
-          loading: false,
+          loading: true,
           url: window.location.pathname
       }
       componentDidMount () {
         this.fetch(this.props.match.params.sn);
       }
       UNSAFE_componentWillReceiveProps (nextProps){
+        if (nextProps.location.pathname !== this.props.location.pathname){
         const sn = nextProps.match.params.sn;
         this.setState({
-          sn
+          loading: true
         }, ()=>{
           this.fetch(sn);
         })
+        }
       }
       handleTableChange = (pagination, filters, sorter) => {
         const pager = { ...this.state.pagination };
@@ -84,7 +86,6 @@ class AppsList extends PureComponent {
         });
       }
       fetch = (sn) => {
-        this.setState({ loading: true });
         http.get('/api/method/iot_ui.iot_api.gate_info?sn=' + this.props.match.params.sn).then(res=>{
           this.props.store.appStore.setStatus(res.message)
         })
@@ -114,17 +115,15 @@ class AppsList extends PureComponent {
         });
       }
     render () {
-      const { data } = this.state;
+      const { loading } = this.state;
         return (
-            data &&
-            data.length > 0 &&
             <div>
                 <Table
                     rowKey="sn"
                     columns={columns}
                     dataSource={this.state.data}
                     pagination={this.state.pagination}
-                    loading={this.state.loading}
+                    loading={loading}
                     onChange={this.handleTableChange}
                 />
             </div>

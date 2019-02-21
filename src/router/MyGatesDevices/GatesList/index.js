@@ -56,18 +56,22 @@ class GatesList extends PureComponent {
 
     state = {
         data: [],
+        loading: true,
         sn: this.props.match.params.sn
     }
     componentDidMount (){
       this.getData(this.state.sn);
     }
     UNSAFE_componentWillReceiveProps (nextProps){
-      const sn = nextProps.match.params.sn;
-      this.setState({
-          sn
-      }, ()=>{
-          this.getData(sn);
-      });
+      if (nextProps.location.pathname !== this.props.location.pathname){
+        const sn = nextProps.match.params.sn;
+        this.setState({
+            sn,
+            loading: true
+        }, ()=>{
+            this.getData(sn);
+        });
+      }
     }
     getData (sn){
       http.get('/api/method/iot_ui.iot_api.gate_info?sn=' + this.props.match.params.sn).then(res=>{
@@ -80,25 +84,23 @@ class GatesList extends PureComponent {
             item.ioc = '' + (item.inputs ? item.inputs : '0') + '/' + (item.outputs ? item.outputs : '0') + '/' + (item.commands ? item.commands : '0');
         })
         this.setState({
-            data
+            data,
+            loading: false
         })
     })
     }
     render () {
-        let { data } = this.state;
+        let { data, loading } = this.state;
         return (
             <div>
-                {
-                      data &&
-                      data.length > 0 &&
                       <Table columns={columns}
                           dataSource={
                               data
                           }
+                          loading={loading}
                           rowKey="sn"
                           expandedRowRender={ExpandedRowRender}
                       />
-                  }
             </div>
         );
     }

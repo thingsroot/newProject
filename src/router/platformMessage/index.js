@@ -204,10 +204,8 @@ class PlatformMessage extends PureComponent {
             selectValue: text
         })
     };
-    searchContent = (value)=>{
-        console.log(value);
-        let input = this.input.value;
-        console.log(input)
+    searchContent = (values)=>{
+        console.log(event.target.value, '===', values);
     };
 
     render () {
@@ -227,7 +225,9 @@ class PlatformMessage extends PureComponent {
                         <Input
                             style={{ width: '20%' }}
                             placeholder="请输入关键字"
-                            onChange={this.searchContent.bind(this, selectValue)}
+                            onChange={()=>{
+                                this.searchContent(selectValue)
+                            }}
                         />
                     </InputGroup>
                 </div>
