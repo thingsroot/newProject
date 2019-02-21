@@ -16,8 +16,8 @@ class LeftNav extends PureComponent {
                 href: '/AppsList'
             }, {
                 icon: 'table',
-                text: '网关列表',
-                href: '/LinkList'
+                text: '网关状态',
+                href: '/LinkStatus'
             }
         ],
         index: 0
@@ -29,7 +29,7 @@ class LeftNav extends PureComponent {
             this.setState({
                 index: 1
             });
-        } else if (pathname.indexOf('/LinkList') !== -1){
+        } else if (pathname.indexOf('/LinkStatus') !== -1){
             this.setState({
                 index: 2
             });

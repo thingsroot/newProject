@@ -56,15 +56,15 @@ class AppsList extends PureComponent {
     }
     
     componentDidMount () {
-        this.fetch();
+        this.fetch(this.props.match.params.sn);
       }
-      UNSAFE_componentWillReceiveProps (){
-        const pathname = window.location.pathname
-        if (pathname === this.state.url){
-          return false
-        } else {
-          this.fetch();
-        }
+      UNSAFE_componentWillReceiveProps (nextProps){
+        const sn = nextProps.match.params.sn;
+        this.setState({
+          sn
+        }, ()=>{
+          this.fetch(sn);
+        })
       }
       handleTableChange = (pagination, filters, sorter) => {
         const pager = { ...this.state.pagination };
@@ -81,10 +81,12 @@ class AppsList extends PureComponent {
         });
       }
     
-      fetch = () => {
-        console.log('1')
+      fetch = (sn) => {
         this.setState({ loading: true });
-        http.get('/api/method/iot_ui.iot_api.gate_applist?sn=' + this.props.match.params.sn).then((res) => {
+        http.get('/api/method/iot_ui.iot_api.gate_info?sn=' + this.props.match.params.sn).then(res=>{
+          this.props.store.appStore.setStatus(res.message)
+        })
+        http.get('/api/method/iot_ui.iot_api.gate_applist?sn=' + sn).then((res) => {
             let data = res.message;
             data.map((item)=>{
                 item.img = <span><Icon type="table" /></span>

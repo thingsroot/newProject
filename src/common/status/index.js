@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
-import { Icon, Button } from 'antd';
+import { Icon } from 'antd';
 import { Link } from 'react-router-dom';
 import './style.scss';
 @inject('store')
@@ -35,9 +35,9 @@ class Status extends Component {
                         />日志</Link>
                 </div>
                 <div>
-                    <Button href={`/MyGatesAppsInstall/${status.sn}`}>
+                    <Link to={`/MyGatesAppsInstall/${status.sn}`}>
                         安装新应用
-                    </Button>
+                    </Link>
                 </div>
             </div>
         );

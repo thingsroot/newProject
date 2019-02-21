@@ -6,18 +6,15 @@ class AppStore {
   @observable users = []  //模拟用户数据库
   @observable loginUser = {}  //当前登录用户信息
   @observable gateList = []
-  @observable status = {
-    status: '',
-    sn: '',
-    name: '',
-    desc: ''
-  }
+  @observable status = {}
+  @observable config ={}
   @action setGatelist (values) {
       this.gateList = [...values];
   }
   @action setStatus (values){
     console.log(values)
-      this.status = {...values}
+      this.status = {...values.basic}
+      this.config = {...values.config}
   }
   @action toggleLogin (flag, info = {}) {
     this.loginUser = info  //设置登录用户信息
