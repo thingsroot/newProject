@@ -1,10 +1,11 @@
 import React, { PureComponent } from 'react';
+// import { Table } from 'antd';
 
 class DevicemMessage extends PureComponent {
     render () {
         return (
-            <div>
-                DevicemMessage
+            <div className="devicemMessage">
+
             </div>
         );
     }
