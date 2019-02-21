@@ -7,7 +7,7 @@ const Option = Select.Option;
 
 const columns = [{
     title: '标题',
-    dataIndex: 'subject',
+    dataIndex: 'title',
     width: '25%',
     render: text => <a href="javascript: ;">{text}</a>
 }, {
@@ -58,13 +58,13 @@ const rowSelection = {
         name: record.name
     })
 };
-
-
 class PlatformMessage extends PureComponent {
     state = {
+        tableData: [],
         platformData: [],
         dataSource: [],
-        selectValue: 'subject'
+        selectValue: 'title',
+        text: ''
     };
     componentDidMount (){
         http.get('api/method/iot.user_api.device_activity').then(res=>{
@@ -184,7 +184,7 @@ class PlatformMessage extends PureComponent {
                     }  //output
                 }
                 data.push({
-                    subject: sub,
+                    title: sub,
                     device: v.device,
                     creation: v.creation.split('.')[0],
                     operation: v.operation,
@@ -194,9 +194,16 @@ class PlatformMessage extends PureComponent {
             });
             this.setState({
                 platformData: data,
-                dataSource: source
+                tableData: data
             })
         });
+    }
+    componentWillReceiveProps (newProps){
+        if (newProps.value !== this.state.inputValue) {
+            this.setState({
+                inputValue: newProps.value
+            });
+        }
     }
     getSelect = (text)=>{
         console.log(text);
@@ -204,12 +211,40 @@ class PlatformMessage extends PureComponent {
             selectValue: text
         })
     };
-    searchContent = (values)=>{
-        console.log(event.target.value, '===', values);
+    tick = (a)=>{
+        if (this.timer){
+            clearTimeout(this.timer)
+        }
+        this.timer = setTimeout(() => {
+            this.setState({
+                text: a
+            }, ()=>{
+                console.log(this.state.text)
+            })
+        }, 500);
+    }
+    search = (inpVal)=>{
+        let a = event.target.value;
+        this.tick(a)
+        console.log(inpVal)
+        // let newData = [];
+        // this.state.platformData.map((v)=>{
+        //     console.log(v[inpVal]);
+        //     if (v[inpVal].indexOf(text) !== -1) {
+        //         newData.push(v)
+        //     }
+        // });
+        // if (text) {
+        //     this.setState({
+        //         platformData: newData
+        //     });
+        // }
+        // console.log(newData);
+        // console.log(value);
+        // console.log(text)
     };
 
     render () {
-        let platformData = this.state.platformData;
         let selectValue = this.state.selectValue;
         return (
             <div className="platformMessage">
@@ -219,22 +254,24 @@ class PlatformMessage extends PureComponent {
                             onChange={this.getSelect}
                             style={{width: '100px'}}
                         >
-                            <Option value="subject">标题</Option>
+                            <Option value="title">标题</Option>
                             <Option value="device">序列号</Option>
                         </Select>
                         <Input
                             style={{ width: '20%' }}
                             placeholder="请输入关键字"
-                            onChange={()=>{
-                                this.searchContent(selectValue)
-                            }}
+                            onChange={
+                                ()=>{
+                                    this.search(selectValue)
+                                }
+                            }
                         />
                     </InputGroup>
                 </div>
                 <Table
                     rowSelection={rowSelection}
                     columns={columns}
-                    dataSource={platformData}
+                    dataSource={this.state.platformData}
                     onChange={onChange}
                     rowKey="name"
                 />
