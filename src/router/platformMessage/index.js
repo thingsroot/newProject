@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Table, Input, Select  } from 'antd'
+import { Table, Input, Select, Menu, Dropdown, Button, Icon } from 'antd'
 import './style.scss'
 import http from '../../utils/Server';
 const InputGroup = Input.Group;
@@ -58,16 +58,36 @@ const rowSelection = {
         name: record.name
     })
 };
+
+function handleMenuClick (e) {
+    console.log(e.key);
+    console.log(this.state.platformData);
+    // console.log(this.state.tableData)
+}
+const menu = (
+    <Menu onClick={handleMenuClick}>
+        <Menu.Item key="">全部</Menu.Item>
+        <Menu.Item key="Action">设备操作</Menu.Item>
+        <Menu.Item key="Status">设备状态</Menu.Item>
+    </Menu>
+);
+
+
 class PlatformMessage extends PureComponent {
     state = {
         tableData: [],
         platformData: [],
         dataSource: [],
         selectValue: 'title',
-        text: ''
+        text: '',
+        loading: false
     };
     componentDidMount (){
+        this.handleMenuClick = handleMenuClick.bind(this)
         http.get('api/method/iot.user_api.device_activity').then(res=>{
+            this.setState({
+                loading: true
+            });
             console.log(res.message);
             let data = [];
             let source = [];
@@ -194,17 +214,12 @@ class PlatformMessage extends PureComponent {
             });
             this.setState({
                 platformData: data,
-                tableData: data
+                tableData: data,
+                loading: false
             })
         });
     }
-    componentWillReceiveProps (newProps){
-        if (newProps.value !== this.state.inputValue) {
-            this.setState({
-                inputValue: newProps.value
-            });
-        }
-    }
+
     getSelect = (text)=>{
         console.log(text);
         this.setState({
@@ -249,6 +264,7 @@ class PlatformMessage extends PureComponent {
         return (
             <div className="platformMessage">
                 <div className="searchBox">
+
                     <InputGroup compact>
                         <Select defaultValue="标题"
                             onChange={this.getSelect}
@@ -267,7 +283,13 @@ class PlatformMessage extends PureComponent {
                             }
                         />
                     </InputGroup>
+                    <Dropdown overlay={menu}>
+                        <Button>
+                            消息类型 <Icon type="down" />
+                        </Button>
+                    </Dropdown>
                 </div>
+
                 <Table
                     rowSelection={rowSelection}
                     columns={columns}
