@@ -48,17 +48,6 @@ const columns = [{
 const onChange = (pagination, filters, sorter)=>{
     console.log('params', pagination, filters, sorter)
 };
-<<<<<<< HEAD
-const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-        console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-    },
-    getCheckboxProps: record => ({
-        disabled: record.name === 'Disabled User', // Column configuration not to be checked
-        name: record.name
-    })
-};
-
 function handleMenuClick (e) {
     console.log(e.key);
     console.log(this);
@@ -72,9 +61,6 @@ const menu = (
     </Menu>
 );
 
-
-=======
->>>>>>> 73ebb1187f8e2852f30f7a46db7434a8e616f98b
 class PlatformMessage extends PureComponent {
     state = {
         length: 100,
