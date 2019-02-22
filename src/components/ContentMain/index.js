@@ -10,8 +10,9 @@ const MyAccessKey = LoadableComponent(()=>import('../../router/MyAccessKey'));
 const MyVirtualGates = LoadableComponent(()=>import('../../router/MyVirtualGates'));
 const MyGatesDevices = LoadableComponent(()=>import('../../router/MyGatesDevices'));
 const MyGatesAppsInstall = LoadableComponent(()=>import('../../router/MyGatesAppsInstall'));
-const PlatformMessage = LoadableComponent(()=>import('../../router/platformMessage'))
-const DeviceMessage = LoadableComponent(()=>import('../../router/deviceMessage'))
+const PlatformMessage = LoadableComponent(()=>import('../../router/platformMessage'));
+const DeviceMessage = LoadableComponent(()=>import('../../router/deviceMessage'));
+const PlatformDetails = LoadableComponent(()=>import('../../router/platformDetails'));
 class ContentMain extends PureComponent {
     render (){
         return (
@@ -55,6 +56,10 @@ class ContentMain extends PureComponent {
                 <PrivateRoute
                     path="/DeviceMessage"
                     component={DeviceMessage}
+                />
+                <PrivateRoute
+                    path="/platformDetails/:name"
+                    component={PlatformDetails}
                 />
                 <Redirect
                     from="/"

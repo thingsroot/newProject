@@ -17,8 +17,8 @@ const columns = [{
 }, {
     title: '名称',
     dataIndex: 'name',
-    className: 'longWidth',
-    key: 'longWidth'
+    className: 'nameWidth',
+    key: 'name'
 }, {
     title: '位置',
     dataIndex: 'position',
@@ -216,7 +216,7 @@ class Home extends PureComponent {
         });
         //一周内故障最多的网关
         http.get('/api/method/iot_ui.iot_api.device_event_count_statistics').then(res=>{
-            // console.log(res.message)
+            console.log(res.message);
             let data = [];
             let t = getBeforeDate(0);
             let t1 = getBeforeDate(-1);
@@ -234,12 +234,13 @@ class Home extends PureComponent {
                     v.last_updated.indexOf(t4) !== -1 ||
                     v.last_updated.indexOf(t5) !== -1 ||
                     v.last_updated.indexOf(t6) !== -1 ){
-                    if (v.today !== '0'){
+                    if (v.total !== '0'){
                         data.push(v)
                     }
                 }
             });
             data = data.splice(0, 10);
+            console.log(data)
             this.setState({
                 weekData: data
             })
