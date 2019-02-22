@@ -9,11 +9,14 @@ function getDevicesList (status){
     http.get('/api/method/iot_ui.iot_api.devices_list?filter=' + status).then(res=>{
         res.message.map((v)=>{
             if (v.device_status === 'ONLINE'){
-                v.device_status = <span className="online"><b></b>&nbsp;&nbsp;在线</span>
+                v.disabled = false;
+                v.device_status = <span className="online"><b></b>&nbsp;&nbsp;在线</span>;
             } else if (v.device_status === 'OFFLINE') {
-                v.device_status = <span className="offline"><b></b>&nbsp;&nbsp;离线</span>
+                v.device_status = <span className="offline"><b></b>&nbsp;&nbsp;离线</span>;
+                v.disabled = true;
             } else {
-                v.device_status = <span className="notline"><b></b>&nbsp;&nbsp;未连接</span>
+                v.device_status = <span className="notline"><b></b>&nbsp;&nbsp;未连接</span>;
+                v.disabled = true;
             }
         })
         if (status === 'online'){
@@ -45,19 +48,17 @@ function callback (key){
     }
 }
   function confirm (record) {
-      console.log()
-  http.post('/api/method/iot_ui.iot_api.remove_gate', `{sn=${record.device_sn}}`).then(res=>{
-      console.log(res);
+  http.postToken('/api/method/iot_ui.iot_api.remove_gate', {
+      sn: [record.device_sn]
+  }).then(res=>{
+        if (res.message){
+            message.success('移除网关成功')
+        }
         this.getDevicesList(this.state.status)
   })
   this.getDevicesList(this.state.status)
-  message.success('Click on Yes');
 }
 
-function cancel (e) {
-  console.log(e);
-  message.error('Click on No');
-}
 @inject('store')
 class MyGates extends PureComponent {
     constructor (props){
@@ -105,12 +106,20 @@ class MyGates extends PureComponent {
                     props
                   return (
                       <span>
-                        <Link to={`/MyGatesDevices/${record.device_sn}`}>
-                          <Button key="1">设备</Button>
+                        <Link to={`/MyGatesDevices/${record.device_sn}`}
+                            disabled={record.disabled}
+                        >
+                            <Button key="1"
+                                disabled={record.disabled}
+                            >设备</Button>
                         </Link>
                         <Divider type="vertical" />
-                        <Link to={`/MyGatesDevices/${record.device_sn}/AppsList`}>
-                          <Button key="2">应用</Button>
+                        <Link to={`/MyGatesDevices/${record.device_sn}/AppsList`}
+                            disabled={record.disabled}
+                        >
+                            <Button key="2"
+                                disabled={record.disabled}
+                            >应用</Button>
                         </Link>
                         <Divider type="vertical" />
                         <Popconfirm
@@ -118,12 +127,13 @@ class MyGates extends PureComponent {
                             onConfirm={()=>{
                               this.confirm(record)
                             }}
-                            onCancel={cancel}
                             okText="确认"
                             cancelText="取消"
                         >
-                          <Button key="3">删除网关</Button>
-                          <Divider type="vertical" />
+                        <Button key="3"
+                            disabled={record.disabled}
+                        >删除网关</Button>
+                        <Divider type="vertical" />
                         </Popconfirm>
                       </span>
                     )

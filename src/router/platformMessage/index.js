@@ -61,7 +61,7 @@ const rowSelection = {
 
 function handleMenuClick (e) {
     console.log(e.key);
-    console.log(this.state.platformData);
+    console.log(this);
     // console.log(this.state.tableData)
 }
 const menu = (

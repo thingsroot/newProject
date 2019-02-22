@@ -15,6 +15,14 @@
         li{
             border-top: 1px solid #eee;
             text-indent: 12px;
+            position: relative;
+            .count{
+                position: absolute;
+                right:0;
+                top:0;
+                line-height: 20px;
+                
+            }
             &:hover{
                 background:#f9f9f9;
             }

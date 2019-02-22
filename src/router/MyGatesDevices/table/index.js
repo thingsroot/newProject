@@ -50,6 +50,7 @@ import http from '../../../utils/Server';
       const { sn } = this.props.match.params;
       http.get('/api/method/iot_ui.iot_api.gate_device_data_array?sn=' + sn + '&vsn=' + this.props.sn).then(res=>{
         let data = res.message;
+        console.log(data)
         data.map((item)=>{
           if (item.vt === null){
             item.vt = 'float';

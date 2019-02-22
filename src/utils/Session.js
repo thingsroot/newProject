@@ -72,3 +72,19 @@ export function isAdmin (){
     }
   })
 }
+export function deviceAppOption (appName, option, value, gateSn, type, sn){
+  const id = `${type}/${gateSn}/${appName}/autorun/${sn}`;
+  http.postToken('/api/method/iot.device_api.app_option', {
+      data: {
+        inst: appName,
+        option: option,
+        value: value
+      },
+      device: gateSn,
+      id: id
+  }).then(()=>{
+    http.postToken('/api/method/iot.device_api.get_action_result?id=' + id).then(res=>{
+      return res;
+    })
+  })
+}

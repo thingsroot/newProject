@@ -8,13 +8,19 @@ class AppStore {
   @observable gateList = []
   @observable status = {}
   @observable config ={}
+  @observable devs_len = 0;
+  @observable apps_len = 0;
   @action setGatelist (values) {
       this.gateList = [...values];
   }
   @action setStatus (values){
+    console.log(values)
+      this.devs_len = values.devs_len
+      this.apps_len = values.apps_len
       this.status = {...values.basic}
       this.config = {...values.config}
   }
+
   @action toggleLogin (flag, info = {}) {
     this.loginUser = info  //设置登录用户信息
 

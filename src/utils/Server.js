@@ -78,15 +78,16 @@ var post = function (url, data) {
 };
 var postToken = function (url, data) {
   return new Promise((resolve, reject) => {
+    const token = _getCookie('T&R_auth_token');
     // qs.stringify(data)
     axios(url, {
           method: 'post',
           data: data,
           headers: {
               Accept: 'application/json; charset=utf-8',
-              'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+              'Content-Type': 'application/json; charset=UTF-8',
               'dataType': 'json',
-              'X-Frappe-CSRF-Token': _getCookie('T&R_auth_token')
+              'X-Frappe-CSRF-Token': token
           }
       }).then(res=>{
           resolve(res.data)

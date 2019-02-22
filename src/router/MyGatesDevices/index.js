@@ -51,9 +51,9 @@ class MyGatesDevices extends PureComponent {
       const { gateList, status } = this.props.store.appStore;
         return (
             <div >
-                <Status />
+                <Status flag={this.visible}/>
                 <div className="mygatesdevices">
-                  <LeftNav />
+                  <LeftNav prop={this.props.match.params}/>
                   <Button type="primary"
                       onClick={this.showDrawer}
                       className="listbutton"
