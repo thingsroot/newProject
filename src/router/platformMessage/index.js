@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
-import { Table, Input, Select } from 'antd'
+import { Table, Input, Select, Button, message } from 'antd'
 import { Link } from 'react-router-dom'
-// import axios from 'axios';
 import './style.scss'
 import http from '../../utils/Server';
 const InputGroup = Input.Group;
@@ -14,7 +13,6 @@ const posed = {
     color: 'rgba(0, 0, 0, 0.65)',
     fontWeight: 'normal'
 };
-
 const columns = [{
     title: '标题',
     dataIndex: 'title',
@@ -46,46 +44,66 @@ const columns = [{
         <span style={record.disposed === 0 ? disposed : posed}>{text}</span>
     )
 }];
-
 //表格onChange
 const onChange = (pagination, filters, sorter)=>{
     console.log('params', pagination, filters, sorter)
 };
-const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-        console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-    },
-    getCheckboxProps: record => ({
-        disabled: record.name === 'Disabled User', // Column configuration not to be checked
-        name: record.name
-    })
-};
-
 class PlatformMessage extends PureComponent {
     state = {
         length: 100,
-        time: '2019-02-22 5:52:00',
+        time: '2019-02-22 15:52:00',
         tableData: [],
         platformData: [],
         dataSource: [],
         selectValue: 'title',
         text: '',
-        loading: false
+        loading: false,
+        selectRow: []
     };
     componentDidMount (){
         this.getMessageList(this.state.length, this.state.time);
     }
+    rowSelection = {
+        onChange: (selectedRowKeys, selectedRows) => {
+            console.log(selectedRows);
+            this.setState({
+                selectRow: selectedRows
+            })
+        },
+        getCheckboxProps: record => ({
+            disabled: record.name === 'Disabled User', // Column configuration not to be checked
+            name: record.name
+        })
+    };
+    //确认消息
+    confMessage = (arr)=>{
+        if (arr.length === 0) {
+            message.warning('请您先选择要确认的消息！');
+        } else {
+            let params = {
+                disposed: 1,
+                activities: arr
+            };
+            http.postToken('/api/method/iot.user_api.dispose_device_activities', params).then(res=>{
+                console.log(res);
+            });
+        }
+    };
+    //确认消息
+    confAllMessage = ()=>{
+        message.warning('请您先选择要确认的消息！');
+    };
     //获取消息列表
     getMessageList = (num, time)=>{
         this.setState({
             loading: true
         });
         console.log(time);
-        http.postToken('/api/method/iot.user_api.device_activity?limit=' + num).then(res=>{
+        http.postToken('/api/method/iot.user_api.device_activity?start=0&limit=' + num).then(res=>{
+            console.log(res.message)
             this.setState({
                 loading: true
             });
-            console.log(res.message);
             let data = [];
             let source = [];
             if (res.message) {
@@ -230,45 +248,38 @@ class PlatformMessage extends PureComponent {
         var s = '00';
         return Y + M + D + h + m + s;
     };
-
     //搜索框改变值
     getSelect = (text)=>{
-        console.log(text);
         this.setState({
             selectValue: text
         })
     };
-    tick = (a)=>{
+    tick = (text)=>{
         if (this.timer){
             clearTimeout(this.timer)
         }
         this.timer = setTimeout(() => {
             this.setState({
-                text: a
+                text: text
             }, ()=>{
                 console.log(this.state.text)
             })
-        }, 500);
-    }
+        }, 1000);
+    };
     search = (inpVal)=>{
-        let a = event.target.value;
-        this.tick(a)
-        console.log(inpVal)
-        // let newData = [];
-        // this.state.platformData.map((v)=>{
-        //     console.log(v[inpVal]);
-        //     if (v[inpVal].indexOf(text) !== -1) {
-        //         newData.push(v)
-        //     }
-        // });
-        // if (text) {
-        //     this.setState({
-        //         platformData: newData
-        //     });
-        // }
-        // console.log(newData);
-        // console.log(value);
-        // console.log(text)
+        let text = event.target.value;
+        this.tick(text);
+        let newData = [];
+        this.state.tableData.map((v)=>{
+            if (v[inpVal].indexOf(text) !== -1) {
+                newData.push(v)
+            }
+        });
+        if (text) {
+            this.setState({
+                platformData: newData
+            });
+        }
     };
     //最大记录数
     messageTotal = (value)=>{
@@ -281,7 +292,6 @@ class PlatformMessage extends PureComponent {
     };
     //筛选消息类型
     messageChange = (value)=>{
-        console.log(`${value}`);
         let data = [];
         if (`${value}`) {
             this.state.tableData.map((v)=>{
@@ -293,20 +303,16 @@ class PlatformMessage extends PureComponent {
                 platformData: data
             })
         }
-
-        // console.log(this.state.tableData)
     };
     //时间
     messageTime = (value)=>{
-        console.log(`${value}`);
-        let hours = Date.parse(new Date()) - `${value}` * 60 * 60 * 1000;
-        let time = this.timestampToTime(hours);
-        console.log(time)
-        // this.getMessageList()
+        console.log(value)
+        // let hours = Date.parse(new Date()) - `${value}` * 60 * 60 * 1000;
+        // let time = this.timestampToTime(hours);
     };
-
     render () {
         let selectValue = this.state.selectValue;
+        let selectRow = this.state.selectRow;
         return (
             <div className="platformMessage">
                 <div className="searchBox">
@@ -335,6 +341,12 @@ class PlatformMessage extends PureComponent {
                         <Option value="24">24小时</Option>
                         <Option value="72">72小时</Option>
                     </Select>
+                    <Button onClick={()=>{
+                        this.confMessage(selectRow)
+                    }}>确认消息</Button>
+                    <Button onClick={()=>{
+                        this.confAllMessage()
+                    }}>确认所有消息</Button>
                     <div style={{
                         width: '340px',
                         position: 'absolute',
@@ -360,12 +372,9 @@ class PlatformMessage extends PureComponent {
                             />
                         </InputGroup>
                     </div>
-
-
                 </div>
-
                 <Table
-                    rowSelection={rowSelection}
+                    rowSelection={this.rowSelection}
                     columns={columns}
                     dataSource={this.state.platformData}
                     loading={this.state.loading}
