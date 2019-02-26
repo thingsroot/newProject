@@ -16,7 +16,7 @@ const posed = {
 const columns = [{
     title: '标题',
     dataIndex: 'title',
-    width: '25%',
+    width: '30%',
     render: (text, record) => (
         <Link to={`/platformDetails/${record.name}`}
             style={record.disposed === 0 ? disposed : posed}
@@ -40,7 +40,7 @@ const columns = [{
 }, {
     title: '消息类型',
     dataIndex: 'operation',
-    width: '15%',
+    width: '10%',
     render: (text, record) => (
         <span style={record.disposed === 0 ? disposed : posed}>{text}</span>
     )
@@ -120,6 +120,7 @@ class PlatformMessage extends PureComponent {
                         }
                         //设备操作
                     } else if (obj.hasOwnProperty('action')){
+                        console.log(1)
                         if (obj.channel === 'app') {
                             if (obj.action === 'option') {   //开机自启动
                                 if (obj.data.value === 1) {
@@ -216,7 +217,7 @@ class PlatformMessage extends PureComponent {
                             }
                         } else if (obj.channel === 'command') {
                             sub = '网关应用设备执行' + obj.data.cmd + '指令'
-                        } else if (obj.channel === 'putput') {
+                        } else if (obj.channel === 'output') {
                             sub = '网关设备应用' + obj.data.output + '数据输出'
                         }  //output
                     }
