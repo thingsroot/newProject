@@ -19,7 +19,8 @@ const columns = [{
     width: '25%',
     render: (text, record) => (
         <Link to={`/platformDetails/${record.name}`}
-            style={record.disposed === 0 ? disposed : posed}>{text}
+            style={record.disposed === 0 ? disposed : posed}
+        >{text}
         </Link>
     )
 }, {
@@ -48,33 +49,6 @@ const columns = [{
 const onChange = (pagination, filters, sorter)=>{
     console.log('params', pagination, filters, sorter)
 };
-<<<<<<< HEAD
-const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-        console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-    },
-    getCheckboxProps: record => ({
-        disabled: record.name === 'Disabled User', // Column configuration not to be checked
-        name: record.name
-    })
-};
-
-function handleMenuClick (e) {
-    console.log(e.key);
-    console.log(this);
-    // console.log(this.state.tableData)
-}
-const menu = (
-    <Menu onClick={handleMenuClick}>
-        <Menu.Item key="">全部</Menu.Item>
-        <Menu.Item key="Action">设备操作</Menu.Item>
-        <Menu.Item key="Status">设备状态</Menu.Item>
-    </Menu>
-);
-
-
-=======
->>>>>>> 73ebb1187f8e2852f30f7a46db7434a8e616f98b
 class PlatformMessage extends PureComponent {
     state = {
         length: 100,
@@ -370,16 +344,19 @@ class PlatformMessage extends PureComponent {
                     </Select>
                     <Button onClick={()=>{
                         this.confMessage(selectRow)
-                    }}>确认消息</Button>
+                    }}
+                    >确认消息</Button>
                     <Button onClick={()=>{
                         this.confAllMessage()
-                    }}>确认所有消息</Button>
+                    }}
+                    >确认所有消息</Button>
                     <div style={{
                         width: '340px',
                         position: 'absolute',
                         right: '0',
                         top: '0'
-                    }}>
+                    }}
+                    >
                         <InputGroup compact>
                             <Select defaultValue="标题"
                                 onChange={this.getSelect}

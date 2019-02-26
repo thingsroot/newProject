@@ -14,7 +14,6 @@ class AppStore {
       this.gateList = [...values];
   }
   @action setStatus (values){
-    console.log(values)
       this.devs_len = values.devs_len
       this.apps_len = values.apps_len
       this.status = {...values.basic}

@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
 import { Icon } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import './style.scss';
+@withRouter
 @inject('store')
 @observer
 class Status extends Component {
     render () {
+        const { url } = this.props.match;
         const { status } = this.props.store.appStore;
         return (
             <div className="statusWrap">
@@ -34,7 +36,7 @@ class Status extends Component {
                         />日志</Link>
                 </div>
                 <div>
-                    <Link to={`/MyGatesAppsInstall/${status.sn}`}>
+                    <Link to={`${url}/MyGatesAppsInstall`}>
                         安装新应用
                     </Link>
                 </div>
