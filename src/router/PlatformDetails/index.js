@@ -136,7 +136,9 @@ class PlatformDetails extends PureComponent {
     render () {
         return (
             <div className="platformDetails">
-                <table border="1" collspacing="0">
+                <table border="1"
+                    collspacing="0"
+                >
                     <tr>
                         <td>标题</td>
                         <td>{this.state.title}</td>

@@ -20,7 +20,8 @@ const columns = [{
     width: '25%',
     render: (text, record) => (
         <Link to={`/platformDetails/${record.name}`}
-            style={record.disposed === 0 ? disposed : posed}>{text}
+            style={record.disposed === 0 ? disposed : posed}
+        >{text}
         </Link>
     )
 }, {
@@ -246,16 +247,19 @@ class DevicemMessage extends PureComponent {
                     </Select>
                     <Button onClick={()=>{
                         this.confMessage(selectRow)
-                    }}>确认消息</Button>
+                    }}
+                    >确认消息</Button>
                     <Button onClick={()=>{
                         this.confAllMessage()
-                    }}>确认所有消息</Button>
+                    }}
+                    >确认所有消息</Button>
                     <div style={{
                         width: '340px',
                         position: 'absolute',
                         right: '0',
                         top: '0'
-                    }}>
+                    }}
+                    >
                         <InputGroup compact>
                             <Select defaultValue="标题"
                                 onChange={this.getSelect}

@@ -1,12 +1,12 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { Icon } from 'antd';
 import { Link, withRouter } from 'react-router-dom';
 import { inject, observer } from 'mobx-react';
 import http from '../../utils/Server';
 import './style.scss';
-@inject('store') @observer
 @withRouter
-class LeftNav extends PureComponent {
+@inject('store') @observer
+class LeftNav extends Component {
     state = {
         list: [
             {

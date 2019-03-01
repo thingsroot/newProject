@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { withRouter, Switch, Redirect, Link } from 'react-router-dom';
 import Status from '../../common/status';
 import LeftNav from '../../components/LeftNav';
@@ -11,11 +11,11 @@ import { Drawer, Button, Icon } from 'antd';
 const GatesList = LoadableComponent(()=>import('./GatesList'));
 const AppsList = LoadableComponent(()=>import('./AppsList'));
 const LinkStatus = LoadableComponent(()=>import('./LinkStatus'));
+const MyGatesAppsInstall = LoadableComponent(()=>import('./MyGatesAppsInstall'));
+@withRouter
 @inject('store')
 @observer
-@withRouter
-
-class MyGatesDevices extends PureComponent {
+class MyGatesDevices extends Component {
   state = {
     visible: false,
     url: window.location.pathname
@@ -99,6 +99,9 @@ class MyGatesDevices extends PureComponent {
                       />
                       <PrivateRoute path={`${path}/LinkStatus`}
                           component={LinkStatus}
+                      />
+                      <PrivateRoute path={`${path}/MyGatesAppsInstall`}
+                          component={MyGatesAppsInstall}
                       />
                       <Redirect from={path}
                           to={`${path}/GatesList`}
