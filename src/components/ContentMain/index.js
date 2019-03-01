@@ -3,6 +3,7 @@ import { Switch, Redirect, withRouter} from 'react-router-dom';
 import LoadableComponent from '../../utils/LoadableComponent';
 import PrivateRoute from '../PrivateRoute';
 const MyAppDetails = LoadableComponent(()=>import('../../router/myAppDetails'));
+const AppSettings = LoadableComponent(()=>import('../../router/AppSettings'));
 const Home = LoadableComponent(()=>import('../../router/Home'));
 const MyGates = LoadableComponent(()=>import('../../router/MyGates'));
 const MyApps = LoadableComponent(()=>import('../../router/MyApps'));
@@ -35,6 +36,10 @@ class ContentMain extends PureComponent {
                 <PrivateRoute
                     path="/myAppDetails/:name"
                     component={MyAppDetails}
+                />
+                <PrivateRoute
+                    path="/appSettings/:name"
+                    component={AppSettings}
                 />
                 <PrivateRoute
                     path="/UserSettings"
