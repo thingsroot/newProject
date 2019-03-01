@@ -1,8 +1,7 @@
 import React, { PureComponent } from 'react';
-
 import EditorCode from './editorCode';
 import EditorDesc from './editorDesc';
-
+import http from '../../utils/Server';
 import {
     Form, Row, Col, Input, Button, Select, Tabs
 } from 'antd';
@@ -18,10 +17,44 @@ function handleChange (value) {
 class AppSettings extends PureComponent {
     state = {
         expand: false,
-        a: 1
+        a: 1,
+        category: [],
+        deviceSupplier: [],
+        protocol: []
     };
     componentDidMount (){
-
+        //获取应用分类
+        http.get('/api/method/app_center.api.app_categories').then(res=>{
+            let data = [];
+            res.message.map((v)=>{
+                data.push(v.name)
+            });
+            this.setState({
+                category: data
+            })
+        });
+        //获取设备提供商
+        http.get('/api/method/app_center.api.app_suppliers').then(res=>{
+            let data = [];
+            res.message.map((v)=>{
+                data.push(v.name)
+            });
+            this.setState({
+                deviceSupplier: data
+            })
+        });
+        //获取通讯协议
+        http.get('/api/method/app_center.api.app_protocols').then(res=>{
+            console.log(res.message);
+            let data = [];
+            res.message.map((v)=>{
+                data.push(v.name)
+            });
+            console.log(data);
+            this.setState({
+                protocol: data
+            })
+        });
     }
     componentWillUnmount (){
         clearInterval(window.set)
@@ -29,26 +62,32 @@ class AppSettings extends PureComponent {
     getFields () {
         let list = [{
             name: '应用名称',
-            type: 'input'
+            type: 'input',
+            index: 'app_name'
         }, {
             name: '授权类型',
             type: 'select',
+            index: '0',
             children: ['免费']
         }, {
             name: '应用厂商',
             type: 'select',
-            children: ['罗克菲尔', '西门子', '中达电通', '旋思科技', '冬笋科技', 'Other', '华为', '三菱电机']
+            index: 'device_supplier',
+            children: this.state.deviceSupplier
         }, {
             name: '设备型号',
-            type: 'input'
+            type: 'input',
+            index: 'device_serial'
         }, {
             name: '协议',
             type: 'select',
-            children: ['SIEMENS-S7COMM', 'Redis', 'Mitsubishi_FX', 'OMRON-FINS', 'Private', 'UNKNOWN', 'DLT645-2007', 'DLT645-1997']
+            index: 'protocol',
+            children: this.state.protocol
         }, {
             name: '类别',
             type: 'select',
-            children: ['General', 'Meter', 'UPS', 'PLC', 'Other', 'SYS']
+            index: 'category',
+            children: this.state.category
         }];
         window.list = list;
         const count = this.state.expand ? 10 : 6;
@@ -62,10 +101,10 @@ class AppSettings extends PureComponent {
                         style={{ display: key < count ? 'block' : 'none' }}
                     >
                         <Form.Item label={`${item.name}`}>
-                            {getFieldDecorator(`field-${key}`, {
+                            {getFieldDecorator(`${item.index}`, {
                                 rules: [{
                                     required: true,
-                                    message: 'Input something!'
+                                    message: `请输入${item.name}`
                                 }]
                             })(
                                 <Input style={{width: '180px'}} placeholder={`请输入${item.name}`} />
@@ -80,14 +119,20 @@ class AppSettings extends PureComponent {
                         style={{ display: key < count ? 'block' : 'none' }}
                     >
                         <Form.Item label={`${item.name}`}>
-                            {(
+                            {getFieldDecorator(`${item.index}`, {
+                                rules: [{
+                                    required: true,
+                                    message: `请选择${item.name}`
+                                }]
+                            })(
                                 <Select labelInValue
-                                    defaultValue={{ key: item.children[0] }}
+                                    defaultValue={item.children[0]}
                                     style={{ width: 240 }}
                                     onChange={handleChange}
                                     key={key}
                                 >
                                     {
+
                                         item.children && item.children.map((val, ind)=>{
                                             return (
                                                 <Option
