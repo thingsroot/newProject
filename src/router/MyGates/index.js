@@ -159,7 +159,7 @@ class MyGates extends PureComponent {
                                                                     this.state.columns
                                                                 }
                                                             dataSource={
-                                                                data
+                                                                data && data.length > 0 && data
                                                             }
                                                             bordered
                                                             loading={this.state.loading}
@@ -177,7 +177,7 @@ class MyGates extends PureComponent {
                                                         key="2"
                                                     ><Table columns={this.state.columns}
                                                         dataSource={
-                                                            data
+                                                            data && data.length > 0 && data
                                                         }
                                                         rowKey="device_sn"
                                                         rowClassName={(record, index) => {
@@ -195,7 +195,7 @@ class MyGates extends PureComponent {
                                                         key="3"
                                                     ><Table columns={this.state.columns}
                                                         dataSource={
-                                                            data
+                                                            data && data.length > 0 && data
                                                         }
                                                         rowClassName={(record, index) => {
                                                             let className = 'light-row';

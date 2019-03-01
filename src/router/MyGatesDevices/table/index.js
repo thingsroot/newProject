@@ -2,7 +2,7 @@ import React, {PureComponent} from 'react';
 import {
     Table
   } from 'antd';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import http from '../../../utils/Server';
 
   // const menu = (
@@ -27,17 +27,20 @@ import http from '../../../utils/Server';
       title: '操作',
       dataIndex: 'operation',
       key: 'operation',
-      render: () => (
-        <span className="table-operation">
-          <a href="javascript:;">历史浏览</a>
-          {/* <a href="javascript:;">Stop</a>
-          <Dropdown overlay={menu}>
-            <a href="javascript:;">
-              More <Icon type="down" />
-            </a>
-          </Dropdown> */}
-        </span>
-      )
+      render: (record, props) => {
+        return (
+          <span className="table-operation">
+            {/* <a href="javascript:;">历史浏览</a> */}
+            <Link to={`/BrowsingHistory/${props.sn}/${props.vsn}`}> 历史浏览 </Link>
+            {/* <a href="javascript:;">Stop</a>
+            <Dropdown overlay={menu}>
+              <a href="javascript:;">
+                More <Icon type="down" />
+              </a>
+            </Dropdown> */}
+          </span>
+        )
+      }
     }
   ];
 
@@ -50,8 +53,10 @@ import http from '../../../utils/Server';
       const { sn } = this.props.match.params;
       http.get('/api/method/iot_ui.iot_api.gate_device_data_array?sn=' + sn + '&vsn=' + this.props.sn).then(res=>{
         let data = res.message;
-        console.log(data)
-        data.map((item)=>{
+        data.map((item, ind)=>{
+          item.sn = sn;
+          item.vsn = this.props.sn;
+          item.key = ind;
           if (item.vt === null){
             item.vt = 'float';
           }
@@ -66,6 +71,7 @@ import http from '../../../utils/Server';
       return (
         <Table
             size="small"
+            rowKey="key"
             loading={this.state.flag}
             columns={columns}
             dataSource={this.state.data}

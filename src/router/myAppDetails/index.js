@@ -42,7 +42,9 @@ class MyAppDetails extends PureComponent {
                 </div>
                 <div className="details">
                     <div className="appImg">
-                        <img src="" alt=""/>
+                        <img src=""
+                            alt=""
+                        />
                     </div>
                     <div className="appInfo">
                         <p className="appName">appname</p>
@@ -72,10 +74,18 @@ class MyAppDetails extends PureComponent {
                         </Button>
                     </div>
                 </div>
-                <Tabs onChange={this.callback} type="card">
-                    <TabPane tab={<Link to={`${url}/desc`}>描述</Link>} key="1"> </TabPane>
-                    <TabPane tab={<Link to={`${url}/versionList`}>版本列表</Link>} key="2"> </TabPane>
-                    <TabPane tab={<Link to={`${url}/templateList`}>模板列表</Link>} key="3"> </TabPane>
+                <Tabs onChange={this.callback}
+                    type="card"
+                >
+                    <TabPane tab={<Link to={`${url}/desc`}>描述</Link>}
+                        key="1"
+                    > </TabPane>
+                    <TabPane tab={<Link to={`${url}/versionList`}>版本列表</Link>}
+                        key="2"
+                    > </TabPane>
+                    <TabPane tab={<Link to={`${url}/templateList`}>模板列表</Link>}
+                        key="3"
+                    > </TabPane>
                 </Tabs>
                 <div className="content">
                     <Switch>

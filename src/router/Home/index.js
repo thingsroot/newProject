@@ -291,7 +291,9 @@ class Home extends PureComponent {
                             style={{width: '92%',
                             height: 400}}
                         >  </div>
-                        <div className="tips" style={this.state.timeData.length > 0 ? hide : show}>
+                        <div className="tips"
+                            style={this.state.timeData.length > 0 ? hide : show}
+                        >
                             暂时没有数据
                         </div>
                     </div>
@@ -341,7 +343,9 @@ class Home extends PureComponent {
                         <div id="gatesMain"
                             style={{width: '92%', height: 400}}
                         >  </div>
-                        <div className="tips" style={this.state.pieData === '{}' ? hide : show}>
+                        <div className="tips"
+                            style={this.state.pieData === '{}' ? hide : show}
+                        >
                             暂时没有数据
                         </div>
                     </div>
@@ -352,7 +356,9 @@ class Home extends PureComponent {
                         <div id="faultTypeMain"
                             style={{width: '92%', height: 400}}
                         >  </div>
-                        <div className="tips" style={this.state.barData.length > 0 ? hide : show}>
+                        <div className="tips"
+                            style={this.state.barData.length > 0 ? hide : show}
+                        >
                             暂时没有数据
                         </div>
                     </div>

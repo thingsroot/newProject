@@ -14,6 +14,8 @@ const MyGatesAppsInstall = LoadableComponent(()=>import('../../router/MyGatesApp
 const PlatformMessage = LoadableComponent(()=>import('../../router/platformMessage'));
 const DeviceMessage = LoadableComponent(()=>import('../../router/deviceMessage'));
 const PlatformDetails = LoadableComponent(()=>import('../../router/platformDetails'));
+const BrowsingHistory = LoadableComponent(()=>import('../../router/BrowsingHistory'));
+const MyGatesDevicesOutputs = LoadableComponent(()=>import('../../router/MyGatesDevicesOutputs'));
 class ContentMain extends PureComponent {
     render (){
         return (
@@ -65,6 +67,14 @@ class ContentMain extends PureComponent {
                 <PrivateRoute
                     path="/platformDetails/:name"
                     component={PlatformDetails}
+                />
+                <PrivateRoute
+                    path="/BrowsingHistory/:sn/:vsn"
+                    component={BrowsingHistory}
+                />
+                <PrivateRoute
+                    path="/MyGatesDevicesOutputs/:sn/:vsn"
+                    component={MyGatesDevicesOutputs}
                 />
                 <Redirect
                     from="/"
