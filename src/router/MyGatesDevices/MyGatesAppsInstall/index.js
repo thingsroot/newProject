@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Select, Input, Rate, Icon, Button } from 'antd';
+import { Select, Input, Rate, Icon, Button, Tabs } from 'antd';
 import http from '../../../utils/Server';
 import marked from 'marked';
 import './style.scss';
+const TabPane = Tabs.TabPane;
 const Search = Input.Search;
 const Option = Select.Option;
-
+function callback (key) {
+    console.log(key);
+  }
 @withRouter
 class MyGatesAppsInstall extends Component {
     state = {
@@ -149,6 +152,14 @@ class MyGatesAppsInstall extends Component {
             this.setFilter()
         })
     }
+    searchApp (value){
+        let { filterdata } = this.state;
+        let newdata = [];
+        newdata = filterdata.filter((item)=>item.app_name.indexOf(value) !== -1)
+        this.setState({
+            data: newdata
+        })
+    }
     render () {
         const { vendor, agreement, type, data, flag, item, detail} = this.state;
         return (<div>
@@ -198,8 +209,33 @@ class MyGatesAppsInstall extends Component {
                             markdown
                         </div>
                     </div>
-                    <div className="installapp">
-                        安装应用到网关
+                    <div className={detail ? 'installapp hide' : 'installapp show'}>
+                    <Tabs onChange={callback}
+                        type="card"
+                    >
+                        <TabPane tab="配置面板"
+                            key="1"
+                        >
+                            <div style={{display: 'flex'}}>
+                                <p>实例名*：</p>
+                                <Input placeholder="应用实例名"
+                                    style={{width: 300}}
+                                />
+                            </div>
+                        <Button type="primary">安装</Button>
+                        </TabPane>
+                        <TabPane tab="JSON源码"
+                            key="2"
+                        >
+                        <div style={{display: 'flex'}}>
+                                <p>实例名*：</p>
+                                <Input placeholder="应用实例名"
+                                    style={{width: 300}}
+                                />
+                        </div>
+                        <Button type="primary">安装</Button>
+                        </TabPane>
+                    </Tabs>,
                     </div>
                 </div>
                 <div className={flag ? 'show' : 'hide'}>
@@ -289,7 +325,9 @@ class MyGatesAppsInstall extends Component {
                             <Search
                                 key="33"
                                 placeholder="搜索应用名"
-                                onSearch={value => console.log(value)}
+                                onSearch={(value)=>{
+                                    this.searchApp(value)
+                                }}
                                 style={{ width: 200 }}
                             />
                         </div>
@@ -304,7 +342,7 @@ class MyGatesAppsInstall extends Component {
                                         <img src={val.icon_image}
                                             alt="logo"
                                             onClick={()=>{
-                                                this.setState({flag: false, item: val})
+                                                this.setState({flag: false, item: val, detail: true})
                                             }}
                                         />
                                         <div className="apptitle">
@@ -314,7 +352,14 @@ class MyGatesAppsInstall extends Component {
                                                     defaultValue={val.star}
                                                     size="small"
                                                 />
-                                                <span><Icon type="cloud-download" /></span>
+                                                <span onClick={()=>{
+                                                    this.setState({
+                                                        flag: false,
+                                                        detail: false,
+                                                        item: val
+                                                    })
+                                                }}
+                                                ><Icon type="cloud-download" /></span>
                                             </div>
                                         </div>
                                     </div>

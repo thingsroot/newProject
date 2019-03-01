@@ -77,7 +77,10 @@ class MyApps extends PureComponent {
                             return <li key={key}>
                                 <div className="appImg">
                                     <Link to={`/myAppDetails/${v.name}`}>
-                                        <img src={v.icon_image} alt=""/>
+                                        <img
+                                            src={v.icon_image}
+                                            alt=""
+                                        />
                                     </Link>
                                 </div>
                                 <div className="appInfo">
