@@ -1,64 +1,86 @@
 import React, { PureComponent } from 'react';
-import { Link, Switch, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Button, Icon, Tabs } from 'antd';
 import './style.scss';
-import marked from 'marked';
-import PrivateRoute from '../../components/PrivateRoute';
-import VersionList from './versionList'
-import TemplateList from './templateList'
+import http from '../../utils/Server';
+import VersionList from './versionList';
+import TemplateList from './templateList';
+import AppDesc from './appDesc';
+import {_getCookie} from '../../utils/Session';
 
 const TabPane = Tabs.TabPane;
-
+const block = {
+    display: 'inline-block',
+    margin: '0 10px'
+};
+const none = {
+    display: 'none'
+};
 class MyAppDetails extends PureComponent {
+    constructor (){
+        super();
+        this.state = {
+            user: '',
+            message: '',
+            time: ''
+        }
+    }
     componentDidMount (){
-        let rendererMD = new marked.Renderer();
-        marked.setOptions({
-            renderer: rendererMD,
-            gfm: true,
-            tables: true,
-            breaks: false,
-            pedantic: false,
-            sanitize: false,
-            smartLists: true,
-            smartypants: false
-        });//基本设置
-        console.log(marked('I am using __markdown__.'));
-        // document.getElementById('editor').innerHTML =
-        //     marked('# Marked in browser\n\nRendered by **marked**.');
+        let usr = _getCookie('usr');
+        this.setState({
+            user: usr
+        });
+        let app = this.props.match.params.name;
+        console.log(app);
+        http.postToken('/api/method/app_center.api.app_detail?app=' + app).then(res=>{
+            console.log(res.message);
+            this.setState({
+                message: res.message,
+                time: res.message.creation.substr(0, 11)
+            })
+        })
     }
     callback = (key)=>{
         console.log(key);
-
     };
-
     render () {
         const { url } = this.props.match;
-        // let name = this.props.match.params.name;
+        let message = this.state.message;
+        let time = this.state.time;
+        let user = this.state.user;
         return (
             <div className="myAppDetails">
                 <div className="header">
-                    <span>gps</span>
-                    <span>创建时间:2019-02-11</span>
+                    <span><Icon type="appstore" />{message.app_name}</span>
+                    <span><Icon type="rollback" /></span>
                 </div>
                 <div className="details">
                     <div className="appImg">
-                        <img src="" alt=""/>
+                        <img
+                            src={message.icon_image}
+                            alt="图片"
+                        />
                     </div>
                     <div className="appInfo">
-                        <p className="appName">appname</p>
+                        <p className="appName">{message.app_name}</p>
                         <p className="info">
-                            <span>应用分类：SYS</span>
-                            <span>通讯协议：private</span><br/>
-                            <span>适配型号：Q102</span>
-                            <span>设备厂商：东笋科技</span>
+                            <span>    发布者：{message.owner}</span>
+                            <span>创建时间：{time}</span><br/>
+                            <span>应用分类：{message.category}</span>
+                            <span>通讯协议：{message.protocol}</span><br/>
+                            <span>适配型号：{message.device_serial}</span>
+                            <span>设备厂商：{message.device_supplier}</span>
+
                         </p>
                     </div>
                     <div className="btnGroup">
-                        <Button style={{margin: '0 10px'}}>
-                            <Icon type="setting" />
-                            设置
+                        <Button style={message.owner === user ? block : none}>
+                            <Link to={`/appSettings/${message.name}`}>
+                                <Icon type="setting" />
+                                设置
+                            </Link>
                         </Button>
-                        <Button style={{margin: '0 10px'}}>
+                        <Button style={message.owner === user ? block : none}>
                             <Icon type="edit" />
                             代码编辑
                         </Button>
@@ -66,31 +88,57 @@ class MyAppDetails extends PureComponent {
                             <Icon type="download" />
                             下载
                         </Button>
-                        <Button style={{margin: '0 10px'}}>
-                            <Icon type="share-alt" />
-                            分支
+                        <Button style={message.fork_from ? block : none}>
+                            <Link to={`/myAppDetails/${message.fork_from}/appDesc`}>
+                                <Icon type="share-alt" />
+                                分支
+                            </Link>
+
                         </Button>
                     </div>
                 </div>
-                <Tabs onChange={this.callback} type="card">
-                    <TabPane tab={<Link to={`${url}/desc`}>描述</Link>} key="1"> </TabPane>
-                    <TabPane tab={<Link to={`${url}/versionList`}>版本列表</Link>} key="2"> </TabPane>
-                    <TabPane tab={<Link to={`${url}/templateList`}>模板列表</Link>} key="3"> </TabPane>
+                <Tabs
+                    onChange={this.callback}
+                    type="card"
+                >
+                    <TabPane
+                        tab={
+                            <Link
+                                style={{textDecoration: 'none'}}
+                                to={`${url}/appDesc`}
+                            >
+                                描述
+                            </Link>}
+                        key="1"
+                    >
+                        <AppDesc name={this.props.match.params.name}/>
+                    </TabPane>
+                    <TabPane
+                        tab={
+                            <Link
+                                style={{textDecoration: 'none'}}
+                                to={`${url}/versionList`}
+                            >
+                                版本列表
+                            </Link>}
+                        key="2"
+                    >
+                        <VersionList name={this.props.match.params.name} user={message.owner === user ? true : false}/>
+                    </TabPane>
+                    <TabPane
+                        tab={
+                            <Link
+                                style={{textDecoration: 'none'}}
+                                to={`${url}/templateList`}
+                            >
+                                模板列表
+                            </Link>}
+                        key="3"
+                    >
+                        <TemplateList name={this.props.match.params.name} />
+                    </TabPane>
                 </Tabs>
-                <div className="content">
-                    <Switch>
-                        <PrivateRoute path={`${url}/versionList`}
-                            component={VersionList}
-                        />
-                        <PrivateRoute path={`${url}/templateList`}
-                            component={TemplateList}
-                        />
-                        <Redirect from={url}
-                            to={`${url}/versionList`}
-                        />
-                    </Switch>
-                </div>
-                {/*<div id="editor"> </div>*/}
+
             </div>
         );
     }

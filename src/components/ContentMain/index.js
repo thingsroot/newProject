@@ -3,6 +3,7 @@ import { Switch, Redirect, withRouter} from 'react-router-dom';
 import LoadableComponent from '../../utils/LoadableComponent';
 import PrivateRoute from '../PrivateRoute';
 const MyAppDetails = LoadableComponent(()=>import('../../router/myAppDetails'));
+const AppSettings = LoadableComponent(()=>import('../../router/AppSettings'));
 const Home = LoadableComponent(()=>import('../../router/Home'));
 const MyGates = LoadableComponent(()=>import('../../router/MyGates'));
 const MyApps = LoadableComponent(()=>import('../../router/MyApps'));
@@ -11,9 +12,9 @@ const MyAccessKey = LoadableComponent(()=>import('../../router/MyAccessKey'));
 const MyVirtualGates = LoadableComponent(()=>import('../../router/MyVirtualGates'));
 const MyGatesDevices = LoadableComponent(()=>import('../../router/MyGatesDevices'));
 const MyGatesAppsInstall = LoadableComponent(()=>import('../../router/MyGatesAppsInstall'));
-const PlatformMessage = LoadableComponent(()=>import('../../router/platformMessage'));
-const DeviceMessage = LoadableComponent(()=>import('../../router/deviceMessage'));
-const PlatformDetails = LoadableComponent(()=>import('../../router/platformDetails'));
+const PlatformMessage = LoadableComponent(()=>import('../../router/PlatformMessage'));
+const DeviceMessage = LoadableComponent(()=>import('../../router/DeviceMessage'));
+const PlatformDetails = LoadableComponent(()=>import('../../router/PlatformDetails'));
 class ContentMain extends PureComponent {
     render (){
         return (
@@ -33,6 +34,10 @@ class ContentMain extends PureComponent {
                 <PrivateRoute
                     path="/myAppDetails/:name"
                     component={MyAppDetails}
+                />
+                <PrivateRoute
+                    path="/appSettings/:name"
+                    component={AppSettings}
                 />
                 <PrivateRoute
                     path="/UserSettings"
