@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react';
 import http from '../../../utils/Server';
 import { Table } from 'antd';
-import ExpandedRowRender from '../table';
 import { inject, observer} from 'mobx-react';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
+import Collapses from './Collapses';
 import PropTypes from 'prop-types';
 const columns = [{
     title: '名称',
@@ -31,19 +31,20 @@ const columns = [{
     key: 'app_inst',
     dataIndex: 'app_inst',
     sorter: true
-    }, {
-    title: 'Action',
-    key: 'action',
-    render: (record) => {
-      return (<span>
-        <Link
-            disabled={record.set_data ? false : true}
-            to={`/MyGatesDevicesOutputs/${record.Gate_Sn}/${record.sn}`}
-            key="1"
-        >数据下置</Link>
-      </span>)
     }
-  }
+  //   , {
+  //   title: 'Action',
+  //   key: 'action',
+  //   render: (record) => {
+  //     return (<span>
+  //       <Link
+  //           disabled={record.set_data ? false : true}
+  //           to={`/MyGatesDevicesOutputs/${record.Gate_Sn}/${record.sn}`}
+  //           key="1"
+  //       >数据下置</Link>
+  //     </span>)
+  //   }
+  // }
   ];
   @inject('store')
   @observer
@@ -106,7 +107,8 @@ class GatesList extends PureComponent {
                           }
                           loading={loading}
                           rowKey="sn"
-                          expandedRowRender={ExpandedRowRender}
+                          expandedRowRender={Collapses}
+                          expandRowByClick
                       />
             </div>
         );
