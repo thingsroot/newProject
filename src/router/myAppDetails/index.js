@@ -11,7 +11,8 @@ import {_getCookie} from '../../utils/Session';
 const TabPane = Tabs.TabPane;
 const block = {
     display: 'inline-block',
-    margin: '0 10px'
+    margin: '0 10px',
+    textDecoration: 'none'
 };
 const none = {
     display: 'none'
@@ -22,7 +23,8 @@ class MyAppDetails extends PureComponent {
         this.state = {
             user: '',
             message: '',
-            time: ''
+            time: '',
+            app: ''
         }
     }
     componentDidMount (){
@@ -31,7 +33,9 @@ class MyAppDetails extends PureComponent {
             user: usr
         });
         let app = this.props.match.params.name;
-        console.log(app);
+        this.getDetails(app);
+    }
+    getDetails = (app)=>{
         http.postToken('/api/method/app_center.api.app_detail?app=' + app).then(res=>{
             console.log(res.message);
             this.setState({
@@ -39,7 +43,7 @@ class MyAppDetails extends PureComponent {
                 time: res.message.creation.substr(0, 11)
             })
         })
-    }
+    };
     callback = (key)=>{
         console.log(key);
     };
@@ -81,19 +85,23 @@ class MyAppDetails extends PureComponent {
                             </Link>
                         </Button>
                         <Button style={message.owner === user ? block : none}>
-                            <Icon type="edit" />
-                            代码编辑
+                            <Link to={`/AppEditorCode/${message.name}/${message.app_name}`}>
+                                <Icon type="edit" />
+                                代码编辑
+                            </Link>
+
                         </Button>
                         <Button style={{margin: '0 10px'}}>
                             <Icon type="download" />
                             下载
                         </Button>
                         <Button style={message.fork_from ? block : none}>
-                            <Link to={`/myAppDetails/${message.fork_from}/appDesc`}>
+                            <a onClick={()=>{
+                                this.getDetails(message.fork_from);
+                            }}>
                                 <Icon type="share-alt" />
                                 分支
-                            </Link>
-
+                            </a>
                         </Button>
                     </div>
                 </div>

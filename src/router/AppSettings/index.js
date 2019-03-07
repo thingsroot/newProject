@@ -1,11 +1,9 @@
 import React, { PureComponent } from 'react';
-
+import {Form, Row, Col, Input, Button, Select, Tabs } from 'antd';
 import EditorCode from './editorCode';
 import EditorDesc from './editorDesc';
+import UploadImg from '../uploadImg';
 
-import {
-    Form, Row, Col, Input, Button, Select, Tabs
-} from 'antd';
 const Option = Select.Option;
 const TabPane = Tabs.TabPane;
 
@@ -17,8 +15,7 @@ function handleChange (value) {
 }
 class AppSettings extends PureComponent {
     state = {
-        expand: false,
-        a: 1
+        expand: false
     };
     componentDidMount (){
 
@@ -126,9 +123,6 @@ class AppSettings extends PureComponent {
         const { expand } = this.state;
         this.setState({ expand: !expand });
     };
-    setNum (_this){
-        _this.setState({a: 333})
-    }
     render () {
         return (
             <div>
@@ -137,7 +131,9 @@ class AppSettings extends PureComponent {
                     onSubmit={this.handleSearch}
                 >
                     <Row gutter={24}>
-                        <Col span={3}> </Col>
+                        <Col span={3}>
+                            <UploadImg />
+                        </Col>
                         <Col span={21}>{this.getFields()}</Col>
                     </Row>
                     <Row>
