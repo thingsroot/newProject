@@ -17,7 +17,7 @@ const hide = {
 };
 
 const TabPane = Tabs.TabPane;
-const columns = [{
+const todayColumns = [{
     title: '序号',
     key: 'index',
     render: (text, record, index)=>`${index + 1}`
@@ -42,7 +42,31 @@ const columns = [{
     className: 'thWidth',
     key: 'today'
 }];
-
+const weekColumns = [{
+    title: '序号',
+    key: 'index',
+    render: (text, record, index)=>`${index + 1}`
+}, {
+    title: '名称',
+    dataIndex: 'name',
+    className: 'nameWidth',
+    key: 'name'
+}, {
+    title: '位置',
+    dataIndex: 'position',
+    className: 'thWidth',
+    key: 'position'
+}, {
+    title: '最后上线时间',
+    dataIndex: 'last_updated',
+    className: 'longWidth',
+    key: 'last_updated'
+}, {
+    title: '次数',
+    dataIndex: 'total',
+    className: 'thWidth',
+    key: 'today'
+}];
 class Home extends PureComponent {
     state = {
         todayData: [],
@@ -257,13 +281,14 @@ class Home extends PureComponent {
                         v.last_updated.indexOf(t4) !== -1 ||
                         v.last_updated.indexOf(t5) !== -1 ||
                         v.last_updated.indexOf(t6) !== -1 ){
-                        if (v.total !== '0'){
+                        if (v.total !== 0 && v.total !== '0'){
                             data.push(v)
                         }
                     }
                 });
-                data = data.splice(0, 10);
-                console.log(data);
+                console.log(data)
+                // data = data.splice(0, 10);
+                // console.log(data);
                 this.setState({
                     weekData: data
                 })
@@ -310,7 +335,7 @@ class Home extends PureComponent {
                                 >
                                     <Table
                                         rowKey="sn"
-                                        columns={columns}
+                                        columns={todayColumns}
                                         dataSource={todayData}
                                         size="small"
                                         style={{width: '100%'}}
@@ -324,7 +349,7 @@ class Home extends PureComponent {
                                 >
                                     <Table
                                         rowKey="sn"
-                                        columns={columns}
+                                        columns={weekColumns}
                                         dataSource={weekData}
                                         size="small"
                                         style={{width: '100%'}}
@@ -344,7 +369,7 @@ class Home extends PureComponent {
                             style={{width: '92%', height: 400}}
                         >  </div>
                         <div className="tips"
-                            style={this.state.pieData === '{}' ? hide : show}
+                            style={JSON.stringify(this.state.pieData) !== '{}' ? hide : show}
                         >
                             暂时没有数据
                         </div>

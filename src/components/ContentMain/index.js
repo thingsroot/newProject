@@ -12,11 +12,12 @@ const MyAccessKey = LoadableComponent(()=>import('../../router/MyAccessKey'));
 const MyVirtualGates = LoadableComponent(()=>import('../../router/MyVirtualGates'));
 const MyGatesDevices = LoadableComponent(()=>import('../../router/MyGatesDevices'));
 const MyGatesAppsInstall = LoadableComponent(()=>import('../../router/MyGatesAppsInstall'));
-const PlatformMessage = LoadableComponent(()=>import('../../router/platformMessage'));
-const DeviceMessage = LoadableComponent(()=>import('../../router/deviceMessage'));
-const PlatformDetails = LoadableComponent(()=>import('../../router/platformDetails'));
+const PlatformMessage = LoadableComponent(()=>import('../../router/PlatformMessage'));
+const DeviceMessage = LoadableComponent(()=>import('../../router/DeviceMessage'));
+const PlatformDetails = LoadableComponent(()=>import('../../router/PlatformDetails'));
 const BrowsingHistory = LoadableComponent(()=>import('../../router/BrowsingHistory'));
 const MyGatesDevicesOutputs = LoadableComponent(()=>import('../../router/MyGatesDevicesOutputs'));
+const AppEditorCode = LoadableComponent(()=>import('../../router/AppEditorCode'));
 class ContentMain extends PureComponent {
     render (){
         return (
@@ -40,6 +41,10 @@ class ContentMain extends PureComponent {
                 <PrivateRoute
                     path="/appSettings/:name"
                     component={AppSettings}
+                />
+                <PrivateRoute
+                    path="/AppEditorCode/:app/:name"
+                    component={AppEditorCode}
                 />
                 <PrivateRoute
                     path="/UserSettings"

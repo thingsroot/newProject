@@ -42,7 +42,6 @@ class VersionList extends PureComponent {
             if (err) {
                 return;
             }
-
             console.log('Received values of form: ', values);
             form.resetFields();
             console.log(form);
@@ -73,8 +72,7 @@ class VersionList extends PureComponent {
                 </div>
                 <ul>
                     {
-                        data
-                            ? data.map((v, key)=>{
+                        data && data.length > 0 && data.map((v, key)=>{
                                 console.log(data);
                                 return <li key={key}>
                                     <div><p>版本号：<span className="fontColor">{v.version}</span>
@@ -90,7 +88,7 @@ class VersionList extends PureComponent {
                                     <div><p>更新日志：<span className="fontColor">{v.comment}</span></p></div>
                                 </li>
                             })
-                            : ''
+
                     }
                 </ul>
                 <p style={data.length > 0 ? none : block}>请先上传版本！</p>

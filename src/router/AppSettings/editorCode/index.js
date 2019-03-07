@@ -2,38 +2,31 @@ import React, { PureComponent } from 'react';
 import { split as SplitEditor} from 'react-ace';
 import 'brace/mode/java';
 import 'brace/theme/github';
-
+const style = {
+    flexGrow: 1,
+    display: 'inline-block',
+    paddingBottom: '10px'
+}
 class EditorCode extends PureComponent {
     state = {
-        data: ['qwer', {
-            'serial': {
-                'parity': 'NONE',
-                'baudrate': 9600,
-                'stop_bits': 1,
-                'flow_control': 'OFF',
-                'data_bits': 8,
-                'port': '/dev/ttymcx0'
-            },
-            'protocol': 'rtu',
-            'socket': {
-                'host': '192.168.1.132',
-                'port': 502,
-                'nodelay': true
-            },
-            'Link_type': 'serial'
-        }]
+        data: '{name: "alice"}'
     };
     render () {
         return (
             <div className="editorCode" style={{width: '100%'}}>
-                <div style={{padding: '20px 0'}}>
+                <div style={{paddingBottom: '20px'}}>
+                    <p style={{display: 'flex'}}>
+                        <span style={style}>配置面板描述(JSON):</span>
+                        <span style={style}>应用初始值(JSON):</span>
+                    </p>
                     <SplitEditor
                         style={{width: '100%'}}
                         mode="json"
                         theme="github"
                         splits={2}
+                        fontSize={18}
                         orientation="beside"
-                        value={['hi', 'hello']}
+                        value={['', this.state.data]}
                         name="UNIQUE_ID_OF_DIV"
                         editorProps={{$blockScrolling: true}}
                     />

@@ -62,6 +62,7 @@ class MyApps extends PureComponent {
         }
     };
     render () {
+        const appList = this.state.appList;
         return (
             <div className="myApps">
                 <div className="searchApp">
@@ -73,7 +74,7 @@ class MyApps extends PureComponent {
                 </div>
                 <ul>
                     {
-                        this.state.appList.map((v, key)=>{
+                        appList && appList.length > 0 && appList.map((v, key)=>{
                             return <li key={key}>
                                 <div className="appImg">
                                     <Link to={`/myAppDetails/${v.name}`}>
