@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Tree } from 'antd';
 import { observer, inject } from 'mobx-react';
@@ -31,9 +31,9 @@ function format (list) {
     return data;
 }
 @withRouter
-@observer
 @inject('store')
-class MyTree extends PureComponent {
+@observer
+class MyTree extends Component {
 
     constructor (props) {
         super(props);
@@ -81,8 +81,9 @@ class MyTree extends PureComponent {
     };
     onSelect = (selectedKeys, info) => {
         info;
-        this.setState({ selectedKeys });
-        this.props.store.codeStore.setFileName(this.state.selectedKeys);
+        this.setState({ selectedKeys }, ()=>{
+            this.props.store.codeStore.setFileName(this.state.selectedKeys);
+        });
     };
 
     renderTreeNodes = data => data.map((item, key) => {

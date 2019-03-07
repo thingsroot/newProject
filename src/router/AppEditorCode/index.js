@@ -1,11 +1,14 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { Icon } from 'antd';
+import { withRouter } from 'react-router-dom';
+import { inject, observer} from 'mobx-react';
 import MyTree from './MyTree/';
 import MyCode from './MyCode';
 import './style.scss';
 import http from '../../utils/Server';
-
-class AppEditorCode extends PureComponent {
+@withRouter
+@inject('store') @observer
+class AppEditorCode extends Component {
     constructor (props){
         super(props);
         this.state = {
@@ -120,7 +123,9 @@ class AppEditorCode extends PureComponent {
                     <div className="code">
                         <MyCode
                             fontSize={fontSize}
+                            fileName={this.props.store.codeStore.fileName}
                         />
+                        {console.log(this.props.store.codeStore)}
                     </div>
                 </div>
             </div>

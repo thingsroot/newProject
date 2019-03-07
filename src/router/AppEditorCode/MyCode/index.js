@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { observer, inject } from 'mobx-react';
 import AceEditor from 'react-ace';
@@ -9,7 +9,7 @@ import 'brace/theme/github';
 @inject('store')
 @observer
 
-class MyCode extends PureComponent {
+class MyCode extends Component {
     constructor (props){
         super(props);
         this.state = {
@@ -22,13 +22,21 @@ class MyCode extends PureComponent {
     componentDidMount () {
         this.getContent();
     }
-    componentWillReact () {
-        console.log(this.props)
+    UNSAFE_componentWillReceiveProps (nextProps){
+        if (this.props.fileName !== nextProps.fileName){
+            // 往这写~~！！！！！！！！！
+            //
+            //
+            //
+            //
+            //
+            //
+            //
+        }
     }
     getContent = ()=>{
         http.get('/api/method/app_center.editor.editor?app=' + this.props.match.params.app + '&operation=get_content&id=' + this.props.store.codeStore.fileName)
             .then(res=>{
-                console.log('==============');
                 console.log(res);
                 this.setState({
                     editorContent: res.content,
