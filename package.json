@@ -53,6 +53,7 @@
     "postcss-safe-parser": "4.0.1",
     "react": "^16.8.1",
     "react-ace": "^6.4.0",
+    "react-ace-editor": "0.0.3",
     "react-app-polyfill": "^0.2.1",
     "react-app-rewired": "^2.1.0",
     "react-cookie": "^3.0.8",

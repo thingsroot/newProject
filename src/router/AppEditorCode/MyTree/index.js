@@ -46,24 +46,25 @@ class MyTree extends Component {
         }
     }
     componentDidMount () {
-        const _this = this;
-        let app = this.props.match.params.app;
-        // http.get('/api/method/app_center.editor.editor?app=' + app + '&operation=get_node&id=%23')
-        //     .then(res=>{
-        //         console.log(res)
-        //     });
-        http.get('/api/method/app_center.editor.editor?app=' + app + '&operation=get_node&id=' + '#')
+        this.getTree();
+    }
+    UNSAFE_componentWillReceiveProps (nextProps){
+        if (this.props.isChange !== nextProps.isChange){
+            this.getTree();
+        }
+    }
+    getTree = ()=>{
+        http.get('/api/method/app_center.editor.editor?app=' + this.props.match.params.app + '&operation=get_node&id=' + '#')
             .then(res=>{
-                console.log(res);
                 let resData = res;
                 resData.map((v)=>{
                     if (v.children) {
-                        http.get('/api/method/app_center.editor.editor?app=' + app + '&operation=get_node&id=' + v.id)
+                        http.get('/api/method/app_center.editor.editor?app=' + this.props.match.params.app + '&operation=get_node&id=' + v.id)
                             .then(res=>{
+                                console.log(res)
                                 v['childrenData'] = res;
                                 let data = format(resData);
-                                console.log(data);
-                                _this.setState({
+                                this.setState({
                                     treed: data
                                 });
                             });
@@ -71,9 +72,7 @@ class MyTree extends Component {
                 });
             });
     }
-
     onExpand = (expandedKeys) => {
-        console.log('onExpand', expandedKeys);
         this.setState({
             expandedKeys,
             autoExpandParent: false
@@ -90,12 +89,21 @@ class MyTree extends Component {
         key;
         if (item.children) {
             return (
-                <TreeNode title={item.title} key={item.key} type={item.type} isLeaf={item.isLeaf}>
+                <TreeNode
+                    title={item.title}
+                    key={item.key}
+                    type={item.type}
+                    isLeaf={item.isLeaf}
+                >
                     {this.renderTreeNodes(item.children)}
                 </TreeNode>
             );
         }
-        return <TreeNode {...item} isLeaf={item.isLeaf} key={item.key} onClick={this.changeName}/>;
+        return <TreeNode
+            {...item}
+            isLeaf={item.isLeaf}
+            key={item.key}
+        />;
     });
 
     render () {

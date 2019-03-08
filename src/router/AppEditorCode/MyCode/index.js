@@ -16,46 +16,42 @@ class MyCode extends Component {
             editorContent: '',
             mode: '',
             app: '',
-            fileName: ''
+            fileName: '',
+            newContent: ''
         }
     }
     componentDidMount () {
         this.getContent();
     }
     UNSAFE_componentWillReceiveProps (nextProps){
-        if (this.props.fileName !== nextProps.fileName){
-            // 往这写~~！！！！！！！！！
-            //
-            //
-            //
-            //
-            //
-            //
-            //
+        if (this.props.fileName !== nextProps.fileName || this.props.isChange !== nextProps.isChange){
+            console.log(123);
+            this.getContent();
         }
     }
+    //获取文件内容
     getContent = ()=>{
         http.get('/api/method/app_center.editor.editor?app=' + this.props.match.params.app + '&operation=get_content&id=' + this.props.store.codeStore.fileName)
             .then(res=>{
-                console.log(res);
-                this.setState({
-                    editorContent: res.content,
-                    mode: res.type
-                })
+                this.props.store.codeStore.setEditorContent(res.content);
+                this.props.store.codeStore.setNewEditorContent(res.content);
             })
     };
-    onChange = (newValue, editor)=>{
-        console.log(this);
-        console.log(newValue);
-        console.log(editor);
-        this.setState({
-            editorCode: this
-        })
+    setContent = (newValue)=>{
+        this.props.store.codeStore.setNewEditorContent(newValue);
+        console.log(this.props.store.codeStore.editorContent);
+        console.log(this.props.store.codeStore.newEditorContent);
     };
+    onChange = (newValue, e)=>{
+        console.log(newValue, e);
+        // const editor = this.ace.editor; // The editor object is from Ace's API
+        // console.log(editor.getValue()); // Outputs the value of the editor
+        this.setContent(newValue)
+    };
+
+
     render () {
         const { fontSize } = this.props;
-        console.log('----------------------')
-
         return (
             <div className="myCode">
                 <AceEditor
@@ -64,7 +60,7 @@ class MyCode extends Component {
                     theme="github"
                     fontSize={fontSize}
                     onChange={this.onChange.bind(this)}
-                    value={this.state.editorContent}
+                    value={this.props.store.codeStore.editorContent}
                     name="UNIQUE_ID_OF_DIV"
                     editorProps={{$blockScrolling: true}}
                 />

@@ -13,7 +13,10 @@ class EditorCode extends PureComponent {
     };
     render () {
         return (
-            <div className="editorCode" style={{width: '100%'}}>
+            <div
+                className="editorCode"
+                style={{width: '100%'}}
+            >
                 <div style={{paddingBottom: '20px'}}>
                     <p style={{display: 'flex'}}>
                         <span style={style}>配置面板描述(JSON):</span>
