@@ -1,21 +1,30 @@
 import React, { Component } from 'react';
-import { Icon } from 'antd';
+import { Icon, Modal, Select, message, Input } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { inject, observer} from 'mobx-react';
 import MyTree from './MyTree/';
 import MyCode from './MyCode';
 import './style.scss';
 import http from '../../utils/Server';
+const Option = Select.Option;
+const { TextArea } = Input;
+
 @withRouter
-@inject('store') @observer
+@inject('store')
+@observer
 class AppEditorCode extends Component {
     constructor (props){
         super(props);
         this.state = {
+            app: '',
             fontSize: 16,
             appName: '',
             version: '',
-            fileName: ''
+            visible: false,
+            newVersion: 0,
+            isShow: false,
+            optionData: [],
+            comment: ''
         }
     }
     componentDidMount () {
@@ -29,19 +38,21 @@ class AppEditorCode extends Component {
         http.get('/api/method/app_center.editor.editor_worksapce_version?app=' + app)
             .then(res=>{
                 let worksapceVersion = res.message;
-                console.log(worksapceVersion);
+                // console.log(worksapceVersion);
                 if (worksapceVersion && worksapceVersion !== 'undefined') {
                     http.get('/api/method/app_center.api.get_latest_version?app=' + app + '&beta=' + 1)
                         .then(data=>{
                             let lastVersion = data.message;
-                            console.log(lastVersion);
+                            // console.log(lastVersion);
                             if (worksapceVersion !== lastVersion) {
                                 //提示当前工作区是会基于worksapceVersion，当前的最新版本为latest_version（弹框）
+                                this.info('版本提示', '当前工作区是会基于版本    ' + worksapceVersion + '，当前的最新版本为    ' + lastVersion + '.');
                                 this.setState({
                                     version: worksapceVersion
                                 })
                             } else if (worksapceVersion === lastVersion ) {
                                 //提示当前工作区是基于最新版本（弹框）
+                                this.info('版本提示', '当前工作区是基于最新版本' + lastVersion + '.');
                                 this.setState({
                                     version: lastVersion
                                 })
@@ -51,10 +62,10 @@ class AppEditorCode extends Component {
                 } else {
                     http.get('/api/method/app_center.api.get_latest_version?app=' + app + '&beta=' + 1)
                         .then(data=>{
-                            console.log(data.message);
                             if (data.message === 'undefined') {
                                 //工作区为空，不显示title（title还没写）
                                 //暂时还没有版本，请先上传（全局提示）
+                                this.info('版本提示', '暂时还没有版本，请先上传!');
                                 this.setState({
                                     version: ''
                                 })
@@ -62,14 +73,18 @@ class AppEditorCode extends Component {
                                 //初始化工作区域到最新版本
                                 http.get('/api/method/app_center.editor.editor_init?app=' + app + '&version=' + data.message)
                                     .then(res=>{
-                                        console.log(res);
                                         let initVersion = res.message;
-                                        console.log(initVersion);
+                                        // console.log(initVersion);
                                         this.setState({
                                             version: initVersion
                                         });
                                         //提示：当前工作区是基于版本initVersion,
                                         // 请将设备中的应用升级到版本initVersion，或者将工作区重置到之前版本。
+                                        this.info('版本提示',
+                                            '当前工作区是基于版本' + initVersion,
+                                            '请将设备中的应用升级到版本' + initVersion,
+                                            '或者将工作区重置到之前版本.'
+                                        );
                                         window.location.reload();
                                     })
                             }
@@ -77,38 +92,169 @@ class AppEditorCode extends Component {
                         });
                     //http
                 }
+            });
+        //应用版本列表
+        http.get('/api/method/app_center.api.get_versions?app=' + app + '&beta=1')
+            .then(res=>{
+                let data = [];
+                res.message.map((v)=>{
+                    data.push(v.version)
+                });
+                data.sort(function (a, b) {
+                    return b - a;
+                });
+                let newVersion = data[0] + 1;
+                this.setState({
+                    optionData: data,
+                    newVersion: newVersion,
+                    comment: 'v' + newVersion
+                })
+
             })
-
     }
-
+    //提示弹框
+    info = (title, content)=>{
+        Modal.info({
+            title: title,
+            content: (
+                <div>
+                    <p>{content}</p>
+                </div>
+            ),
+            onOk () {}
+        });
+    }
+    //+
     zoomIn = ()=>{
         let size = this.state.fontSize - 2;
         this.setState({
             fontSize: size
         })
     };
+    //-
     zoomOut = ()=>{
         let size = this.state.fontSize + 2;
         this.setState({
             fontSize: size
         })
-        console.log(this.state.fileName)
     };
+    //重置版本
+    showModal = () => {
+        this.setState({
+            visible: true
+        });
+    };
+    hideModal = () => {
+        this.setState({
+            visible: false
+        });
+    };
+    getVersion = (value)=>{
+        this.setState({
+            version: value
+        });
+    };
+    resetVersion = ()=>{
+        this.setState({
+            visible: false
+        });
+        let url = '/api/method/app_center.editor.editor_revert';
+        http.postToken(url + '?app=' + this.state.app + '&operation=set_content&version=' + this.state.version)
+            .then(res=>{
+                this.props.store.codeStore.change();
+                message.success(res.message);
+            })
+    };//重置版本结束
+
+    //保存文件
+    saveFile = ()=>{
+        if (this.props.store.codeStore.editorContent === this.props.store.codeStore.newEditorContent) {
+            message.warning('文件未改动！')
+        } else {
+            let url = '/api/method/app_center.editor.editor';
+            http.postToken(url + '?app=' + this.state.app +
+                '&operation=set_content&id=' + this.props.store.codeStore.fileName +
+                '&text=' + this.props.store.codeStore.newEditorContent)
+                .then(res=>{
+                    console.log(res);
+                    message.success('文件保存成功！')
+                })
+        }
+
+    };//保存文件结束
+
+    //发布新版本
+    show = () => {
+        this.setState({
+            isShow: true
+        });
+    };
+    hide = () => {
+        this.setState({
+            isShow: false
+        });
+    };
+    versionChange = (e)=>{
+        const { value } = e.target;
+        this.setState({
+            newVersion: value
+        })
+    };
+    commentChange = (e)=>{
+        const { value } = e.target;
+        this.setState({
+            comment: value
+        })
+    };
+    newVersion = ()=>{
+        http.postToken('/api/method/app_center.editor.editor_release?app=' + this.state.app +
+            '&operation=set_content&version=' + this.state.newVersion +
+            '&comment=' + this.state.comment)
+            .then(res=>{
+                message.success(res.message);
+            });
+        setTimeout(()=>{
+            this.setState({
+                isShow: false
+            });
+            this.props.store.codeStore.change();
+        }, 1000)
+    };
+
 
     render () {
         const {
             fontSize,
-            appName
+            appName,
+            optionData
         } = this.state;
         return (
             <div className="appEditorCode">
                 <div className="iconGroup">
-                    <p>
+                    <p style={{width: '220px'}}>
                         <Icon type="zoom-in"/>
                     </p>
                     <p>
-                        <Icon type="zoom-in" onClick={this.zoomOut} />
-                        <Icon type="zoom-out" onClick={this.zoomIn}/>
+                        <Icon
+                            type="rollback"
+                            onClick={this.showModal}
+                        />
+                        <Icon
+                            type="zoom-in"
+                            onClick={this.zoomOut}
+                        />
+                        <Icon
+                            type="zoom-out"
+                            onClick={this.zoomIn}
+                        />
+                        <Icon
+                            type="save"
+                            onClick={this.saveFile}
+                        />
+                        <Icon
+                            type="upload"
+                            onClick={this.show}
+                        />
                         {/*<Icon type="undo" onClick={this.keyPress}/>*/}
                         {/*<Icon type="redo" onClick={this.keyPress} />*/}
                     </p>
@@ -118,16 +264,73 @@ class AppEditorCode extends Component {
                         <MyTree
                             appName={appName}
                             getFileName={this.getFileName}
+                            isChange={this.props.store.codeStore.isChange}
                         />
                     </div>
                     <div className="code">
                         <MyCode
                             fontSize={fontSize}
                             fileName={this.props.store.codeStore.fileName}
+                            isChange={this.props.store.codeStore.isChange}
                         />
-                        {console.log(this.props.store.codeStore)}
                     </div>
                 </div>
+                <Modal
+                    title="重置编辑器工作区内容版本到"
+                    visible={this.state.visible}
+                    onOk={this.resetVersion}
+                    onCancel={this.hideModal}
+                    okText="确认"
+                    cancelText="取消"
+                >
+                    <span style={{padding: '0 20px'}}>版本</span>
+                    <Select
+                        defaultValue="请选择..."
+                        style={{ width: 350 }}
+                    >
+                        {
+                            optionData && optionData.length > 0 && optionData.map((v)=>{
+                                return <Option
+                                    key={v}
+                                    onClick={()=>{
+                                        this.getVersion(v)
+                                    }}
+                                >
+                                    {v}
+                                </Option>
+                            })
+                        }
+                    </Select>
+                </Modal>
+                <Modal
+                    title="发布新版本"
+                    visible={this.state.isShow}
+                    onOk={this.newVersion}
+                    onCancel={this.hide}
+                    okText="确认"
+                    cancelText="取消"
+                >
+                    <p style={{display: 'flex'}}>
+                        <span style={{padding: '5px 20px'}}>填写版本</span>
+                        <Input
+                            type="text"
+                            defaultValue={this.state.newVersion}
+                            style={{width: '320px'}}
+                            onChange={this.versionChange}
+                        />
+                    </p>
+                    <br/>
+
+                    <p style={{display: 'flex'}}>
+                        <span style={{padding: '0 20px'}}>更新日志</span>
+                        <TextArea
+                            row={8}
+                            style={{width: '320px'}}
+                            defaultValue={this.state.comment}
+                            onChange={this.commentChange}
+                        />
+                    </p>
+                </Modal>
             </div>
         );
     }
