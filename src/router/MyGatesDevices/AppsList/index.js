@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Table, Icon, Switch } from 'antd';
+import { Table, Icon, Switch, Button } from 'antd';
 import http from '../../../utils/Server';
 import { deviceAppOption } from '../../../utils/Session';
 import { inject } from 'mobx-react';
@@ -12,8 +12,15 @@ class AppsList extends PureComponent {
           url: window.location.pathname,
           columns: [{
             title: '',
-            dataIndex: 'img',
-            key: 'img'
+            dataIndex: 'cloud.icon_image',
+            key: 'img',
+            render: (record)=>{
+              return (
+              <img src={record}
+                  style={{width: 50, height: 50}}
+              />
+              )
+            }
           }, {
             title: '实例名',
             dataIndex: 'info.inst',
@@ -59,7 +66,31 @@ class AppsList extends PureComponent {
             }
           }, {
             title: '操作',
-            dataIndex: ''
+            dataIndex: '',
+            render: (record)=>{
+              return (
+                <div>
+                  <Button size="small">应用升级</Button>
+                  <Button size="small"
+                      onClick={
+                          ()=>{
+                            const id = `app_uninstall/${record.info.sn}/${record.info.inst}/${new Date() * 1}`
+                            const data = {
+                              data: {
+                                inst: record.info.inst
+                              },
+                              device: record.sn,
+                              id: id
+                            }
+                            http.postToken('/api/method/iot.device_api.app_uninstall', data).then(res=>{
+                              console.log(res)
+                            })
+                          }
+                      }
+                  >应用卸载</Button>
+                </div>
+              )
+            }
           }]
       }
       componentDidMount () {
@@ -141,6 +172,7 @@ class AppsList extends PureComponent {
                     pagination={this.state.pagination}
                     loading={loading}
                     onChange={this.handleTableChange}
+                    bordered
                 />
             </div>
         );

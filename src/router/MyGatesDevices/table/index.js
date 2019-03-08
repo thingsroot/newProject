@@ -1,4 +1,9 @@
 import React, {PureComponent} from 'react';
+import echarts from 'echarts/lib/echarts';
+import  'echarts/lib/chart/line';
+import  'echarts/lib/chart/pie';
+import 'echarts/lib/component/legend';
+import 'echarts/lib/component/tooltip';
 import {
     Table,
     Button,
@@ -11,7 +16,8 @@ import './style.scss';
     state = {
       data: [],
       flag: true,
-      visible: false
+      visible: false,
+      barData: []
     }
     componentDidMount (){
       const { sn } = this.props.match.params;
@@ -64,6 +70,102 @@ import './style.scss';
         visible: true,
         record: props
       });
+      http.get(`/api/method/iot_ui.iot_api.gate_device_data_array?sn=${this.props.match.params.sn}&vsn=${props.vsn}&_=${new Date() * 1}`).then(res=>{
+        let data = res.message;
+        let newdata = [];
+        let alldata = [];
+        data && data.map((item, index)=>{
+          alldata[index] = [];
+          http.get(`/api/method/iot_ui.iot_api.taghisdata?sn=${this.props.match.params.sn}&vsn=${props.vsn}&tag=${item.name}&vt=${item.vt || 'float'}&time_condition=time > now() - 30m&value_method=raw&group_time_span=10m&_=${new Date() * 1}`).then(message=>{
+            newdata = message.message;
+            newdata.map((item)=>{
+              alldata[index].push(item.value)
+            })
+          })
+        })
+        setTimeout(()=>{
+          let myFaultTypeChart = echarts.init(document.getElementById('faultTypeMain'));
+          myFaultTypeChart.setOption({
+              tooltip: {
+                  trigger: 'axis',
+                  axisPointer: {
+                      type: 'shadow'
+                  }
+              },
+              // legend: {
+              //     data: ['系统', '设备', '通讯', '数据']
+              // },
+              xAxis: {
+                  data: ['Mon Fed 11', 'Mon Fed 13', 'Mon Fed 15', 'Mon Fed 17']
+              },
+              yAxis: {},
+              series: data.map((item, key)=>{
+                  console.log(alldata[key], '=====')
+                return {
+                  name: item.name,
+                  type: 'line',
+                  color: '#37A2DA',
+                  data: alldata[key]
+                }
+              })
+          });
+        }, 1000)
+      })
+      
+      // http.get('/api/method/iot_ui.iot_api.device_event_type_statistics').then(res=>{
+      //   this.setState({barData: res.message}, ()=>{
+      //     console.log(res, '=====')
+      //     if (res.message){
+      //       let data1 = [];
+      //           let data2 = [];
+      //           let data3 = [];
+      //           let data4 = [];
+      //           this.state.barData.map((v) =>{
+      //               data1.push(v['系统']);
+      //               data2.push(v['设备']);
+      //               data3.push(v['通讯']);
+      //               data4.push(v['数据']);
+      //           });
+      //           let myFaultTypeChart = echarts.init(document.getElementById('faultTypeMain'));
+      //           myFaultTypeChart.setOption({
+      //               tooltip: {
+      //                   trigger: 'axis',
+      //                   axisPointer: {
+      //                       type: 'shadow'
+      //                   }
+      //               },
+      //               // legend: {
+      //               //     data: ['系统', '设备', '通讯', '数据']
+      //               // },
+      //               xAxis: {
+      //                   data: ['Mon Fed 11', 'Mon Fed 13', 'Mon Fed 15', 'Mon Fed 17']
+      //               },
+      //               yAxis: {},
+      //               series: [{
+      //                   name: '系统',
+      //                   type: 'line',
+      //                   color: '#37A2DA',
+      //                   data: data1
+      //               }, {
+      //                   name: '设备',
+      //                   type: 'line',
+      //                   color: '#67E0E3',
+      //                   data: data2
+      //               }, {
+      //                   name: '通讯',
+      //                   type: 'line',
+      //                   color: '#FFDB5C',
+      //                   data: data3
+      //               }, {
+      //                   name: '数据',
+      //                   type: 'line',
+      //                   color: '#FF9F7F',
+      //                   data: data4
+      //               }]
+      //           });
+      //     }
+      //   });
+      // })
     }
     handleOk = () => {
       const {record} = this.state;
@@ -105,9 +207,11 @@ import './style.scss';
                   更多历史数据
                 </Button>
               ]}
-          ></Modal>
+          >
+            <div id="faultTypeMain" style={{width: 472, height: 250}}></div>
+          </Modal>
         </div>
       );
     }
   }
-export default withRouter(ExpandedRowRender) ;
+export default withRouter(ExpandedRowRender);

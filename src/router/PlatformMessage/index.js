@@ -112,14 +112,14 @@ class PlatformMessage extends PureComponent {
                     let obj = JSON.parse(v.message);
                     let sub = '';
                     //设备状态
-                    if (obj.hasOwnProperty('device_status')) {
+                    if (obj && obj.hasOwnProperty('device_status')) {
                         if (obj.device_status === 'ONLINE'){
                             sub = '设备上线'
                         } else if (obj.device_status === 'OFFLINE'){
                             sub = '设备离线'
                         }
                         //设备操作
-                    } else if (obj.hasOwnProperty('action')){
+                    } else if (obj && obj.hasOwnProperty('action')){
                         console.log(1)
                         if (obj.channel === 'app') {
                             if (obj.action === 'option') {   //开机自启动

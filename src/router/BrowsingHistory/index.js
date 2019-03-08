@@ -75,7 +75,7 @@ class BrowsingHistory extends Component {
         console.log('params:', params);
         this.setState({ loading: true });
         axios({
-          url: `/api/method/iot_ui.iot_api.gate_device_data_array?sn=${this.props.match.params.sn}&vsn=${this.props.match.params.vsn}&_=1551251898468`,
+          url: `/api/method/iot_ui.iot_api.gate_device_data_array?sn=${this.props.match.params.sn}&vsn=${this.props.match.params.vsn}&_=${new Date() * 1}`,
           method: 'get',
           data: {
             results: 10,

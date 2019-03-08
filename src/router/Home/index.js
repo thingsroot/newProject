@@ -306,7 +306,7 @@ class Home extends PureComponent {
                             height: 400}}
                         >  </div>
                         <div className="tips"
-                            style={this.state.timeData.length > 0 ? hide : show}
+                            style={this.state.timeData && this.state.timeData.length > 0 ? hide : show}
                         >
                             暂时没有数据
                         </div>
@@ -371,7 +371,7 @@ class Home extends PureComponent {
                             style={{width: '92%', height: 400}}
                         >  </div>
                         <div className="tips"
-                            style={this.state.barData.length > 0 ? hide : show}
+                            style={this.state.barData && this.state.barData.length > 0 ? hide : show}
                         >
                             暂时没有数据
                         </div>

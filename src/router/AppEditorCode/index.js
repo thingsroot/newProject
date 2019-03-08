@@ -125,7 +125,6 @@ class AppEditorCode extends Component {
                             fontSize={fontSize}
                             fileName={this.props.store.codeStore.fileName}
                         />
-                        {console.log(this.props.store.codeStore)}
                     </div>
                 </div>
             </div>
