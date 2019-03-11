@@ -39,16 +39,15 @@ class MyCode extends Component {
     };
     setContent = (newValue)=>{
         this.props.store.codeStore.setNewEditorContent(newValue);
-        console.log(this.props.store.codeStore.editorContent);
-        console.log(this.props.store.codeStore.newEditorContent);
     };
     onChange = (newValue, e)=>{
         console.log(newValue, e);
-        // const editor = this.ace.editor; // The editor object is from Ace's API
-        // console.log(editor.getValue()); // Outputs the value of the editor
         this.setContent(newValue)
     };
-
+    // blur = ()=>{
+    //     this.props.store.codeStore.setMyEditor(this.refs.editor);
+    //     console.log(this.props.store.codeStore.myEditor)
+    // };
 
     render () {
         const { fontSize } = this.props;
@@ -58,8 +57,10 @@ class MyCode extends Component {
                     style={{width: '100%', height: '600px'}}
                     mode="java"
                     theme="github"
+                    ref="editor"
                     fontSize={fontSize}
                     onChange={this.onChange.bind(this)}
+                    // onBlur={this.blur.bind(this)}
                     value={this.props.store.codeStore.editorContent}
                     name="UNIQUE_ID_OF_DIV"
                     editorProps={{$blockScrolling: true}}

@@ -220,7 +220,9 @@ class AppEditorCode extends Component {
             this.props.store.codeStore.change();
         }, 1000)
     };
-
+    // undo = ()=>{
+    //     this.props.store.codeStore.myEditor.undo()
+    // };
 
     render () {
         const {
@@ -255,7 +257,10 @@ class AppEditorCode extends Component {
                             type="upload"
                             onClick={this.show}
                         />
-                        {/*<Icon type="undo" onClick={this.keyPress}/>*/}
+                        {/*<Icon*/}
+                            {/*type="undo"*/}
+                            {/*onClick={this.undo}*/}
+                        {/*/>*/}
                         {/*<Icon type="redo" onClick={this.keyPress} />*/}
                     </p>
                 </div>

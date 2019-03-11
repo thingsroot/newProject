@@ -3,9 +3,13 @@ class CodeStore {
     @observable isChange = false;
     @observable editorContent = '';
     @observable newEditorContent = '';
+    @observable myEditor = null;
     @observable fileName = 'version';
     @action setEditorContent (values) {
         this.editorContent = values;
+    }
+    @action setMyEditor (values) {
+        this.myEditor = values;
     }
     @action setNewEditorContent (values) {
         this.newEditorContent = values;
