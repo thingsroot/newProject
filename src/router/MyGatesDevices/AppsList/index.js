@@ -1,10 +1,10 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { Table, Icon, Switch, Button } from 'antd';
 import http from '../../../utils/Server';
 import { deviceAppOption } from '../../../utils/Session';
-import { inject } from 'mobx-react';
-  @inject('store')
-class AppsList extends PureComponent {
+import { inject, observer } from 'mobx-react';
+  @inject('store') @observer
+class AppsList extends Component {
       state = {
           data: [],
           pagination: {},
@@ -14,6 +14,7 @@ class AppsList extends PureComponent {
             title: '',
             dataIndex: 'cloud.icon_image',
             key: 'img',
+            width: '100px',
             render: (record)=>{
               return (
               <img src={record}
@@ -25,7 +26,7 @@ class AppsList extends PureComponent {
             title: '实例名',
             dataIndex: 'info.inst',
             sorter: true,
-            render: name => `${name} ${name}`,
+            //render: name => `${name} ${name}`,
             width: '20%'
           },
         //   {
@@ -136,7 +137,6 @@ class AppsList extends PureComponent {
           this.props.store.appStore.setStatus(res.message)
         })
         http.get('/api/method/iot_ui.iot_api.gate_applist?sn=' + sn).then((res) => {
-          console.log(res)
             let data = res.message;
             data && data.length > 0 && data.map((item)=>{
               item.img = <span><Icon type="table" /></span>

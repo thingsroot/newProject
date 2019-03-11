@@ -100,7 +100,6 @@ import './style.scss';
               },
               yAxis: {},
               series: data.map((item, key)=>{
-                  console.log(alldata[key], '=====')
                 return {
                   name: item.name,
                   type: 'line',
@@ -111,7 +110,6 @@ import './style.scss';
           });
         }, 1000)
       })
-      
       // http.get('/api/method/iot_ui.iot_api.device_event_type_statistics').then(res=>{
       //   this.setState({barData: res.message}, ()=>{
       //     console.log(res, '=====')
@@ -208,7 +206,10 @@ import './style.scss';
                 </Button>
               ]}
           >
-            <div id="faultTypeMain" style={{width: 472, height: 250}}></div>
+            <div
+                id="faultTypeMain"
+                style={{width: 472, height: 250}}
+            ></div>
           </Modal>
         </div>
       );

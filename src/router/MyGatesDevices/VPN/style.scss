@@ -1,0 +1,42 @@
+.VPN{
+    display: flex;
+    .VPNLeft{
+        width:40%;
+        .VPNlist{
+            display: flex;
+            padding:10px 0;
+            >p{
+                display: block;
+                width:30%;
+                min-width: 150px;
+                text-align: right;
+                line-height: 2.3;
+                padding-right: 10px;
+            }
+            >input{
+                flex:1;
+            }
+            >div{
+                flex:1;
+            }
+        }
+    }
+    .VPNRight{
+        width:40%;
+        .VPNlist{
+            display: flex;
+            padding:10px 0;
+            >p{
+                display: block;
+                width:30%;
+                min-width: 150px;
+                text-align: right;
+                line-height: 2.3;
+                padding-right: 10px;
+            }
+            >input{
+                flex:1;
+            }
+        }
+    }
+}

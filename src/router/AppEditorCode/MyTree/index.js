@@ -99,11 +99,13 @@ class MyTree extends Component {
                 </TreeNode>
             );
         }
-        return <TreeNode
-            {...item}
-            isLeaf={item.isLeaf}
-            key={item.key}
-        />;
+        return (
+            <TreeNode
+                {...item}
+                isLeaf={item.isLeaf}
+                key={item.key}
+            />
+        )
     });
 
     render () {

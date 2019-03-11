@@ -77,7 +77,15 @@ class LeftNav extends Component {
                 <div className="navlist">
                     <p>扩展功能</p>
                     <ul>
-                        <li>VPN通道</li>
+                        <Link to={`${url}/VPN`}>
+                            <li
+                                className={index === 3 ? 'active' : ''}
+                                key="3"
+                                onClick={()=>{
+                                    this.setState({index: 3})
+                                }}
+                            >VPN通道</li>
+                        </Link>
                     </ul>
                 </div>
             </div>

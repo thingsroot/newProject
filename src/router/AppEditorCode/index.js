@@ -290,14 +290,16 @@ class AppEditorCode extends Component {
                     >
                         {
                             optionData && optionData.length > 0 && optionData.map((v)=>{
-                                return <Option
-                                    key={v}
-                                    onClick={()=>{
-                                        this.getVersion(v)
-                                    }}
-                                >
-                                    {v}
-                                </Option>
+                                return (
+                                    <Option
+                                        key={v}
+                                        onClick={()=>{
+                                            this.getVersion(v)
+                                        }}
+                                    >
+                                        {v}
+                                    </Option>
+                                )
                             })
                         }
                     </Select>

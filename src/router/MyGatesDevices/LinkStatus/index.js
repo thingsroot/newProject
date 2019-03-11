@@ -3,6 +3,11 @@ import { Card, Button, Switch, message, InputNumber, Icon } from 'antd';
 import { inject, observer} from 'mobx-react';
 import { withRouter, Link } from 'react-router-dom';
 import http from '../../../utils/Server';
+import echarts from 'echarts/lib/echarts';
+import  'echarts/lib/chart/line';
+import  'echarts/lib/chart/pie';
+import 'echarts/lib/component/legend';
+import 'echarts/lib/component/tooltip';
 import './style.scss';
 @withRouter
 @inject('store')
@@ -18,10 +23,102 @@ class LinkStatus extends Component {
         COV_TTL: false,
         UOLOAD: false,
         iot_beta: 0,
-        update: false
+        update: false,
+        barData: []
     }
     componentDidMount (){
       this.getData(this.state.sn);
+
+      http.get('/api/method/iot_ui.iot_api.device_event_type_statistics').then(res=>{
+        this.setState({
+            barData: res.message
+        }, ()=>{
+            let data1 = [];
+            let data2 = [];
+            let data3 = [];
+            let data4 = [];
+            this.state.barData.map((v) =>{
+                data1.push(v['系统']);
+                data2.push(v['设备']);
+                data3.push(v['通讯']);
+                data4.push(v['数据']);
+            });
+            let myFaultTypeChart = echarts.init(document.getElementById('CPU'));
+            let memory = echarts.init(document.getElementById('memory'));
+            memory.setOption({
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                // legend: {
+                //     data: ['系统', '设备', '通讯', '数据']
+                // },
+                xAxis: {
+                    data: ['Mon Fed 11', 'Mon Fed 13', 'Mon Fed 15', 'Mon Fed 17']
+                },
+                yAxis: {},
+                series: [{
+                    name: '系统',
+                    type: 'line',
+                    color: '#37A2DA',
+                    data: data1
+                }, {
+                    name: '设备',
+                    type: 'line',
+                    color: '#67E0E3',
+                    data: data2
+                }, {
+                    name: '通讯',
+                    type: 'line',
+                    color: '#FFDB5C',
+                    data: data3
+                }, {
+                    name: '数据',
+                    type: 'line',
+                    color: '#FF9F7F',
+                    data: data4
+                }]
+            })
+            myFaultTypeChart.setOption({
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                // legend: {
+                //     data: ['系统', '设备', '通讯', '数据']
+                // },
+                xAxis: {
+                    data: ['Mon Fed 11', 'Mon Fed 13', 'Mon Fed 15', 'Mon Fed 17']
+                },
+                yAxis: {},
+                series: [{
+                    name: '系统',
+                    type: 'line',
+                    color: '#37A2DA',
+                    data: data1
+                }, {
+                    name: '设备',
+                    type: 'line',
+                    color: '#67E0E3',
+                    data: data2
+                }, {
+                    name: '通讯',
+                    type: 'line',
+                    color: '#FFDB5C',
+                    data: data3
+                }, {
+                    name: '数据',
+                    type: 'line',
+                    color: '#FF9F7F',
+                    data: data4
+                }]
+            })
+        })
+    })
     }
     UNSAFE_componentWillReceiveProps (nextProps){
       if (nextProps.location.pathname !== this.props.location.pathname){
@@ -38,12 +135,10 @@ class LinkStatus extends Component {
         this.props.store.appStore.setStatus(res.message)
         http.get('/api/method/app_center.api.get_latest_version?app=freeioe&beta=' + res.message.basic.iot_beta).then(data=>{
             this.setState({iot_beta: data.message})
-            console.log(data.message, '=====')
             if (data.message > res.message.config.iot_version){
                 http.get('/api/method/app_center.api.get_versions?app=freeioe&beta=' + res.message.basic.iot_beta).then(req=>{
                     const data = req.message.filter(item=>item.version > res.message.config.iot_version)
                     this.setState({newdata: data})
-                    console.log(data, 'datadatdadadadadad')
                 })
             } else {
                 this.setState({newdata: []})
@@ -67,8 +162,8 @@ class LinkStatus extends Component {
     }
     setAutoDisabled (record, config){
         const type = config === 1 ? 'disable' : 'enable';
-        const success = type === 'disable' ? '开启' : '关闭';
-        console.log(success)
+        // const success = type === 'disable' ? '开启' : '关闭';
+        // console.log(success)
         const data = {
             data: config === 0 ? 1 : 0,
             device: this.props.match.params.sn,
@@ -83,8 +178,6 @@ class LinkStatus extends Component {
                 }
             })
         })
-        console.log(data)
-        console.log(config)
       }
       restart (url){
           const data = {
@@ -106,7 +199,6 @@ class LinkStatus extends Component {
     render () {
         const { status, config, COV_TTL, DATA_UPLOAD_PERIOD } = this.props.store.appStore;
         const { loading, flag, update, newdata } = this.state;
-        console.log(status, config)
         return (
             <div>
                 <div className={flag && !update ? 'linkstatuswrap show flex' : 'linkstatuswrap hide'}>
@@ -142,7 +234,6 @@ class LinkStatus extends Component {
                             <p><b>存储:</b>{config.rom}</p>
                             <p><b>操作系统:</b>{config.os}</p>
                             <p><b>核心软件:</b>{config.skynet_version}</p>
-                            {console.log(this.state.iot_beta)}
                             <p><b>业务软件:</b>{config.iot_version}{this.state.iot_beta > config.iot_version
                             ? <Link
                                 to="#"
@@ -150,7 +241,7 @@ class LinkStatus extends Component {
                                 onClick={()=>{
                                     this.setState({update: false, flag: false})
                                 }}
-                            >发现新版本></Link> : ''}</p>
+                              >发现新版本></Link> : ''}</p>
                             <p><b>公网IP:</b>{config.public_ip}</p>
                             <p><b>调试模式:</b>{status.iot_beta  === 1 ? '开启' : '关闭'}</p>
                             <p><b>数据上传:</b>{config.data_upload === 1 ? '开启' : '关闭'}</p>
@@ -162,11 +253,17 @@ class LinkStatus extends Component {
                     <div className="rightecharts">
                         <Card className="border">
                             <p>CPU负载</p>
-                            <div style={{height: 200}}></div>
+                            <div
+                                style={{height: 280, width: 700}}
+                                id="CPU"
+                            ></div>
                         </Card>
                         <Card className="border">
                             <p>内存负载</p>
-                            <div style={{height: 200}}></div>
+                            <div
+                                style={{height: 280, width: 700}}
+                                id="memory"
+                            ></div>
                         </Card>
                     </div>
                  </div>
@@ -331,19 +428,22 @@ class LinkStatus extends Component {
                                         </div>
                                     </div>
                                     {
-                                        config.iot_version < this.state.iot_beta ? <Button onClick={()=>{
-                                            console.log(this.state.data)
-                                            const data = {
-                                                data: {
-                                                    no_ack: 1
-                                                },
-                                                device: this.props.match.params.sn,
-                                                id: `sys_upgrade/${this.props.match.params.sn}/ ${new Date() * 1}`
-                                            }
-                                            http.postToken('/api/method/iot.device_api.sys_upgrade', data).then(res=>{
-                                                console.log(res)
-                                            })
-                                        }}>升级更新</Button> : <Button>检查更新</Button>
+                                        config.iot_version < this.state.iot_beta
+                                        ? <Button
+                                            onClick={()=>{
+                                                console.log(this.state.data)
+                                                const data = {
+                                                    data: {
+                                                        no_ack: 1
+                                                    },
+                                                    device: this.props.match.params.sn,
+                                                    id: `sys_upgrade/${this.props.match.params.sn}/ ${new Date() * 1}`
+                                                }
+                                                http.postToken('/api/method/iot.device_api.sys_upgrade', data).then(res=>{
+                                                    console.log(res)
+                                                })
+                                            }}
+                                          >升级更新</Button> : <Button>检查更新</Button>
                                     }
                         </div>
                         <h1>FreeIOE</h1>
