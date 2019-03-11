@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import http from '../../../utils/Server';
 import { Table } from 'antd';
 import { inject, observer} from 'mobx-react';
@@ -46,10 +46,10 @@ const columns = [{
   //   }
   // }
   ];
+  @withRouter
   @inject('store')
   @observer
-  @withRouter
-class GatesList extends PureComponent {
+class GatesList extends Component {
   static propTypes = {
     match: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
@@ -81,7 +81,6 @@ class GatesList extends PureComponent {
         this.props.store.appStore.setStatus(res.message)
       })
       http.get('/api/method/iot_ui.iot_api.gate_devs_list?sn=' + sn ).then(res=>{
-        console.log(res, '=====')
         let data = [];
         data = res.message;
         data.map((item)=>{
