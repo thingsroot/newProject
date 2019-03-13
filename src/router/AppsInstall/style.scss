@@ -6,6 +6,9 @@
             flex:1;
         }
 }
+pre{
+    background:#eee;
+}
 .installheader{
     display: flex;
     justify-content: space-between;
@@ -17,6 +20,7 @@
 .show{
     display: block;
     margin-top: 15px;
+    margin-left: 20px;
 }
 .hide{
     display: none;

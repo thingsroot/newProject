@@ -5,6 +5,9 @@ import { inject, observer} from 'mobx-react';
 import Status from '../../common/status';
 import http from '../../utils/Server';
 import marked from 'marked';
+import highlight from 'highlight.js';
+import 'highlight.js/styles/github.css';
+import 'simplemde/dist/simplemde.min.css';
 import './style.scss';
 import Nav from './Nav';
 const TabPane = Tabs.TabPane;
@@ -56,10 +59,23 @@ class MyGatesAppsInstall extends Component {
                 filterdata: res.message.result
             })
         })
+        marked.setOptions({
+            renderer: new marked.Renderer(),
+            gfm: true,
+            tables: true,
+            breaks: false,
+            pedantic: false,
+            sanitize: false,
+            smartLists: true,
+            smartypants: false,
+            xhtml: false,
+            highlight: (code) =>  highlight.highlightAuto(code).value // 这段代码
+            })
     }
     shouldComponentUpdate (nextProps, nextState){
+        console.log(nextState.item.description)
         if (nextState.item.description !== undefined){
-            console.log(document.getElementById('box').innerHTML = marked(nextState.item.description))
+            document.getElementById('box').innerHTML = marked(nextState.item.description)
         }
         return true;
     }
@@ -195,7 +211,7 @@ class MyGatesAppsInstall extends Component {
                         <h2 style={{borderBottom: '1px solid #ccc', padding: 10}}>{item.app_name}</h2>
                         <div className={detail ? 'show' : 'hide'}>
                             <div style={{display: 'flex' }}>
-                                <img src={item.icon_image}
+                                <img src={'http://cloud.thingsroot.com' + item.icon_image}
                                     alt=""
                                 />
                                 <div style={{display: 'flex', paddingTop: 20, paddingLeft: 20}}>
@@ -349,7 +365,7 @@ class MyGatesAppsInstall extends Component {
                                         <div key={ind}
                                             className="item"
                                         >
-                                            <img src={val.icon_image}
+                                            <img src={`http://cloud.thingsroot.com${val.icon_image}`}
                                                 alt="logo"
                                                 onClick={()=>{
                                                     this.setState({flag: false, item: val, detail: true})

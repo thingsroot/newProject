@@ -82,12 +82,12 @@ module.exports = function(proxy, allowedHost) {
     },
     public: allowedHost,
     proxy: {
-      '/apis/': {
-        target: 'http://127.0.0.0.1:5000',
+      '/apis': {
+        target: 'http://127.0.0.1:5000',
         changeOrigin: true,
         secure: false,
         pathRewrite: {
-          '/apis': ''
+          '^/apis/*': '/'
         }
       },
       '/api/*': {

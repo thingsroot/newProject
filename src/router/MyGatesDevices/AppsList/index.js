@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Icon, Switch, Button } from 'antd';
+import { Table, Switch, Button } from 'antd';
 import http from '../../../utils/Server';
 import { deviceAppOption } from '../../../utils/Session';
 import { inject, observer } from 'mobx-react';
@@ -139,7 +139,7 @@ class AppsList extends Component {
         http.get('/api/method/iot_ui.iot_api.gate_applist?sn=' + sn).then((res) => {
             let data = res.message;
             data && data.length > 0 && data.map((item)=>{
-              item.img = <span><Icon type="table" /></span>
+              item.cloud.icon_image = 'http://cloud.thingsroot.com' + item.cloud.icon_image;
               if (item.info.running){
                   item.info.running = new Date(parseInt(item.info.running) * 1000).toLocaleString().replace(/:\d{1,2}$/, ' ')
               }

@@ -58,8 +58,8 @@ class MyGatesDevices extends Component {
                       onClick={this.showDrawer}
                       className="listbutton"
                   >
-                      <Icon type="swap"/><br />
-                      网关列表
+                    <Icon type="swap"/><br />
+                    网关列表
                   </Button>
                   <Drawer
                       title="网关列表"

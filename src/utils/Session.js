@@ -57,9 +57,10 @@ export function get_NewToken () {
 }
 // 申请AccessKey
 export function apply_AccessKey (){
-  http.get('/api/method/iot_ui.iot_api.apply_AccessKey').then(res=>{
-    console.log('AccessKey', res)
+  const data = http.get('/api/method/iot_ui.iot_api.apply_AccessKey').then(res=>{
+    return res.message;
   })
+  return data;
 }
 // 是否公司管理员
 export function isAdmin (){

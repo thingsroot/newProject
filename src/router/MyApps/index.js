@@ -79,7 +79,7 @@ class MyApps extends PureComponent {
                                 <div className="appImg">
                                     <Link to={`/myAppDetails/${v.name}`}>
                                         <img
-                                            src={v.icon_image}
+                                            src={`http://cloud.thingsroot.com${v.icon_image}`}
                                             alt=""
                                         />
                                     </Link>
