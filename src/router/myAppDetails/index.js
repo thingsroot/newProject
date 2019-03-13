@@ -61,7 +61,7 @@ class MyAppDetails extends PureComponent {
                 <div className="details">
                     <div className="appImg">
                         <img
-                            src={message.icon_image}
+                            src={`http://cloud.thingsroot.com${message.icon_image}`}
                             alt="图片"
                         />
                     </div>
