@@ -41,7 +41,7 @@ class UserSettings extends PureComponent {
 
     handleCreate = () => {
         const form = this.formRef.props.form;
-        console.log(form)
+        console.log(form);
         form.validateFields((err, values) => {
             if (err) {
                 return;

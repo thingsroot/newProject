@@ -2,12 +2,36 @@ import React, { Component } from 'react';
 import { Icon, Modal, Select, message, Input } from 'antd';
 import { withRouter } from 'react-router-dom';
 import { inject, observer} from 'mobx-react';
-import MyTree from './MyTree/';
+import MyTree from './MyTree';
 import MyCode from './MyCode';
 import './style.scss';
 import http from '../../utils/Server';
 const Option = Select.Option;
 const { TextArea } = Input;
+function format (list) {
+    let data = [];
+    for (var i = 0; i < list.length; i++){
+        if (list[i].children){
+            if (list[i].childrenData){
+                data.push({
+                    title: list[i].text,
+                    key: list[i].id,
+                    type: list[i].type,
+                    isLeaf: false,
+                    children: format(list[i].childrenData)
+                })
+            }
+        } else {
+            data.push({
+                title: list[i].text,
+                key: list[i].id,
+                type: list[i].type,
+                isLeaf: true
+            })
+        }
+    }
+    return data;
+}
 
 @withRouter
 @inject('store')
@@ -24,7 +48,8 @@ class AppEditorCode extends Component {
             newVersion: 0,
             isShow: false,
             optionData: [],
-            comment: ''
+            comment: '',
+            isAddFileShow: false
         }
     }
     componentDidMount () {
@@ -165,7 +190,6 @@ class AppEditorCode extends Component {
                 message.success(res.message);
             })
     };//重置版本结束
-
     //保存文件
     saveFile = ()=>{
         if (this.props.store.codeStore.editorContent === this.props.store.codeStore.newEditorContent) {
@@ -180,7 +204,6 @@ class AppEditorCode extends Component {
                     message.success('文件保存成功！')
                 })
         }
-
     };//保存文件结束
 
     //发布新版本
@@ -220,9 +243,57 @@ class AppEditorCode extends Component {
             this.props.store.codeStore.change();
         }, 1000)
     };
-    // undo = ()=>{
-    //     this.props.store.codeStore.myEditor.undo()
-    // };
+    //添加文件
+    addFile = ()=>{
+        let myFolder = this.props.store.codeStore.myFolder[0];
+        let folderType = this.props.store.codeStore.folderType;
+        if (folderType === 'folder') {
+            let url = '/api/method/app_center.editor.editor';
+            http.get(url + '?app=' + this.state.app + '&operation=create_node&type=file&id=' +
+                myFolder + '&text=' + this.props.store.codeStore.addFileName)
+                .then(res=>{
+                    console.log(res);
+                    http.get('/api/method/app_center.editor.editor?app=' + this.props.match.params.app + '&operation=get_node&id=' + '#')
+                        .then(res=>{
+                            let resData = res;
+                            resData.map((v)=>{
+                                if (v.children) {
+                                    http.get('/api/method/app_center.editor.editor?app=' + this.props.match.params.app + '&operation=get_node&id=' + v.id)
+                                        .then(res=>{
+                                            v['childrenData'] = res;
+                                            let data = format(resData);
+                                            console.log(data);
+                                            this.props.store.codeStore.setTreeData(data)
+                                        });
+                                }
+                            });
+                        });
+
+                });
+            message.success('创建文件成功');
+            this.setState({
+                isAddFileShow: false
+            });
+        } else {
+            message.warning('请先选择目录！')
+        }
+    };
+    addFileHide = ()=>{
+        this.setState({
+            isAddFileShow: false
+        })
+    };
+    addFileShow = ()=>{
+        this.setState({
+            isAddFileShow: true
+        })
+    };
+    addFileName = ()=>{
+        this.props.store.codeStore.setAddFileName(event.target.value );
+    };
+
+    //删除文件
+    
 
     render () {
         const {
@@ -234,7 +305,10 @@ class AppEditorCode extends Component {
             <div className="appEditorCode">
                 <div className="iconGroup">
                     <p style={{width: '220px'}}>
-                        <Icon type="zoom-in"/>
+                        <Icon
+                            type="file-add"
+                            onClick={this.addFileShow}
+                        />
                     </p>
                     <p>
                         <Icon
@@ -308,6 +382,17 @@ class AppEditorCode extends Component {
                             })
                         }
                     </Select>
+                </Modal>
+                <Modal
+                    title="新建文件"
+                    visible={this.state.isAddFileShow}
+                    onOk={this.addFile}
+                    onCancel={this.addFileHide}
+                    okText="确认"
+                    cancelText="取消"
+                >
+                    <span style={{padding: '0 20px'}}>文件名</span>
+                    <Input type="text" onChange={this.addFileName}/>
                 </Modal>
                 <Modal
                     title="发布新版本"

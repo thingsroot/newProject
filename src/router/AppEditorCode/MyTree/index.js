@@ -3,7 +3,6 @@ import { withRouter } from 'react-router-dom';
 import { Tree } from 'antd';
 import { observer, inject } from 'mobx-react';
 import http from '../../../utils/Server';
-const DirectoryTree = Tree.DirectoryTree;
 const { TreeNode } = Tree;
 
 function format (list) {
@@ -41,8 +40,7 @@ class MyTree extends Component {
             expandedKeys: [],
             defaultExpandAll: true,
             autoExpandParent: true,
-            selectedKeys: ['version'],
-            treed: []
+            selectedKeys: ['version']
         }
     }
     componentDidMount () {
@@ -50,6 +48,9 @@ class MyTree extends Component {
     }
     UNSAFE_componentWillReceiveProps (nextProps){
         if (this.props.isChange !== nextProps.isChange){
+            this.getTree();
+        }
+        if (this.props.isChangeTree !== nextProps.isChange){
             this.getTree();
         }
     }
@@ -61,29 +62,31 @@ class MyTree extends Component {
                     if (v.children) {
                         http.get('/api/method/app_center.editor.editor?app=' + this.props.match.params.app + '&operation=get_node&id=' + v.id)
                             .then(res=>{
-                                console.log(res)
                                 v['childrenData'] = res;
                                 let data = format(resData);
-                                this.setState({
-                                    treed: data
-                                });
+                                console.log(data);
+                                this.props.store.codeStore.setTreeData(data)
                             });
                     }
                 });
             });
-    }
+    };
     onExpand = (expandedKeys) => {
         this.setState({
             expandedKeys,
             autoExpandParent: false
         });
+
     };
     onSelect = (selectedKeys, info) => {
-        info;
         this.setState({ selectedKeys }, ()=>{
             this.props.store.codeStore.setFileName(this.state.selectedKeys);
         });
+        this.props.store.codeStore.setMyFolder(selectedKeys);
+        this.props.store.codeStore.setFolderType(info.node.props.type);
+        console.log(this.props.store.codeStore.treeData)
     };
+
 
     renderTreeNodes = data => data.map((item, key) => {
         key;
@@ -110,24 +113,26 @@ class MyTree extends Component {
 
     render () {
         const { appName } = this.props;
-        const {treed} = this.state;
         return (
-            <DirectoryTree
+            <Tree
+                className="draggable-tree"
                 defaultExpandAll={this.state.defaultExpandAll}
                 onExpand={this.onExpand}
                 expandedKeys={this.state.expandedKeys}
                 onSelect={this.onSelect.bind(this)}
                 selectedKeys={this.state.selectedKeys}
+                draggable
+                blockNode
             >
                 <TreeNode
                     defaultExpandAll
                     title={appName}
                     key={appName}
                 >
-                    {this.renderTreeNodes(treed)}
+                    {this.renderTreeNodes(this.props.store.codeStore.treeData)}
                 </TreeNode>
 
-            </DirectoryTree>
+            </Tree>
         );
     }
 }
