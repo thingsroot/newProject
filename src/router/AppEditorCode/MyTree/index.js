@@ -50,9 +50,6 @@ class MyTree extends Component {
         if (this.props.isChange !== nextProps.isChange){
             this.getTree();
         }
-        if (this.props.isChangeTree !== nextProps.isChange){
-            this.getTree();
-        }
     }
     getTree = ()=>{
         http.get('/api/method/app_center.editor.editor?app=' + this.props.match.params.app + '&operation=get_node&id=' + '#')

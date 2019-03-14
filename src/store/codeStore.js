@@ -9,7 +9,7 @@ class CodeStore {
     @observable myEditor = null;
     @observable fileName = 'version';
     @observable addFileName = '';
-    @observable isChangeTree = false;
+    @observable addFolderName = '';
     @action setEditorContent (values) {
         this.editorContent = values;
     }
@@ -37,9 +37,10 @@ class CodeStore {
     @action setAddFileName (values) {
         this.addFileName = values;
     }
-    @action setIsChangeTree () {
-        this.isChangeTree = !this.isChangeTree;
+    @action setAddFolderName (values) {
+        this.addFolderName = values;
     }
+
 }
 
 export default new CodeStore()

@@ -8,6 +8,7 @@ import './style.scss';
 import http from '../../utils/Server';
 const Option = Select.Option;
 const { TextArea } = Input;
+const confirm = Modal.confirm;
 function format (list) {
     let data = [];
     for (var i = 0; i < list.length; i++){
@@ -49,7 +50,8 @@ class AppEditorCode extends Component {
             isShow: false,
             optionData: [],
             comment: '',
-            isAddFileShow: false
+            isAddFileShow: false,
+            isAddFolderShow: false
         }
     }
     componentDidMount () {
@@ -148,7 +150,7 @@ class AppEditorCode extends Component {
             ),
             onOk () {}
         });
-    }
+    };
     //+
     zoomIn = ()=>{
         let size = this.state.fontSize - 2;
@@ -243,39 +245,40 @@ class AppEditorCode extends Component {
             this.props.store.codeStore.change();
         }, 1000)
     };
+
+    getTreeData = ()=>{
+        http.get('/api/method/app_center.editor.editor?app=' + this.state.app + '&operation=get_node&id=' + '#')
+            .then(res=>{
+                let resData = res;
+                resData.map((v)=>{
+                    if (v.children) {
+                        http.get('/api/method/app_center.editor.editor?app=' + this.state.app + '&operation=get_node&id=' + v.id)
+                            .then(res=>{
+                                v['childrenData'] = res;
+                                let data = format(resData);
+                                console.log(data);
+                                this.props.store.codeStore.setTreeData(data)
+                            });
+                    }
+                });
+            });
+    };
+
     //添加文件
     addFile = ()=>{
         let myFolder = this.props.store.codeStore.myFolder[0];
-        let folderType = this.props.store.codeStore.folderType;
-        if (folderType === 'folder') {
+        if (this.props.store.codeStore.addFileName !== '') {
             let url = '/api/method/app_center.editor.editor';
             http.get(url + '?app=' + this.state.app + '&operation=create_node&type=file&id=' +
                 myFolder + '&text=' + this.props.store.codeStore.addFileName)
                 .then(res=>{
                     console.log(res);
-                    http.get('/api/method/app_center.editor.editor?app=' + this.props.match.params.app + '&operation=get_node&id=' + '#')
-                        .then(res=>{
-                            let resData = res;
-                            resData.map((v)=>{
-                                if (v.children) {
-                                    http.get('/api/method/app_center.editor.editor?app=' + this.props.match.params.app + '&operation=get_node&id=' + v.id)
-                                        .then(res=>{
-                                            v['childrenData'] = res;
-                                            let data = format(resData);
-                                            console.log(data);
-                                            this.props.store.codeStore.setTreeData(data)
-                                        });
-                                }
-                            });
-                        });
-
+                    this.getTreeData();
                 });
-            message.success('创建文件成功');
-            this.setState({
-                isAddFileShow: false
-            });
+            message.success('创建文件成功！');
+            this.addFileHide();
         } else {
-            message.warning('请先选择目录！')
+            message.warning('请输入文件名！')
         }
     };
     addFileHide = ()=>{
@@ -284,16 +287,87 @@ class AppEditorCode extends Component {
         })
     };
     addFileShow = ()=>{
-        this.setState({
-            isAddFileShow: true
-        })
+        if (this.props.store.codeStore.folderType === 'folder') {
+            this.setState({
+                isAddFileShow: true
+            })
+        } else {
+            message.warning('请先选择目录！')
+        }
+
     };
     addFileName = ()=>{
         this.props.store.codeStore.setAddFileName(event.target.value );
     };
 
+    //添加文件夹
+    addFolderShow = ()=>{
+        if (this.props.store.codeStore.folderType === 'folder') {
+            this.setState({
+                isAddFolderShow: true
+            })
+        } else {
+            message.warning('请先选择目录！')
+        }
+    };
+    addFolderHide = ()=>{
+        this.setState({
+            isAddFolderShow: false
+        })
+    };
+    addFolderName = ()=>{
+        this.props.store.codeStore.setAddFolderName(event.target.value)
+    };
+    addFolder = ()=>{
+        let myFolder = this.props.store.codeStore.myFolder[0];
+        if (this.props.store.codeStore.addFolderName !== '') {
+            let url = '/api/method/app_center.editor.editor';
+            http.get(url + '?app=' + this.state.app + '&operation=create_node&type=folder&id=' +
+                myFolder + '&text=' + this.props.store.codeStore.addFolderName)
+                .then(res=>{
+                    console.log(res);
+                    this.getTreeData();
+                });
+            message.success('创建文件夹成功');
+            this.addFolderHide();
+        }
+    };
+
     //删除文件
-    
+    showConfirm = (content)=>{
+        confirm({
+            title: '提示信息',
+            content: content,
+            onOk () {
+                return new Promise((resolve, reject) => {
+                    let myFolder = this.props.store.codeStore.myFolder[0];
+                    let url = '/api/method/app_center.editor.editor';
+                    http.get(url + '?app=' + this.state.app + '&operation=delete_node&type=folder&id=' + myFolder)
+                        .then(res=>{
+                            console.log(res);
+                            this.getTreeData();
+                        });
+                    resolve(message.success('删除文件夹成功'));
+                    reject(message.success('111'));
+                }).catch(() =>{
+
+                });
+
+            },
+            onCancel () {}
+        });
+    };
+
+    deleteFileShow = ()=>{
+        if (this.props.store.codeStore.folderType === 'folder') {
+            this.showConfirm('确认删除此文件夹？')
+        } else if (this.props.store.codeStore.folderType === 'file') {
+            this.showConfirm('确认删除此文件？')
+        } else if (this.props.store.codeStore.folderType === '') {
+            message.warning('请选择文件！')
+        }
+    };
+
 
     render () {
         const {
@@ -308,6 +382,14 @@ class AppEditorCode extends Component {
                         <Icon
                             type="file-add"
                             onClick={this.addFileShow}
+                        />
+                        <Icon
+                            type="delete"
+                            onClick={this.deleteFileShow}
+                        />
+                        <Icon
+                            type="folder-add"
+                            onClick={this.addFolderShow}
                         />
                     </p>
                     <p>
@@ -393,6 +475,17 @@ class AppEditorCode extends Component {
                 >
                     <span style={{padding: '0 20px'}}>文件名</span>
                     <Input type="text" onChange={this.addFileName}/>
+                </Modal>
+                <Modal
+                    title="新建文件夹"
+                    visible={this.state.isAddFolderShow}
+                    onOk={this.addFolder}
+                    onCancel={this.addFolderHide}
+                    okText="确认"
+                    cancelText="取消"
+                >
+                    <span style={{padding: '0 20px'}}>文件夹名</span>
+                    <Input type="text" onChange={this.addFolderName}/>
                 </Modal>
                 <Modal
                     title="发布新版本"
