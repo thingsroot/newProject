@@ -77,7 +77,9 @@ class LeftNav extends Component {
                 <div className="navlist">
                     <p>扩展功能</p>
                     <ul>
-                        <Link to={`${url}/VPN`}>
+                        {
+                            this.props.vpnflag
+                            ? <Link to={`${url}/VPN`}>
                             <li
                                 className={index === 3 ? 'active' : ''}
                                 key="3"
@@ -86,6 +88,8 @@ class LeftNav extends Component {
                                 }}
                             >VPN通道</li>
                         </Link>
+                        : ''
+                        }
                     </ul>
                 </div>
             </div>

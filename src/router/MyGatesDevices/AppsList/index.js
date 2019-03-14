@@ -1,9 +1,44 @@
 import React, { Component } from 'react';
-import { Table, Switch, Button } from 'antd';
+import { Table, Switch, Button, Popconfirm, message } from 'antd';
 import http from '../../../utils/Server';
 import { deviceAppOption } from '../../../utils/Session';
 import { inject, observer } from 'mobx-react';
-  @inject('store') @observer
+import { withRouter } from 'react-router-dom';
+function confirm (record, sn) {
+  console.log(record);
+  const hide = message.loading('Action in progress..', 0);
+  setTimeout(hide, 2500);
+  const data = {
+    data: {
+      inst: record.info.inst,
+      name: record.info.name
+    },
+    device: sn,
+    id: `app_upgrade/${sn}/ ${record.info.inst}/${new Date() * 1}`
+  };
+  http.postToken('/api/method/iot.device_api.app_upgrade', data).then(res=>{
+    if (res.message){
+      setTimeout(() => {
+        http.get(`/api/method/iot.device_api.get_action_result?id=${res.message}`).then(data=>{
+          console.log(data)
+          if (data && data.message.result){
+            message.success('应用更新成功！')
+          } else {
+            message.error('应用更新失败，请重试！')
+          }
+        })
+      }, 2000);
+    }
+  })
+}
+
+function cancel (e) {
+  console.log(e);
+  message.error('You have canceled the update');
+}
+@withRouter
+@inject('store') @observer
+
 class AppsList extends Component {
       state = {
           data: [],
@@ -28,17 +63,7 @@ class AppsList extends Component {
             sorter: true,
             //render: name => `${name} ${name}`,
             width: '20%'
-          },
-        //   {
-        //     title: 'Gender',
-        //     dataIndex: 'gender',
-        //     filters: [
-        //       { text: 'Male', value: 'male' },
-        //       { text: 'Female', value: 'female' }
-        //     ],
-        //     width: '20%'
-        //   },
-           {
+          }, {
             title: '版本',
             dataIndex: 'info.version',
             key: 'info.version'
@@ -69,26 +94,19 @@ class AppsList extends Component {
             title: '操作',
             dataIndex: '',
             render: (record)=>{
+              record
               return (
                 <div>
-                  <Button size="small">应用升级</Button>
-                  <Button size="small"
-                      onClick={
-                          ()=>{
-                            const id = `app_uninstall/${record.info.sn}/${record.info.inst}/${new Date() * 1}`
-                            const data = {
-                              data: {
-                                inst: record.info.inst
-                              },
-                              device: record.sn,
-                              id: id
-                            }
-                            http.postToken('/api/method/iot.device_api.app_uninstall', data).then(res=>{
-                              console.log(res)
-                            })
-                          }
-                      }
-                  >应用卸载</Button>
+                  <Popconfirm
+                      title="Are you sure update this app?"
+                      onConfirm={()=>{
+                        confirm(record, this.props.match.params.sn)
+                      }}
+                      onCancel={cancel}
+                      okText="Yes"
+                      cancelText="No">
+                    <Button>应用升级</Button>
+                  </Popconfirm>
                 </div>
               )
             }
@@ -139,7 +157,9 @@ class AppsList extends Component {
         http.get('/api/method/iot_ui.iot_api.gate_applist?sn=' + sn).then((res) => {
             let data = res.message;
             data && data.length > 0 && data.map((item)=>{
-              item.cloud.icon_image = 'http://cloud.thingsroot.com' + item.cloud.icon_image;
+              if (item.cloud){
+                item.cloud.icon_image = 'http://cloud.thingsroot.com' + item.cloud.icon_image;
+              }
               if (item.info.running){
                   item.info.running = new Date(parseInt(item.info.running) * 1000).toLocaleString().replace(/:\d{1,2}$/, ' ')
               }

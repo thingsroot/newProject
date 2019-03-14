@@ -18,14 +18,36 @@ const VPN  = LoadableComponent(()=>import('./VPN'));
 class MyGatesDevices extends Component {
   state = {
     visible: false,
+    flag: true,
+    VPNflag: false,
     url: window.location.pathname
   }
   componentDidMount (){
-    this.sendAjax()
+    this.sendAjax(this.props.match.params.sn)
+    if (this.props.location.pathname.indexOf('VPN') !== -1){
+      this.setState({flag: false})
+    } else {
+      this.setState({flag: true})
+    }
   }
-  sendAjax = () => {
-    http.get('/api/method/iot_ui.iot_api.gate_info?sn=' + this.props.match.params.sn).then(res=>{
+  UNSAFE_componentWillReceiveProps (nextProps){
+    if (nextProps.location.pathname.indexOf('VPN') !== -1){
+      this.setState({flag: false})
+    } else {
+      this.setState({flag: true})
+    }
+    if (this.props.match.params !== nextProps.match.params){
+      this.sendAjax(nextProps.match.params.sn)
+    }
+  }
+  sendAjax = (sn) => {
+    http.get('/api/method/iot_ui.iot_api.gate_info?sn=' + sn).then(res=>{
       this.props.store.appStore.setStatus(res.message)
+      if (Object.keys(res.message.applist).indexOf('ioe_frpc') !== -1){
+        this.setState({VPNflag: true})
+      } else {
+        this.setState({VPNflag: false})
+      }
     })
     http.get('/api/method/iot_ui.iot_api.devices_list?filter=online').then(res=>{
       this.props.store.appStore.setGatelist(res.message);
@@ -47,20 +69,25 @@ class MyGatesDevices extends Component {
     return arr.join('/')
   }
     render () {
+      const { flag } = this.state;
       const { path } = this.props.match;
       const { gateList, status } = this.props.store.appStore;
         return (
             <div >
                 <Status flag={this.visible}/>
                 <div className="mygatesdevices">
-                  <LeftNav prop={this.props.match.params}/>
-                  <Button type="primary"
-                      onClick={this.showDrawer}
-                      className="listbutton"
-                  >
-                    <Icon type="swap"/><br />
-                    网关列表
-                  </Button>
+                  <LeftNav prop={this.props.match.params} vpnflag={this.state.VPNflag}/>
+                  {
+                    flag
+                    ? <Button type="primary"
+                        onClick={this.showDrawer}
+                        className="listbutton"
+                >
+                  <Icon type="swap"/><br />
+                  网关列表
+                </Button>
+                : ''
+                  }
                   <Drawer
                       title="网关列表"
                       placement="left"

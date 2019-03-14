@@ -7,7 +7,6 @@ import http from '../../utils/Server';
 import marked from 'marked';
 import highlight from 'highlight.js';
 import 'highlight.js/styles/github.css';
-import 'simplemde/dist/simplemde.min.css';
 import './style.scss';
 import Nav from './Nav';
 const TabPane = Tabs.TabPane;

@@ -332,27 +332,34 @@ class AppEditorCode extends Component {
             this.addFolderHide();
         }
     };
-
+    
     //删除文件
     showConfirm = (content)=>{
+        console.log(this)
+        const pro = ()=>{
+            return new Promise((resolve, reject) => {
+                let myFolder = this.props.store.codeStore.myFolder[0];
+                let url = '/api/method/app_center.editor.editor';
+                http.get(url + '?app=' + this.state.app + '&operation=delete_node&type=folder&id=' + myFolder)
+                    .then(res=>{
+                        console.log(res);
+                        if (res){
+                            resolve(true);
+                        } else {
+                            reject(false);
+                        }
+                        this.getTreeData();
+                    });
+            }).catch(() =>{
+            });
+        }
         confirm({
             title: '提示信息',
             content: content,
             onOk () {
-                return new Promise((resolve, reject) => {
-                    let myFolder = this.props.store.codeStore.myFolder[0];
-                    let url = '/api/method/app_center.editor.editor';
-                    http.get(url + '?app=' + this.state.app + '&operation=delete_node&type=folder&id=' + myFolder)
-                        .then(res=>{
-                            console.log(res);
-                            this.getTreeData();
-                        });
-                    resolve(message.success('删除文件夹成功'));
-                    reject(message.success('111'));
-                }).catch(() =>{
-
-                });
-
+                pro().then(res=>{
+                    console.log(res)
+                })
             },
             onCancel () {}
         });

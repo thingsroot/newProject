@@ -30,10 +30,13 @@ class VPN extends Component {
         message: {},
         result: {},
         toggleFlag: true,
-        gateStatus: '',
+        gateStatus: ' ',
         chouldstatus: {}
     }
     componentDidMount (){
+        
+        this.getStatus()
+        this.check_gate_isbusy()
         let auth_code;
         apply_AccessKey().then(res=>{
             auth_code = res;
@@ -42,39 +45,13 @@ class VPN extends Component {
         this.timer = setInterval(() => {
             this.getStatus()
             this.check_gate_isbusy()
-            // fetch('/apis/gate_isbusy', {
-            //     method: 'POST',
-            //     mode: 'cors'
-            // }).then(res => {
-            //     return res.json();
-            // }).then(json => {
-            //     console.log('获取的结果', json);
-            //     return json;
-            // }).catch(err => {
-            //     console.log('请求错误', err);
-            // })
-
-            // fetch('/apis/tunnel_mode', {
-            //     method: 'GET',
-            //     mode: 'cors',
-            //     headers: {
-            //         Accept: 'application/json; charset=utf-8',
-            //         Authorization: 'Bearer 123123123'
-            //     }
-            // }).then(res => {
-            //     return res.json();
-            // }).then(json => {
-            //     console.log(json)
-            // }).catch(err => {
-            //     console.log('请求错误', err);
-            // })
         }, 5000);
     }
-    // UNSAFE_componentWillReceiveProps (nextProps){
-    //     if (this.props.location.pathname !== nextProps.location.pathname){
-    //         clearInterval(this.timer)
-    //     }
-    // }
+    UNSAFE_componentWillReceiveProps (nextProps){
+        if (this.props.location.pathname !== nextProps.location.pathname){
+            this.setState({result: {}})
+        }
+    }
     componentWillUnmount (){
         clearInterval(this.timer)
     }
@@ -324,7 +301,7 @@ class VPN extends Component {
                     <div className="VPNlist">
                         <p>网关状态：</p>
                         <Input
-                            value={this.state.gateStatus}
+                            value={this.state.gateStatus ? this.state.gateStatus : ''}
                             disabled={flag}
                         />
                     </div>
@@ -426,11 +403,14 @@ class VPN extends Component {
                         }}
                       >停止VPN</Button>
                     }
-                    <div className="successMessage">
+                    {
+                        !this.state.toggleFlag ? <div className="successMessage">
                         <p>平台返回消息：{result.cloud_mes}</p>
                         <p>网关返回消息：{result.gate_mes}</p>
                         <p>本地返回消息：{result.services_mes}</p>
                     </div>
+                    : ''
+                    }
                 </div>
                 <div className="VPNRight">
                     <div className="VPNlist">
