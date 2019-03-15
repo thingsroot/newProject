@@ -19,6 +19,7 @@ const BrowsingHistory = LoadableComponent(()=>import('../../router/BrowsingHisto
 const MyGatesDevicesOutputs = LoadableComponent(()=>import('../../router/MyGatesDevicesOutputs'));
 const AppsInstall = LoadableComponent(()=>import('../../router/AppsInstall'));
 const AppEditorCode = LoadableComponent(()=>import('../../router/AppEditorCode'));
+const MyTemplateDetails = LoadableComponent(()=>import('../../router/MyTemplateDetails'));
 class ContentMain extends PureComponent {
     render (){
         return (
@@ -90,6 +91,10 @@ class ContentMain extends PureComponent {
                 <PrivateRoute
                     path="/AppsInstall/:sn"
                     component={AppsInstall}
+                />
+                <PrivateRoute
+                    path="/MyTemplateDetails/:app/:name/:version"
+                    component={MyTemplateDetails}
                 />
                 <Redirect
                     from="/"

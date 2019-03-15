@@ -96,7 +96,9 @@ class MyAppDetails extends PureComponent {
                             下载
                         </Button>
                         <Button style={message.fork_from ? block : none}>
-                            <a onClick={
+                            <Link
+                                to={`/myAppDetails/${message.fork_from}`}
+                                onClick={
                                 ()=>{
                                 this.getDetails(message.fork_from);
                                 }
@@ -104,7 +106,7 @@ class MyAppDetails extends PureComponent {
                             >
                                 <Icon type="share-alt" />
                                 分支
-                            </a>
+                            </Link>
                         </Button>
                     </div>
                 </div>

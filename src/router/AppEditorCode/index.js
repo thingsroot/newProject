@@ -50,8 +50,10 @@ class AppEditorCode extends Component {
             isShow: false,
             optionData: [],
             comment: '',
+            editorFileName: '',
             isAddFileShow: false,
-            isAddFolderShow: false
+            isAddFolderShow: false,
+            isEditorFileShow: false
         }
     }
     componentDidMount () {
@@ -335,14 +337,12 @@ class AppEditorCode extends Component {
     
     //删除文件
     showConfirm = (content)=>{
-        console.log(this)
         const pro = ()=>{
             return new Promise((resolve, reject) => {
                 let myFolder = this.props.store.codeStore.myFolder[0];
                 let url = '/api/method/app_center.editor.editor';
                 http.get(url + '?app=' + this.state.app + '&operation=delete_node&type=folder&id=' + myFolder)
                     .then(res=>{
-                        console.log(res);
                         if (res){
                             resolve(true);
                         } else {
@@ -352,19 +352,24 @@ class AppEditorCode extends Component {
                     });
             }).catch(() =>{
             });
-        }
+        };
         confirm({
             title: '提示信息',
+            okText: '确定',
+            cancelText: '取消',
             content: content,
             onOk () {
                 pro().then(res=>{
-                    console.log(res)
+                    res;
+                    message.success('删除成功！')
+                }).catch(req=>{
+                    req;
+                    message.error('删除失败！')
                 })
             },
             onCancel () {}
         });
     };
-
     deleteFileShow = ()=>{
         if (this.props.store.codeStore.folderType === 'folder') {
             this.showConfirm('确认删除此文件夹？')
@@ -375,6 +380,43 @@ class AppEditorCode extends Component {
         }
     };
 
+    //编辑文件名称
+    editorFileShow = ()=>{
+        if (this.props.store.codeStore.folderType) {
+            this.setState({
+                isEditorFileShow: true
+            })
+        } else if (!this.props.store.codeStore.folderType) {
+            message.warning('请先选择目录！')
+        }
+    };
+    editorFileHide = ()=>{
+        this.setState({
+            isEditorFileShow: false
+        })
+    };
+    editorFileName = ()=>{
+        this.setState({
+            editorFileName: event.target.value
+        })
+    };
+    editorFile = ()=>{
+        let myFolder = this.props.store.codeStore.myFolder[0];
+        if (this.state.editorFileName !== '') {
+            let url = '/api/method/app_center.editor.editor';
+            http.get(url + '?app=' + this.state.app + '&operation=rename_node&type=folder&id=' +
+                myFolder + '&text=' + this.state.editorFileName)
+                .then(res=>{
+                    console.log(res);
+                    this.getTreeData();
+                });
+            message.success('编辑文件成功');
+            this.addFolderHide();
+        } else {
+            message.warning('请输入文件名！')
+        }
+        this.editorFileHide()
+    };
 
     render () {
         const {
@@ -391,13 +433,17 @@ class AppEditorCode extends Component {
                             onClick={this.addFileShow}
                         />
                         <Icon
-                            type="delete"
-                            onClick={this.deleteFileShow}
-                        />
-                        <Icon
                             type="folder-add"
                             onClick={this.addFolderShow}
                         />
+                        <Icon
+                            type="edit"
+                            onClick={this.editorFileShow}
+                        />
+                        <Icon
+                            type="delete"
+                            onClick={this.deleteFileShow}
+                    />
                     </p>
                     <p>
                         <Icon
@@ -481,7 +527,26 @@ class AppEditorCode extends Component {
                     cancelText="取消"
                 >
                     <span style={{padding: '0 20px'}}>文件名</span>
-                    <Input type="text" onChange={this.addFileName}/>
+                    <Input
+                        type="text"
+                        onChange={this.addFileName}
+                        style={{ width: 350 }}
+                    />
+                </Modal>
+                <Modal
+                    title="更改文件名"
+                    visible={this.state.isEditorFileShow}
+                    onOk={this.editorFile}
+                    onCancel={this.editorFileHide}
+                    okText="确认"
+                    cancelText="取消"
+                >
+                    <span style={{padding: '0 20px'}}>重命名</span>
+                    <Input
+                        type="text"
+                        onChange={this.editorFileName}
+                        style={{ width: 350 }}
+                    />
                 </Modal>
                 <Modal
                     title="新建文件夹"
@@ -492,7 +557,11 @@ class AppEditorCode extends Component {
                     cancelText="取消"
                 >
                     <span style={{padding: '0 20px'}}>文件夹名</span>
-                    <Input type="text" onChange={this.addFolderName}/>
+                    <Input
+                        type="text"
+                        onChange={this.addFolderName}
+                        style={{ width: 350 }}
+                    />
                 </Modal>
                 <Modal
                     title="发布新版本"
