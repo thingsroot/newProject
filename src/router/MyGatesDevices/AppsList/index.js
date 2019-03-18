@@ -104,7 +104,8 @@ class AppsList extends Component {
                       }}
                       onCancel={cancel}
                       okText="Yes"
-                      cancelText="No">
+                      cancelText="No"
+                  >
                     <Button>应用升级</Button>
                   </Popconfirm>
                 </div>

@@ -34,7 +34,6 @@ class VPN extends Component {
         chouldstatus: {}
     }
     componentDidMount (){
-        
         this.getStatus()
         this.check_gate_isbusy()
         let auth_code;

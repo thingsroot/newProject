@@ -332,7 +332,6 @@ class AppEditorCode extends Component {
             this.addFolderHide();
         }
     };
-    
     //删除文件
     showConfirm = (content)=>{
         console.log(this)
@@ -481,7 +480,10 @@ class AppEditorCode extends Component {
                     cancelText="取消"
                 >
                     <span style={{padding: '0 20px'}}>文件名</span>
-                    <Input type="text" onChange={this.addFileName}/>
+                    <Input
+                        type="text"
+                        onChange={this.addFileName}
+                    />
                 </Modal>
                 <Modal
                     title="新建文件夹"
@@ -492,7 +494,10 @@ class AppEditorCode extends Component {
                     cancelText="取消"
                 >
                     <span style={{padding: '0 20px'}}>文件夹名</span>
-                    <Input type="text" onChange={this.addFolderName}/>
+                    <Input
+                        type="text"
+                        onChange={this.addFolderName}
+                    />
                 </Modal>
                 <Modal
                     title="发布新版本"
