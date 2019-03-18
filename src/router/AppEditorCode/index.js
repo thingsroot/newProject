@@ -442,7 +442,7 @@ class AppEditorCode extends Component {
                         <Icon
                             type="delete"
                             onClick={this.deleteFileShow}
-                    />
+                        />
                     </p>
                     <p>
                         <Icon

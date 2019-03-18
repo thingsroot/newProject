@@ -278,27 +278,35 @@ class MyGatesAppsInstall extends Component {
                                     {
                                         config && config.length > 0 && config.map((v, key)=>{
                                             if (v.type === 'section') {
-                                                console.log(v);
-                                                console.log(key);
-                                                return <div id={v.name} key={key}>
-                                                    <p style={{lineHeight: '50px'}}>
-                                                        <span className="spanStyle">{v.desc}</span>
+                                                return (
+                                                    <div
+                                                        id={v.name}
+                                                        key={key}
+                                                    >
+                                                        <p style={{lineHeight: '50px'}}>
+                                                            <span className="spanStyle">{v.desc}</span>
 
-                                                    </p>
-                                                </div>
-                                            } else {
-                                                return <div id={v.name} key={key}>
-                                                    <div style={{lineHeight: '50px'}}>
-                                                        <span className="spanStyle">{v.desc}：</span>
-                                                        <Select
-                                                            defaultValue={v.value[0]}
-                                                            style={{ width: 300 }}
-                                                            onChange={this.selectChange1}
-                                                        >
-                                                            {v.value.map(w => <Option key={w}>{w}</Option>)}
-                                                        </Select>
+                                                        </p>
                                                     </div>
-                                                </div>
+                                                )
+                                            } else {
+                                                return (
+                                                    <div
+                                                        id={v.name}
+                                                        key={key}
+                                                    >
+                                                        <div style={{lineHeight: '50px'}}>
+                                                            <span className="spanStyle">{v.desc}：</span>
+                                                            <Select
+                                                                defaultValue={v.value[0]}
+                                                                style={{ width: 300 }}
+                                                                onChange={this.selectChange1}
+                                                            >
+                                                                {v.value.map(w => <Option key={w}>{w}</Option>)}
+                                                            </Select>
+                                                        </div>
+                                                    </div>
+                                                )
                                             }
                                         })
                                     }

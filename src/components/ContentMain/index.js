@@ -19,11 +19,8 @@ const BrowsingHistory = LoadableComponent(()=>import('../../router/BrowsingHisto
 const MyGatesDevicesOutputs = LoadableComponent(()=>import('../../router/MyGatesDevicesOutputs'));
 const AppsInstall = LoadableComponent(()=>import('../../router/AppsInstall'));
 const AppEditorCode = LoadableComponent(()=>import('../../router/AppEditorCode'));
-<<<<<<< HEAD
 const MyTemplateDetails = LoadableComponent(()=>import('../../router/MyTemplateDetails'));
-=======
 const MyGatesLogviewer = LoadableComponent(()=>import('../../router/MyGatesLogviewer'));
->>>>>>> 1425175b989c86119841fd9567fa79af4c1480cd
 class ContentMain extends PureComponent {
     render (){
         return (
@@ -97,13 +94,12 @@ class ContentMain extends PureComponent {
                     component={AppsInstall}
                 />
                 <PrivateRoute
-<<<<<<< HEAD
                     path="/MyTemplateDetails/:app/:name/:version"
                     component={MyTemplateDetails}
-=======
+                />
+                <PrivateRoute
                     path="/MyGatesLogviewer/:sn"
                     component={MyGatesLogviewer}
->>>>>>> 1425175b989c86119841fd9567fa79af4c1480cd
                 />
                 <Redirect
                     from="/"
