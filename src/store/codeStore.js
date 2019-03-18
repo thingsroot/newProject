@@ -10,6 +10,11 @@ class CodeStore {
     @observable fileName = 'version';
     @observable addFileName = '';
     @observable addFolderName = '';
+
+    @observable readOnly = true;
+    @observable editorValue = {};
+    @observable instName = '123';
+
     @action setEditorContent (values) {
         this.editorContent = values;
     }
@@ -31,6 +36,9 @@ class CodeStore {
     @action change () {
         this.isChange = !this.isChange
     }
+    @action setReadOnly () {
+        this.readOnly = !this.readOnly
+    }
     @action setFileName (values) {
         this.fileName = values;
     }
@@ -39,6 +47,13 @@ class CodeStore {
     }
     @action setAddFolderName (values) {
         this.addFolderName = values;
+    }
+    @action setEditorValue (values) {
+        this.editorValue = values;
+    }
+    @action setInstName (values) {
+        this.instName = values;
+        console.log(values)
     }
 
 }

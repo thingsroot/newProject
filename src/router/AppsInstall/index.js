@@ -9,14 +9,20 @@ import highlight from 'highlight.js';
 import 'highlight.js/styles/github.css';
 import './style.scss';
 import Nav from './Nav';
+import AceEditor from 'react-ace';
+import 'brace/mode/java';
+import 'brace/theme/github';
 const TabPane = Tabs.TabPane;
 const Search = Input.Search;
 const Option = Select.Option;
 function callback (key) {
-    console.log(key);
+    if (key === 2) {
+        console.log(2)
+    }
   }
 @withRouter
-@inject('store') @observer
+@inject('store')
+@observer
 class MyGatesAppsInstall extends Component {
     state = {
         vendor: [],
@@ -30,34 +36,35 @@ class MyGatesAppsInstall extends Component {
             ventor: '',
             agreement: '',
             type: ''
-        }
-    }
+        },
+        instName: null,
+        config: []
+    };
     componentDidMount (){
         http.get('/api/method/iot_ui.iot_api.gate_info?sn=' + this.props.match.params.sn).then(res=>{
             this.props.store.appStore.setStatus(res.message)
-          })
+          });
         http.get('/api/method/app_center.api.app_suppliers').then(res=>{
             this.setState({
                 vendor: res.message
             })
-        })
+        });
         http.get('/api/method/app_center.api.app_protocols').then(res=>{
             this.setState({
                 agreement: res.message
             })
-        })
+        });
         http.get('/api/method/app_center.api.app_categories').then(res=>{
             this.setState({
                 type: res.message
             })
-        })
+        });
         http.get('/api/method/iot_ui.iot_api.appslist_bypage?count=100&page=1').then(res=>{
-            console.log(res.message.result)
             res.message.result.length > 0 && this.setState({
                 data: res.message.result,
                 filterdata: res.message.result
             })
-        })
+        });
         marked.setOptions({
             renderer: new marked.Renderer(),
             gfm: true,
@@ -69,10 +76,10 @@ class MyGatesAppsInstall extends Component {
             smartypants: false,
             xhtml: false,
             highlight: (code) =>  highlight.highlightAuto(code).value // 这段代码
-            })
+            });
+
     }
     shouldComponentUpdate (nextProps, nextState){
-        console.log(nextState.item.description)
         if (nextState.item.description !== undefined){
             document.getElementById('box').innerHTML = marked(nextState.item.description)
         }
@@ -182,8 +189,24 @@ class MyGatesAppsInstall extends Component {
             data: newdata
         })
     }
+    setInstName = ()=>{
+        this.setState({
+            instName: event.target.value
+        }, ()=>{
+            console.log(this.state.instName)
+        });
+        console.log(this.state.item)
+    };
+    onChange = (newValue)=>{
+        console.log('change', newValue);
+        this.props.store.codeStore.setEditorValue(newValue)
+    };
+    selectChange1 = (val)=>{
+        console.log(val)
+    };
+
     render () {
-        const { vendor, agreement, type, data, flag, item, detail} = this.state;
+        const { vendor, agreement, type, data, flag, item, detail, instName, config} = this.state;
         return (<div>
             <Status />
                 <div className="AppInstall">
@@ -241,26 +264,80 @@ class MyGatesAppsInstall extends Component {
                             <TabPane tab="配置面板"
                                 key="1"
                             >
-                                <div style={{display: 'flex'}}>
-                                    <p>实例名*：</p>
-                                    <Input placeholder="应用实例名"
-                                        style={{width: 300}}
+                                <p style={{lineHeight: '50px'}}>
+                                    <span className="spanStyle">实例名：</span>
+                                    <Input
+                                        type="text"
+                                        style={{width: '300px'}}
+                                        defaultValue={instName}
+                                        onChange={this.setInstName}
                                     />
+                                    <span>{instName}</span>
+                                </p>
+                                <div>
+                                    {
+                                        config && config.length > 0 && config.map((v, key)=>{
+                                            if (v.type === 'section') {
+                                                console.log(v);
+                                                console.log(key);
+                                                return <div id={v.name} key={key}>
+                                                    <p style={{lineHeight: '50px'}}>
+                                                        <span className="spanStyle">{v.desc}</span>
+
+                                                    </p>
+                                                </div>
+                                            } else {
+                                                return <div id={v.name} key={key}>
+                                                    <div style={{lineHeight: '50px'}}>
+                                                        <span className="spanStyle">{v.desc}：</span>
+                                                        <Select
+                                                            defaultValue={v.value[0]}
+                                                            style={{ width: 300 }}
+                                                            onChange={this.selectChange1}
+                                                        >
+                                                            {v.value.map(w => <Option key={w}>{w}</Option>)}
+                                                        </Select>
+                                                    </div>
+                                                </div>
+                                            }
+                                        })
+                                    }
                                 </div>
-                            <Button type="primary">安装</Button>
+
                             </TabPane>
                             <TabPane tab="JSON源码"
                                 key="2"
                             >
-                            <div style={{display: 'flex'}}>
-                                    <p>实例名*：</p>
-                                    <Input placeholder="应用实例名"
-                                        style={{width: 300}}
-                                    />
-                            </div>
-                            <Button type="primary">安装</Button>
+                                <div className="editorInfo">
+                                    <p style={{lineHeight: '50px'}}>
+                                        <span className="spanStyle">实例名：</span>
+                                        <Input
+                                            type="text"
+                                            style={{width: '300px'}}
+                                            defaultValue={instName}
+                                            onChange={this.setInstName}
+                                        />
+                                    </p>
+                                    <p style={{lineHeight: '40px'}}>
+                                        编辑器状态：
+                                        <span>{this.props.store.codeStore.readOnly ? '不可编辑' : '可编辑'}</span>
+                                    </p>
+                                </div>
+                                <AceEditor
+                                    style={{width: '100%'}}
+                                    mode="java"
+                                    theme="github"
+                                    onChange={this.onChange}
+                                    value={this.state.item.pre_configuration}
+                                    fontSize={16}
+                                    readOnly={this.props.store.codeStore.readOnly}
+                                    name="UNIQUE_ID_OF_DIV"
+                                />
+                                <Button type="primary">安装</Button>
+
+
                             </TabPane>
-                        </Tabs>,
+                        </Tabs>
                         </div>
                     </div>
                     <div className={flag ? 'show' : 'hide'}>
@@ -367,7 +444,15 @@ class MyGatesAppsInstall extends Component {
                                             <img src={`http://cloud.thingsroot.com${val.icon_image}`}
                                                 alt="logo"
                                                 onClick={()=>{
-                                                    this.setState({flag: false, item: val, detail: true})
+                                                    let config = JSON.parse(val.conf_template);
+                                                    console.log(config);
+                                                    console.log(val.conf_template);
+                                                    this.setState({
+                                                        flag: false,
+                                                        item: val,
+                                                        detail: true,
+                                                        config: config
+                                                    })
                                                 }}
                                             />
                                             <div className="apptitle">
