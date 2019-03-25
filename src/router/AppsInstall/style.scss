@@ -100,7 +100,27 @@ pre{
     }
     .spanStyle{
         display: inline-block;
-        width: 130px;
-
+        width: 100px;
+        font-weight: 600;
+    }
+    .sectionName{
+        line-height: 50px;
+    }
+    .display{
+        display: flex;
+    }
+}
+.tableModal{
+    .ant-modal-content {
+        width: 1000px!important;
+        height: 500px!important;
+        margin-left: -500px!important;
+        position: absolute;
+        left: 50%;
+        overflow-y: auto;
+    }
+    .ant-modal-body {
+        width: 1000px!important;
+        height: 390px!important;
     }
 }

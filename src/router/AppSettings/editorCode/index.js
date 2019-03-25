@@ -33,6 +33,9 @@ class EditorCode extends PureComponent {
                         name="UNIQUE_ID_OF_DIV"
                         editorProps={{$blockScrolling: true}}
                     />
+                    {
+                        console.log(this.state.data)
+                    }
                 </div>
             </div>
         );

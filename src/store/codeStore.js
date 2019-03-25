@@ -14,7 +14,16 @@ class CodeStore {
     @observable readOnly = true;
     @observable editorValue = {};
     @observable instName = '123';
+    @observable template = [];   //template选项
+    @observable dataSource = [];   //templateList
 
+    @action setTemplate (values) {
+        this.template = values;
+    }
+    @action setDataSource (values) {
+        this.dataSource = values;
+        console.log(values)
+    }
     @action setEditorContent (values) {
         this.editorContent = values;
     }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
-import { Select, Input, Rate, Icon, Button, Tabs } from 'antd';
+import { withRouter, Link } from 'react-router-dom';
+import { Select, Input, Rate, Icon, Button, Tabs, Table, Modal, Checkbox } from 'antd';
 import { inject, observer} from 'mobx-react';
 import Status from '../../common/status';
 import http from '../../utils/Server';
@@ -12,14 +12,16 @@ import Nav from './Nav';
 import AceEditor from 'react-ace';
 import 'brace/mode/java';
 import 'brace/theme/github';
+import EditableTable from './editorTable';
 const TabPane = Tabs.TabPane;
 const Search = Input.Search;
 const Option = Select.Option;
-function callback (key) {
-    if (key === 2) {
-        console.log(2)
-    }
-  }
+const block = {
+    display: 'block'
+};
+const none = {
+    display: 'none'
+};
 @withRouter
 @inject('store')
 @observer
@@ -38,7 +40,136 @@ class MyGatesAppsInstall extends Component {
             type: ''
         },
         instName: null,
-        config: []
+        config: [],
+        isTemplateShow: false,
+        addTempList: [],
+        showTempList: [],
+        deviceList: [],
+        object: {},
+        editingKey: '',
+        selectSection: 'socket',   //socket :false     serial: true
+        tcp: [
+            {
+                'name': 'ip',
+                'desc': 'IP地址',
+                'type': 'text'
+            },
+            {
+                'name': 'port',
+                'desc': '端口',
+                'type': 'number',
+                'value': 502
+            },
+            {
+                'name': 'nodelay',
+                'desc': 'Nodelay',
+                'type': 'boolean',
+                'value': true
+            }
+        ],
+        serial: [
+            {
+                'name': 'tty',
+                'desc': '端口',
+                'type': 'dropdown',
+                'value': ['ttymcx0', 'ttymcx1']
+            },
+            {
+                'name': 'baudrate',
+                'desc': '波特率',
+                'type': 'dropdown',
+                'value': [4800, 9600, 115200, 19200]
+            },
+            {
+                'name': 'stop_bits',
+                'desc': '停止位',
+                'type': 'dropdown',
+                'value': [1, 2]
+            },
+            {
+                'name': 'data_bits',
+                'desc': '数据位',
+                'type': 'dropdown',
+                'value': [8, 7]
+            },
+            {
+                'name': 'flow_control',
+                'desc': '流控',
+                'type': 'boolean',
+                'value': false
+            },
+            {
+                'name': 'parity',
+                'desc': '校验',
+                'type': 'dropdown',
+                'value': ['None', 'Even', 'Odd']
+            }
+        ],
+        addTempLists: [{
+            title: '名称',
+            dataIndex: 'conf_name',
+            key: 'conf_name',
+            render: text => <a href="javascript:;">{text}</a>
+        }, {
+            title: '描述',
+            dataIndex: 'description',
+            key: 'description'
+        }, {
+            title: '模板ID',
+            dataIndex: 'name',
+            key: 'name'
+        }, {
+            title: '版本',
+            key: 'latest_version',
+            dataIndex: 'latest_version'
+        }, {
+            title: '操作',
+            render: (record) => (
+                <div>
+                    <Button>
+                        <Link to={`/myTemplateDetails/${record.app}/${record.name}/${record.latest_version}`}>查看</Link>
+                    </Button>
+                    <span style={{padding: '0 5px'}}> </span>
+                    <Button
+                        disabled={record.disabled}
+                        onClick={()=>{
+                        this.addSingleTemp(record.conf_name, record.description, record.name, record.latest_version)
+                    }}>添加</Button>
+                </div>
+            )
+        }],
+        showTempLists: [{
+            title: '名称',
+            dataIndex: 'conf_name',
+            key: 'conf_name',
+            render: text => <a href="javascript:;">{text}</a>
+        }, {
+            title: '描述',
+            dataIndex: 'description',
+            key: 'description'
+        }, {
+            title: '模板ID',
+            dataIndex: 'name',
+            key: 'name'
+        }, {
+            title: '版本',
+            key: 'latest_version',
+            dataIndex: 'latest_version'
+        }, {
+            title: '操作',
+            key: 'app',
+            render: (record) => (
+                <Button
+                    onClick={()=>{
+                    this.onDelete(`${record.name}`)
+                    }
+                }>删除</Button>
+            )
+        }],
+        deviceColumns: [],
+        deviceSource: [],
+        SourceCode: [],
+        dataSourceCode: []
     };
     componentDidMount (){
         http.get('/api/method/iot_ui.iot_api.gate_info?sn=' + this.props.match.params.sn).then(res=>{
@@ -65,6 +196,16 @@ class MyGatesAppsInstall extends Component {
                 filterdata: res.message.result
             })
         });
+        http.get('/api/method/conf_center.api.list_app_conf_pri?app=APP00000040&limit=100')
+            .then(res=>{
+                let data = res.message;
+                data && data.length > 0 && data.map((v)=>{
+                    v['disabled'] = false;
+                });
+                this.setState({
+                    addTempList: data
+                })
+            });
         marked.setOptions({
             renderer: new marked.Renderer(),
             gfm: true,
@@ -77,7 +218,6 @@ class MyGatesAppsInstall extends Component {
             xhtml: false,
             highlight: (code) =>  highlight.highlightAuto(code).value // 这段代码
             });
-
     }
     shouldComponentUpdate (nextProps, nextState){
         if (nextState.item.description !== undefined){
@@ -144,7 +284,7 @@ class MyGatesAppsInstall extends Component {
                 }
             }, ()=>{
                 this.setFilter()
-            })
+            });
             return
         }
         this.setState({
@@ -192,21 +332,182 @@ class MyGatesAppsInstall extends Component {
     setInstName = ()=>{
         this.setState({
             instName: event.target.value
-        }, ()=>{
-            console.log(this.state.instName)
         });
-        console.log(this.state.item)
-    };
+    };  //实例名
     onChange = (newValue)=>{
-        console.log('change', newValue);
         this.props.store.codeStore.setEditorValue(newValue)
     };
-    selectChange1 = (val)=>{
-        console.log(val)
+    //添加模板
+    templateShow = ()=>{
+        this.setState({
+            isTemplateShow: true
+        });
+    };
+    handleCancelAddTempList = ()=>{
+        this.setState({
+            isTemplateShow: false
+        })
+    };
+    protocolChange = (val)=>{   //通讯
+        console.log(val);
+        if (val === 'serial') {
+            this.setState({
+                selectSection: 'serial'
+            });
+        } else if (val === 'socket') {
+            this.setState({
+                selectSection: val
+            });
+        }
+    };
+
+    //添加模板
+    addSingleTemp = (conf, desc, name, version)=>{
+        let single = {
+            conf_name: conf,
+            description: desc,
+            name: name,
+            latest_version: version
+        };
+        let template = this.props.store.codeStore.template;
+        template.push(conf)
+        this.props.store.codeStore.setTemplate(template);
+        let source = this.state.addTempList;
+        source && source.length > 0 && source.map((v)=>{
+            if (v.name === name) {
+                v.disabled = true
+            }
+        });
+        let data = this.state.showTempList;
+        data.push(single);
+        this.setState({
+            showTempList: data,
+            addTempList: source,
+            template: template
+        })
+    };
+    onDelete =  (name)=>{
+        let dataSource = this.state.showTempList;
+        dataSource.splice(name, 1);//index为获取的索引，后面的 1 是删除几行
+        this.setState({
+            showTempList: dataSource
+        });
+        let addTempList = this.state.addTempList;
+        addTempList && addTempList.length > 0 && addTempList.map((v)=>{
+            if (v.name === name) {
+                v.disabled = false;
+            }
+        });
+        this.setState({
+            addTempList: addTempList
+        })
+    };
+    getConfig = (val)=>{
+        let config = JSON.parse(val.conf_template);
+        let deviceColumns = [];
+        let object = {};
+        config && config.length > 0 && config.map((v, key)=>{
+            key;
+            if (v.name === 'device_section') {
+                v.child.map((w, key1)=>{
+                    key1;
+                    w.cols.map((i, key2)=>{
+                        key2;
+                        console.log(i);
+                        deviceColumns.push({
+                            key: key2,
+                            name: i.name,
+                            desc: i.desc,
+                            type: i.type
+                        });
+                    })
+
+                });
+            }
+        });
+        console.log(deviceColumns)
+        this.setState({
+            flag: false,
+            item: val,
+            detail: true,
+            config: config,
+            object: object,
+            deviceColumns: deviceColumns
+        })
+    };
+    checkedChange = (refName)=>{
+        this.refs[refName].value = event.target.checked
+    };
+    selectChangeValue = (refName)=>{
+        this.refs[refName].value = event.target.innerText
+    };
+
+    getData = ()=>{
+        const { tcp, serial, showTempList, selectSection } = this.state;
+        let sourceCodeData = {
+            protocol: this.refs.protocol.value,
+            Link_type: this.refs.Link_type.value
+        };
+        let data = [];
+        let showList = [];
+        if (selectSection === 'socket') {
+            tcp.map((v, key)=>{
+                key;
+                data.push({
+                    [v.name]: this.refs[v.name].value
+                })
+            });
+            sourceCodeData['socket'] = data;
+        } else if (selectSection === 'serial') {
+            serial.map((v, key)=>{
+                key;
+                data.push({
+                    [v.name]: this.refs[v.name].value
+                })
+            });
+            sourceCodeData['serial'] = data;
+        }
+        showTempList.length > 0 && showTempList.map((v, key)=>{
+            key;
+            showList.push({
+                name: v.conf_name,
+                desc: v.description,
+                id: v.name,
+                ver: v.latest_version
+            })
+        });
+        sourceCodeData['tpls'] = showList;
+        const { dataSource } = this.props.store.codeStore;
+        if (dataSource.length > 0) {
+            dataSource.map((v)=>{
+                console.log(v);
+                delete v['key']
+            });
+            sourceCodeData['devs'] = this.props.store.codeStore.dataSource
+        }
+        console.log(sourceCodeData);
+        this.setState({
+            dataSourceCode: JSON.stringify(sourceCodeData)
+        });
+    };
+    submitData = ()=>{
+        this.getData();
+    };
+    callback = (key)=>{
+        key;
+        if (this.state.config && this.state.config.length > 0) {
+            console.log('不可编辑');
+            this.getData();
+        } else {
+            console.log('可编辑')
+            this.props.store.codeStore.setReadOnly(true);
+        }
+
     };
 
     render () {
-        const { vendor, agreement, type, data, flag, item, detail, instName, config} = this.state;
+        const { vendor, agreement, type, data, flag, item, detail, showTempLists, serial, tcp,
+            addTempLists, instName, showTempList, config, addTempList} = this.state;
         return (<div>
             <Status />
                 <div className="AppInstall">
@@ -258,50 +559,215 @@ class MyGatesAppsInstall extends Component {
                             </div>
                         </div>
                         <div className={detail ? 'installapp hide' : 'installapp show'}>
-                        <Tabs onChange={callback}
+                        <Tabs onChange={this.callback}
                             type="card"
                         >
                             <TabPane tab="配置面板"
                                 key="1"
                             >
-                                <p style={{lineHeight: '50px'}}>
-                                    <span className="spanStyle">实例名：</span>
-                                    <Input
-                                        type="text"
-                                        style={{width: '300px'}}
-                                        defaultValue={instName}
-                                        onChange={this.setInstName}
-                                    />
-                                    <span>{instName}</span>
-                                </p>
-                                <div>
-                                    {
-                                        config && config.length > 0 && config.map((v, key)=>{
-                                            if (v.type === 'section') {
-                                                console.log(v);
-                                                console.log(key);
-                                                return <div id={v.name} key={key}>
-                                                    <p style={{lineHeight: '50px'}}>
-                                                        <span className="spanStyle">{v.desc}</span>
-
-                                                    </p>
-                                                </div>
-                                            } else {
-                                                return <div id={v.name} key={key}>
-                                                    <div style={{lineHeight: '50px'}}>
-                                                        <span className="spanStyle">{v.desc}：</span>
-                                                        <Select
-                                                            defaultValue={v.value[0]}
-                                                            style={{ width: 300 }}
-                                                            onChange={this.selectChange1}
-                                                        >
-                                                            {v.value.map(w => <Option key={w}>{w}</Option>)}
-                                                        </Select>
+                                <div style={config && config.length > 0 ? block : none}>
+                                    <p style={{lineHeight: '50px'}}>
+                                        <span className="spanStyle">实例名：</span>
+                                        <Input
+                                            type="text"
+                                            style={{width: '300px'}}
+                                            defaultValue={instName}
+                                            onChange={this.setInstName}
+                                        />
+                                        <span>{instName}</span>
+                                    </p>
+                                    <div>
+                                        {
+                                            config && config.length > 0 && config.map((v, key)=>{
+                                                if (v.type === 'dropdown') {
+                                                    return <div id={v.name} key={key}>
+                                                        <div style={{lineHeight: '50px'}}>
+                                                            <span className="spanStyle">{v.desc}：</span>
+                                                            <Select
+                                                                defaultValue={v.value[0]}
+                                                                style={{ width: 300 }}
+                                                                onChange={this.protocolChange}
+                                                            >
+                                                                {v.value.map(w => <Option key={w}>{w}</Option>)}
+                                                            </Select>
+                                                            <input
+                                                                type="hidden"
+                                                                value={v.value[0]}
+                                                                ref={v.name}
+                                                            />
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            }
-                                        })
-                                    }
+                                                } else if (v.name === 'serial_section') {
+                                                    return (
+                                                        <div
+                                                            id={v.name}
+                                                            key={key}
+                                                            style={this.state.selectSection === 'serial' ? block : none}
+                                                        >
+                                                            <p className="sectionName"><span style={{padding: '0 5px'}}>|</span>{v.desc}</p>
+                                                            {
+                                                                serial && serial.length > 0 && serial.map((a, index)=>{
+                                                                    if (a.type === 'dropdown') {
+                                                                        return (
+                                                                            <div
+                                                                                style={{lineHeight: '50px'}}
+                                                                                key={index}
+                                                                            >
+                                                                                <span
+                                                                                    className="spanStyle">{a.desc}</span>
+                                                                                <Select
+                                                                                    defaultValue={a.value[0]}
+                                                                                    style={{width: 300}}
+                                                                                    onChange={()=>{
+                                                                                        this.selectChangeValue(a.name)
+                                                                                    }}
+                                                                                >
+                                                                                    {a.value.map(b => <Option key={b}>{b}</Option>)}
+                                                                                </Select>
+                                                                                <input
+                                                                                    ref={a.name}
+                                                                                    type="hidden"
+                                                                                    value={a.value[0]}
+                                                                                />
+                                                                            </div>
+                                                                        )
+                                                                    } else {
+                                                                        return (
+                                                                            <div
+                                                                                style={{lineHeight: '50px'}}
+                                                                                key={index}
+                                                                            >
+                                                                                <span className="spanStyle">{a.desc}</span>
+                                                                                <Checkbox
+                                                                                    defaultChecked={a.value}
+                                                                                    onChange={
+                                                                                        ()=>{
+                                                                                            this.checkedChange(a.name)
+                                                                                        }
+                                                                                    }
+                                                                                >
+                                                                                </Checkbox>
+                                                                                <input
+                                                                                    ref={a.name}
+                                                                                    type="hidden"
+                                                                                    value={a.value}
+                                                                                />
+                                                                            </div>
+                                                                        )
+                                                                    }
+                                                                })
+                                                            }
+                                                        </div>
+                                                    )
+                                                } else if (v.name === 'tcp_section') {
+                                                    return (
+                                                        <div
+                                                            id={v.name}
+                                                            key={key}
+                                                            style={this.state.selectSection === 'socket' ? block : none}
+                                                        >
+                                                            <p className="sectionName"><span style={{padding: '0 5px'}}>|</span>{v.desc}</p>
+                                                            {
+                                                                tcp && tcp.length > 0 && tcp.map((a, index)=>{
+                                                                    if (a.type === 'boolean') {
+                                                                        return (
+                                                                            <div
+                                                                                style={{lineHeight: '50px'}}
+                                                                                key={index}
+                                                                            >
+                                                                                <span className="spanStyle">{a.desc}</span>
+                                                                                <Checkbox
+                                                                                    defaultChecked={a.value}
+                                                                                    onChange={
+                                                                                        ()=>{
+                                                                                            this.checkedChange(a.name)
+                                                                                        }
+                                                                                    }
+                                                                                >
+                                                                                </Checkbox>
+                                                                                <input
+                                                                                    ref={a.name}
+                                                                                    type="hidden"
+                                                                                    value={a.value}
+                                                                                />
+                                                                            </div>
+                                                                        )
+                                                                    } else {
+                                                                        return (
+                                                                            <div
+                                                                                style={{lineHeight: '50px'}}
+                                                                                key={index}
+                                                                            >
+                                                                                <span className="spanStyle">{a.desc}</span>
+                                                                                <Input
+                                                                                    style={{width: 320}}
+                                                                                    name={a.name}
+                                                                                    type={a.type}
+                                                                                    defaultValue={a.value}
+                                                                                />
+                                                                                <input
+                                                                                    ref={a.name}
+                                                                                    type="hidden"
+                                                                                    value={a.value}
+                                                                                />
+                                                                            </div>
+                                                                        )
+                                                                    }
+                                                                })
+                                                            }
+                                                        </div>
+                                                    )
+                                                } else if (v.name === 'template_section') {
+                                                    return (
+                                                        <div id={v.name} key={key}>
+                                                            <p className="sectionName"><span style={{padding: '0 5px'}}>|</span>{v.desc}</p>
+                                                            <Table
+                                                                rowKey="name"
+                                                                dataSource={showTempList}
+                                                                columns={showTempLists}
+                                                                pagination={false}
+                                                                style={showTempList.length > 0 ? block : none}
+                                                            />
+                                                            <Button
+                                                                onClick={this.templateShow}
+                                                                style={{margin: '10px 0'}}
+                                                            >
+                                                                添加模板
+                                                            </Button>
+                                                            <Modal
+                                                                title="添加模板"
+                                                                visible={this.state.isTemplateShow}
+                                                                onOk={this.handleCancelAddTempList}
+                                                                onCancel={this.handleCancelAddTempList}
+                                                                wrapClassName={'tableModal'}
+                                                                okText="确定"
+                                                                cancelText="取消"
+                                                            >
+                                                                <Table
+                                                                    rowKey="name"
+                                                                    dataSource={addTempList ? addTempList : []}
+                                                                    columns={addTempLists}
+                                                                    pagination={false}
+                                                                />
+                                                            </Modal>
+                                                        </div>
+                                                    )
+                                                } else if (v.name === 'device_section') {
+                                                    return <div id={v.name} key={key}>
+                                                        <p className="sectionName"><span style={{padding: '0 5px'}}>|</span>{v.desc}</p>
+                                                        <EditableTable
+                                                            deviceColumns={this.state.deviceColumns}
+                                                            deviceSource={this.state.deviceSource}
+                                                        />
+                                                    </div>
+                                                }
+                                            })
+                                        }
+                                    </div>
+                                    <Button onClick={this.submitData}>提交</Button>
+                                </div>
+                                <div style={config && config.length > 0 ? none : block}>
+                                    <p style={{winth: '100%', lineHeight: '100px', fontSize: '22px', fontWeight: 600, textAlign: 'center'}}>此应用不支持配置界面 请使用JSON格式配置</p>
                                 </div>
 
                             </TabPane>
@@ -328,14 +794,13 @@ class MyGatesAppsInstall extends Component {
                                     mode="java"
                                     theme="github"
                                     onChange={this.onChange}
-                                    value={this.state.item.pre_configuration}
+                                    // value={this.state.item.pre_configuration}
+                                    value={JSON.stringify(this.state.dataSourceCode) === '[]' ? this.state.item.pre_configuration : JSON.stringify(this.state.dataSourceCode)}
                                     fontSize={16}
                                     readOnly={this.props.store.codeStore.readOnly}
                                     name="UNIQUE_ID_OF_DIV"
                                 />
-                                <Button type="primary">安装</Button>
-
-
+                                <Button onClick={this.submitData}>提交</Button>
                             </TabPane>
                         </Tabs>
                         </div>
@@ -349,7 +814,6 @@ class MyGatesAppsInstall extends Component {
                                         style={{ width: 120 }}
                                         onChange={()=>{
                                             this.handleChangevendor()
-
                                         }}
                                         size="small"
                                         key="44"
@@ -444,15 +908,7 @@ class MyGatesAppsInstall extends Component {
                                             <img src={`http://cloud.thingsroot.com${val.icon_image}`}
                                                 alt="logo"
                                                 onClick={()=>{
-                                                    let config = JSON.parse(val.conf_template);
-                                                    console.log(config);
-                                                    console.log(val.conf_template);
-                                                    this.setState({
-                                                        flag: false,
-                                                        item: val,
-                                                        detail: true,
-                                                        config: config
-                                                    })
+                                                    this.getConfig(val)
                                                 }}
                                             />
                                             <div className="apptitle">
