@@ -565,24 +565,6 @@ class MyGatesAppsInstall extends Component {
                             <TabPane tab="配置面板"
                                 key="1"
                             >
-<<<<<<< HEAD
-                                <div style={config && config.length > 0 ? block : none}>
-                                    <p style={{lineHeight: '50px'}}>
-                                        <span className="spanStyle">实例名：</span>
-                                        <Input
-                                            type="text"
-                                            style={{width: '300px'}}
-                                            defaultValue={instName}
-                                            onChange={this.setInstName}
-                                        />
-                                        <span>{instName}</span>
-                                    </p>
-                                    <div>
-                                        {
-                                            config && config.length > 0 && config.map((v, key)=>{
-                                                if (v.type === 'dropdown') {
-                                                    return <div id={v.name} key={key}>
-=======
                                 <p style={{lineHeight: '50px'}}>
                                     <span className="spanStyle">实例名：</span>
                                     <Input
@@ -594,54 +576,21 @@ class MyGatesAppsInstall extends Component {
                                     <span>{instName}</span>
                                 </p>
                                 <div>
+                                    {console.log(config)}
                                     {
-                                        config && config.length > 0 && config.map((v, key)=>{
+                                        config && config.length > 0 && config.map((v, key) => {
                                             if (v.type === 'section') {
-                                                return (
-                                                    <div
-                                                        id={v.name}
-                                                        key={key}
-                                                    >
-                                                        <p style={{lineHeight: '50px'}}>
-                                                            <span className="spanStyle">{v.desc}</span>
-
-                                                        </p>
-                                                    </div>
-                                                )
-                                            } else {
-                                                return (
-                                                    <div
-                                                        id={v.name}
-                                                        key={key}
-                                                    >
->>>>>>> cbe5136eb042275f0ba69b37844dcf27dfe754f4
-                                                        <div style={{lineHeight: '50px'}}>
-                                                            <span className="spanStyle">{v.desc}：</span>
-                                                            <Select
-                                                                defaultValue={v.value[0]}
-                                                                style={{ width: 300 }}
-<<<<<<< HEAD
-                                                                onChange={this.protocolChange}
-                                                            >
-                                                                {v.value.map(w => <Option key={w}>{w}</Option>)}
-                                                            </Select>
-                                                            <input
-                                                                type="hidden"
-                                                                value={v.value[0]}
-                                                                ref={v.name}
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                } else if (v.name === 'serial_section') {
+                                                if (v.name === 'serial_section') {
                                                     return (
                                                         <div
                                                             id={v.name}
                                                             key={key}
                                                             style={this.state.selectSection === 'serial' ? block : none}
                                                         >
-                                                            <p className="sectionName"><span style={{padding: '0 5px'}}>|</span>{v.desc}</p>
+                                                            <p className="sectionName"><span
+                                                                style={{padding: '0 5px'}}>|</span>{v.desc}</p>
                                                             {
-                                                                serial && serial.length > 0 && serial.map((a, index)=>{
+                                                                serial && serial.length > 0 && serial.map((a, index) => {
                                                                     if (a.type === 'dropdown') {
                                                                         return (
                                                                             <div
@@ -653,11 +602,12 @@ class MyGatesAppsInstall extends Component {
                                                                                 <Select
                                                                                     defaultValue={a.value[0]}
                                                                                     style={{width: 300}}
-                                                                                    onChange={()=>{
+                                                                                    onChange={() => {
                                                                                         this.selectChangeValue(a.name)
                                                                                     }}
                                                                                 >
-                                                                                    {a.value.map(b => <Option key={b}>{b}</Option>)}
+                                                                                    {a.value.map(b => <Option
+                                                                                        key={b}>{b}</Option>)}
                                                                                 </Select>
                                                                                 <input
                                                                                     ref={a.name}
@@ -672,11 +622,12 @@ class MyGatesAppsInstall extends Component {
                                                                                 style={{lineHeight: '50px'}}
                                                                                 key={index}
                                                                             >
-                                                                                <span className="spanStyle">{a.desc}</span>
+                                                                                <span
+                                                                                    className="spanStyle">{a.desc}</span>
                                                                                 <Checkbox
                                                                                     defaultChecked={a.value}
                                                                                     onChange={
-                                                                                        ()=>{
+                                                                                        () => {
                                                                                             this.checkedChange(a.name)
                                                                                         }
                                                                                     }
@@ -701,20 +652,22 @@ class MyGatesAppsInstall extends Component {
                                                             key={key}
                                                             style={this.state.selectSection === 'socket' ? block : none}
                                                         >
-                                                            <p className="sectionName"><span style={{padding: '0 5px'}}>|</span>{v.desc}</p>
+                                                            <p className="sectionName"><span
+                                                                style={{padding: '0 5px'}}>|</span>{v.desc}</p>
                                                             {
-                                                                tcp && tcp.length > 0 && tcp.map((a, index)=>{
+                                                                tcp && tcp.length > 0 && tcp.map((a, index) => {
                                                                     if (a.type === 'boolean') {
                                                                         return (
                                                                             <div
                                                                                 style={{lineHeight: '50px'}}
                                                                                 key={index}
                                                                             >
-                                                                                <span className="spanStyle">{a.desc}</span>
+                                                                                <span
+                                                                                    className="spanStyle">{a.desc}</span>
                                                                                 <Checkbox
                                                                                     defaultChecked={a.value}
                                                                                     onChange={
-                                                                                        ()=>{
+                                                                                        () => {
                                                                                             this.checkedChange(a.name)
                                                                                         }
                                                                                     }
@@ -733,7 +686,8 @@ class MyGatesAppsInstall extends Component {
                                                                                 style={{lineHeight: '50px'}}
                                                                                 key={index}
                                                                             >
-                                                                                <span className="spanStyle">{a.desc}</span>
+                                                                                <span
+                                                                                    className="spanStyle">{a.desc}</span>
                                                                                 <Input
                                                                                     style={{width: 320}}
                                                                                     name={a.name}
@@ -755,7 +709,8 @@ class MyGatesAppsInstall extends Component {
                                                 } else if (v.name === 'template_section') {
                                                     return (
                                                         <div id={v.name} key={key}>
-                                                            <p className="sectionName"><span style={{padding: '0 5px'}}>|</span>{v.desc}</p>
+                                                            <p className="sectionName"><span
+                                                                style={{padding: '0 5px'}}>|</span>{v.desc}</p>
                                                             <Table
                                                                 rowKey="name"
                                                                 dataSource={showTempList}
@@ -789,32 +744,53 @@ class MyGatesAppsInstall extends Component {
                                                     )
                                                 } else if (v.name === 'device_section') {
                                                     return <div id={v.name} key={key}>
-                                                        <p className="sectionName"><span style={{padding: '0 5px'}}>|</span>{v.desc}</p>
+                                                        <p className="sectionName"><span
+                                                            style={{padding: '0 5px'}}>|</span>{v.desc}</p>
                                                         <EditableTable
                                                             deviceColumns={this.state.deviceColumns}
                                                             deviceSource={this.state.deviceSource}
                                                         />
                                                     </div>
                                                 }
-                                            })
-                                        }
-                                    </div>
-                                    <Button onClick={this.submitData}>提交</Button>
-                                </div>
-                                <div style={config && config.length > 0 ? none : block}>
-                                    <p style={{winth: '100%', lineHeight: '100px', fontSize: '22px', fontWeight: 600, textAlign: 'center'}}>此应用不支持配置界面 请使用JSON格式配置</p>
-=======
-                                                                onChange={this.selectChange1}
+                                            } else {
+                                                return (
+                                                    <div
+                                                        id={v.name}
+                                                        key={key}
+                                                    >
+                                                        <div style={{lineHeight: '50px'}}>
+                                                            <span className="spanStyle">{v.desc}：</span>
+                                                            <Select
+                                                                defaultValue={v.value[0]}
+                                                                style={{width: 300}}
+                                                                onChange={this.protocolChange}
                                                             >
                                                                 {v.value.map(w => <Option key={w}>{w}</Option>)}
                                                             </Select>
+                                                            <input
+                                                                type="hidden"
+                                                                value={v.value[0]}
+                                                                ref={v.name}
+                                                            />
                                                         </div>
                                                     </div>
                                                 )
                                             }
                                         })
                                     }
->>>>>>> cbe5136eb042275f0ba69b37844dcf27dfe754f4
+                                </div>
+                                <div style={config && config.length > 0 ? none : block}>
+                                    <p
+                                        style={{
+                                            winth: '100%',
+                                            lineHeight: '100px',
+                                            fontSize: '22px',
+                                            fontWeight: 600,
+                                            textAlign: 'center'
+                                        }}
+                                    >此应用不支持配置界面 请使用JSON格式配置</p>
+
+
                                 </div>
 
                             </TabPane>
@@ -854,131 +830,130 @@ class MyGatesAppsInstall extends Component {
                     </div>
                     <div className={flag ? 'show' : 'hide'}>
                         <div className="installheader">
-                            <div className="selectlist">
-                                <div>
-                                    设备厂商:
-                                    <Select defaultValue="设备厂商"
-                                        style={{ width: 120 }}
-                                        onChange={()=>{
-                                            this.handleChangevendor()
-                                        }}
-                                        size="small"
-                                        key="44"
-                                    >
-                                        <Option
-                                            value="全部"
-                                            key="99"
-                                        >全部</Option>
-                                                {
-                                                    vendor && vendor.length > 0 && vendor.map((val, ind) => {
+                           <div className="selectlist">
+                               <div>
+                                   设备厂商:
+                                   <Select defaultValue="设备厂商"
+                                       style={{ width: 120 }}
+                                       onChange={()=>{
+                                           this.handleChangevendor()
+                                       }}
+                                       size="small"
+                                       key="44"
+                                   >
+                                       <Option
+                                           value="全部"
+                                           key="99"
+                                       >全部</Option>
+                                               {
+                                                   vendor && vendor.length > 0 && vendor.map((val, ind) => {
+                                                       return (
+                                                           <Option
+                                                               value={val.name}
+                                                               key={ind}
+                                                           >{val.name}</Option>
+                                                       )
+                                                   })
+                                               }
+                                           </Select>
+                               </div>
+                               <div>
+                                   通讯协议:
+                                   <Select defaultValue="通讯协议"
+                                       style={{ width: 120 }}
+                                       onChange={()=>{
+                                           this.handleChangeagreement()
+                                       }}
+                                       size="small"
+                                       key="11"
+                                   >
+                                       <Option
+                                           value="全部"
+                                           key="99"
+                                       >全部</Option>
+                                               {
+                                                   agreement && agreement.length > 0 && agreement.map((val, ind) => {
+                                                       return (
+                                                           <Option
+                                                               value={val.name}
+                                                               key={ind}
+                                                           >{val.name}</Option>
+                                                       )
+                                                   })
+                                               }
+                                           </Select>
+                               </div>
+                               <div>
+                                   应用类型:
+                                   <Select defaultValue="应用类型"
+                                       style={{ width: 120 }}
+                                       onChange={()=>{
+                                           this.handleChangetype()
+                                       }}
+                                       size="small"
+                                       key="22"
+                                   >
+                                       <Option
+                                           value="全部"
+                                           key="99"
+                                       >全部</Option>
+                                               {
+                                                   type && type.length > 0 && type.map((val, ind) => {
                                                         return (
-                                                            <Option
-                                                                value={val.name}
-                                                                key={ind}
-                                                            >{val.name}</Option>
-                                                        )
-                                                    })
-                                                }
-                                            </Select>
-                                </div>
-                                <div>
-                                    通讯协议:
-                                    <Select defaultValue="通讯协议"
-                                        style={{ width: 120 }}
-                                        onChange={()=>{
-                                            this.handleChangeagreement()
-                                        }}
-                                        size="small"
-                                        key="11"
-                                    >
-                                        <Option
-                                            value="全部"
-                                            key="99"
-                                        >全部</Option>
-                                                {
-                                                    agreement && agreement.length > 0 && agreement.map((val, ind) => {
-                                                        return (
-                                                            <Option
-                                                                value={val.name}
-                                                                key={ind}
-                                                            >{val.name}</Option>
-                                                        )
-                                                    })
-                                                }
-                                            </Select>
-                                </div>
-                                <div>
-                                    应用类型:
-                                    <Select defaultValue="应用类型"
-                                        style={{ width: 120 }}
-                                        onChange={()=>{
-                                            this.handleChangetype()
-                                        }}
-                                        size="small"
-                                        key="22"
-                                    >
-                                        <Option
-                                            value="全部"
-                                            key="99"
-                                        >全部</Option>
-                                                {
-                                                    type && type.length > 0 && type.map((val, ind) => {
-                                                        return (
-                                                            <Option
-                                                                value={val.name}
-                                                                key={ind}
-                                                            >{val.name}</Option>
-                                                        )
-                                                    })
-                                                }
-                                            </Select>
-                                </div>
-                            </div>
-                            <div className="searchlist">
-                                <Search
-                                    key="33"
-                                    placeholder="搜索应用名"
-                                    onSearch={(value)=>{
-                                        this.searchApp(value)
-                                    }}
-                                    style={{ width: 200 }}
-                                />
-                            </div>
-                        </div>
-                        <div className="installcontent">
-                            {
-                                data && data.length > 0 && data.map((val, ind)=>{
-                                    return (
-                                        <div key={ind}
-                                            className="item"
-                                        >
-                                            <img src={`http://cloud.thingsroot.com${val.icon_image}`}
-                                                alt="logo"
-                                                onClick={()=>{
-                                                    this.getConfig(val)
-                                                }}
-                                            />
-                                            <div className="apptitle">
-                                                <p>{val.app_name}</p>
-                                                <div>
-                                                    <Rate disabled
-                                                        defaultValue={val.star}
-                                                        size="small"
-                                                    />
-                                                    <span onClick={()=>{
-                                                        this.setState({
-                                                            flag: false,
-                                                            detail: false,
-                                                            item: val
-                                                        })
-                                                    }}
-                                                    ><Icon type="cloud-download" /></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )
-                                })
-                            }
+                                                           <Option
+                                                               value={val.name}
+                                                               key={ind}
+                                                           >{val.name}</Option>
+                                                       )
+                                                   })
+                                               }
+                                   </Select>
+                               </div>
+                           </div>
+                           <div className="searchlist">
+                               <Search
+                                   key="33"
+                                   placeholder="搜索应用名"
+                                   onSearch={(value)=>{
+                                       this.searchApp(value)
+                                   }}
+                                   style={{ width: 200 }}
+                               />
+                           </div>
+                       </div>
+                       <div className="installcontent">
+                           {
+                               data && data.length > 0 && data.map((val, ind)=>{
+                                   return (
+                                       <div key={ind}
+                                           className="item"
+                                       >
+                                           <img src={`http://cloud.thingsroot.com${val.icon_image}`}
+                                               alt="logo"
+                                               onClick={()=>{
+                                                   this.getConfig(val)
+                                               }}
+                                           />
+                                           <div className="apptitle">
+                                               <p>{val.app_name}</p>
+                                               <div>
+                                                   <Rate disabled
+                                                       defaultValue={val.star}
+                                                       size="small"
+                                                   />
+                                                   <span onClick={()=>{
+                                                       this.setState({
+                                                           flag: false,
+                                                           detail: false,
+                                                           item: val
+                                                       })
+                                                   }}
+                                                   ><Icon type="cloud-download" /></span>
+                                               </div>
+                                           </div>
+                                        </div>)
+                               })
+                           }
                         </div>
                     </div>
                 </div>
