@@ -12,6 +12,16 @@ import {
 import { withRouter } from 'react-router-dom';
 import http from '../../../utils/Server';
 import './style.scss';
+let myFaultTypeChart;
+function getMin (i, date){
+  let Dates = new Date(date - i * 60000)
+  let min = Dates.getMinutes();
+  if (min < 10){
+    return '0' + min
+  } else {
+    return min;
+  }
+}
   class ExpandedRowRender extends PureComponent {
     state = {
       data: [],
@@ -20,6 +30,10 @@ import './style.scss';
       barData: []
     }
     componentDidMount (){
+      myFaultTypeChart = null;
+      if (myFaultTypeChart && myFaultTypeChart.dispose) {
+        myFaultTypeChart.dispose();
+        }
       const { sn } = this.props.match.params;
       http.get('/api/method/iot_ui.iot_api.gate_device_data_array?sn=' + sn + '&vsn=' + this.props.sn).then(res=>{
         console.log(res)
@@ -65,105 +79,59 @@ import './style.scss';
           })
       })
     }
-    showModal = (props) => {
+    showModal = (record) => {
+      console.log(record)
       this.setState({
         visible: true,
-        record: props
+        record
       });
-      http.get(`/api/method/iot_ui.iot_api.gate_device_data_array?sn=${this.props.match.params.sn}&vsn=${props.vsn}&_=${new Date() * 1}`).then(res=>{
-        let data = res.message;
-        let newdata = [];
-        let alldata = [];
-        data && data.map((item, index)=>{
-          alldata[index] = [];
-          http.get(`/api/method/iot_ui.iot_api.taghisdata?sn=${this.props.match.params.sn}&vsn=${props.vsn}&tag=${item.name}&vt=${item.vt || 'float'}&time_condition=time > now() - 30m&value_method=raw&group_time_span=10m&_=${new Date() * 1}`).then(message=>{
-            newdata = message.message;
-            newdata.map((item)=>{
-              alldata[index].push(item.value)
-            })
-          })
-        })
-        setTimeout(()=>{
-          let myFaultTypeChart = echarts.init(document.getElementById('faultTypeMain'));
+      if (record.vt === 'int'){
+        record.vt = 'int';
+      } else if (record.vt === 'string'){
+        record.vt = 'string';
+      } else {
+        record.vt = 'float';
+      }
+      const data = {
+        sn: this.props.match.params.sn,
+        vsn: this.props.sn,
+        name: record.name,
+        vt: record.vt,
+        time_condition: 'time > now() - 1h',
+        value_method: 'raw',
+        group_time_span: '1h',
+        _: new Date() * 1
+      }
+      http.get(`/api/method/iot_ui.iot_api.taghisdata?sn=${data.sn}&vsn=${data.vsn}&tag=${data.name}&vt=${data.vt}&time_condition=time > now() - 10m&value_method=raw&group_time_span=10m&_=1551251898530`).then((res)=>{
+        const { myCharts } = this.refs;
+        let data = [];
+        const date = new Date() * 1;
+        for (var i = 0;i < 10;i++){
+          data.unshift(new Date(date - (i * 60000)).getHours() + ':' + getMin(i, date));
+        }
+        console.log(name)
+        myFaultTypeChart = echarts.init(myCharts);
           myFaultTypeChart.setOption({
               tooltip: {
                   trigger: 'axis',
                   axisPointer: {
-                      type: 'shadow'
+                      type: 'cross'
                   }
               },
-              // legend: {
-              //     data: ['系统', '设备', '通讯', '数据']
-              // },
               xAxis: {
-                  data: ['Mon Fed 11', 'Mon Fed 13', 'Mon Fed 15', 'Mon Fed 17']
+                  data: data
               },
               yAxis: {},
-              series: data.map((item, key)=>{
-                return {
-                  name: item.name,
+              series: [
+                {
+                  name: '数值',
                   type: 'line',
                   color: '#37A2DA',
-                  data: alldata[key]
+                  data: res.message
                 }
-              })
+              ]
           });
-        }, 1000)
       })
-      // http.get('/api/method/iot_ui.iot_api.device_event_type_statistics').then(res=>{
-      //   this.setState({barData: res.message}, ()=>{
-      //     console.log(res, '=====')
-      //     if (res.message){
-      //       let data1 = [];
-      //           let data2 = [];
-      //           let data3 = [];
-      //           let data4 = [];
-      //           this.state.barData.map((v) =>{
-      //               data1.push(v['系统']);
-      //               data2.push(v['设备']);
-      //               data3.push(v['通讯']);
-      //               data4.push(v['数据']);
-      //           });
-      //           let myFaultTypeChart = echarts.init(document.getElementById('faultTypeMain'));
-      //           myFaultTypeChart.setOption({
-      //               tooltip: {
-      //                   trigger: 'axis',
-      //                   axisPointer: {
-      //                       type: 'shadow'
-      //                   }
-      //               },
-      //               // legend: {
-      //               //     data: ['系统', '设备', '通讯', '数据']
-      //               // },
-      //               xAxis: {
-      //                   data: ['Mon Fed 11', 'Mon Fed 13', 'Mon Fed 15', 'Mon Fed 17']
-      //               },
-      //               yAxis: {},
-      //               series: [{
-      //                   name: '系统',
-      //                   type: 'line',
-      //                   color: '#37A2DA',
-      //                   data: data1
-      //               }, {
-      //                   name: '设备',
-      //                   type: 'line',
-      //                   color: '#67E0E3',
-      //                   data: data2
-      //               }, {
-      //                   name: '通讯',
-      //                   type: 'line',
-      //                   color: '#FFDB5C',
-      //                   data: data3
-      //               }, {
-      //                   name: '数据',
-      //                   type: 'line',
-      //                   color: '#FF9F7F',
-      //                   data: data4
-      //               }]
-      //           });
-      //     }
-      //   });
-      // })
     }
     handleOk = () => {
       const {record} = this.state;
@@ -171,12 +139,14 @@ import './style.scss';
         visible: false
       });
       this.props.history.push(`/BrowsingHistory/${record.sn}/${record.vsn}`)
+      myFaultTypeChart.dispose();
     }
     handleCancel = (e) => {
       console.log(e);
       this.setState({
         visible: false
       });
+      myFaultTypeChart.dispose();
     }
     render () {
       return (
@@ -190,7 +160,7 @@ import './style.scss';
               pagination={false}
           />
           <Modal
-              title="Basic Modal"
+              title={this.state.record ? '变量' + this.state.record.name + '十分钟内数值变化' : ''}
               visible={this.state.visible}
               onOk={this.handleOk}
               onCancel={this.handleCancel}
@@ -208,6 +178,7 @@ import './style.scss';
           >
             <div
                 id="faultTypeMain"
+                ref="myCharts"
                 style={{width: 472, height: 250}}
             ></div>
           </Modal>

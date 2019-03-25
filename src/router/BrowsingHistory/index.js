@@ -104,12 +104,18 @@ class BrowsingHistory extends Component {
         const { way, scope, domain} = this.state;
         return {
             onClick: () => {
-                console.log(record)
               this.setState({
                 rowId: record.id,
                 defaultvalue: this.state.data[record.id].name,
                 detailloading: true
               }, ()=>{
+                if (record.vt === 'int'){
+                  record.vt = 'int';
+                } else if (record.vt === 'string'){
+                  record.vt = 'string';
+                } else {
+                  record.vt = 'float';
+                }
                   axios(`/api/method/iot_ui.iot_api.taghisdata?sn=${this.props.match.params.sn}&vsn=${this.props.match.params.vsn}&tag=${record.name}&vt=${record.vt || 'float'}&time_condition=time > now() - ${scope}&value_method=${way}&group_time_span=${domain}&_=1551251898530`, {
                     method: 'get',
                     headers: {

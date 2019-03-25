@@ -43,6 +43,7 @@ class LinkStatus extends Component {
                 data3.push(v['通讯']);
                 data4.push(v['数据']);
             });
+            console.log(data2)
             let myFaultTypeChart = echarts.init(document.getElementById('CPU'));
             let memory = echarts.init(document.getElementById('memory'));
             memory.setOption({
