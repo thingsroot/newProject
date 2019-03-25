@@ -565,24 +565,6 @@ class MyGatesAppsInstall extends Component {
                             <TabPane tab="配置面板"
                                 key="1"
                             >
-<<<<<<< HEAD
-                                <div style={config && config.length > 0 ? block : none}>
-                                    <p style={{lineHeight: '50px'}}>
-                                        <span className="spanStyle">实例名：</span>
-                                        <Input
-                                            type="text"
-                                            style={{width: '300px'}}
-                                            defaultValue={instName}
-                                            onChange={this.setInstName}
-                                        />
-                                        <span>{instName}</span>
-                                    </p>
-                                    <div>
-                                        {
-                                            config && config.length > 0 && config.map((v, key)=>{
-                                                if (v.type === 'dropdown') {
-                                                    return <div id={v.name} key={key}>
-=======
                                 <p style={{lineHeight: '50px'}}>
                                     <span className="spanStyle">实例名：</span>
                                     <Input
@@ -614,196 +596,11 @@ class MyGatesAppsInstall extends Component {
                                                         id={v.name}
                                                         key={key}
                                                     >
->>>>>>> cbe5136eb042275f0ba69b37844dcf27dfe754f4
                                                         <div style={{lineHeight: '50px'}}>
                                                             <span className="spanStyle">{v.desc}：</span>
                                                             <Select
                                                                 defaultValue={v.value[0]}
                                                                 style={{ width: 300 }}
-<<<<<<< HEAD
-                                                                onChange={this.protocolChange}
-                                                            >
-                                                                {v.value.map(w => <Option key={w}>{w}</Option>)}
-                                                            </Select>
-                                                            <input
-                                                                type="hidden"
-                                                                value={v.value[0]}
-                                                                ref={v.name}
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                } else if (v.name === 'serial_section') {
-                                                    return (
-                                                        <div
-                                                            id={v.name}
-                                                            key={key}
-                                                            style={this.state.selectSection === 'serial' ? block : none}
-                                                        >
-                                                            <p className="sectionName"><span style={{padding: '0 5px'}}>|</span>{v.desc}</p>
-                                                            {
-                                                                serial && serial.length > 0 && serial.map((a, index)=>{
-                                                                    if (a.type === 'dropdown') {
-                                                                        return (
-                                                                            <div
-                                                                                style={{lineHeight: '50px'}}
-                                                                                key={index}
-                                                                            >
-                                                                                <span
-                                                                                    className="spanStyle">{a.desc}</span>
-                                                                                <Select
-                                                                                    defaultValue={a.value[0]}
-                                                                                    style={{width: 300}}
-                                                                                    onChange={()=>{
-                                                                                        this.selectChangeValue(a.name)
-                                                                                    }}
-                                                                                >
-                                                                                    {a.value.map(b => <Option key={b}>{b}</Option>)}
-                                                                                </Select>
-                                                                                <input
-                                                                                    ref={a.name}
-                                                                                    type="hidden"
-                                                                                    value={a.value[0]}
-                                                                                />
-                                                                            </div>
-                                                                        )
-                                                                    } else {
-                                                                        return (
-                                                                            <div
-                                                                                style={{lineHeight: '50px'}}
-                                                                                key={index}
-                                                                            >
-                                                                                <span className="spanStyle">{a.desc}</span>
-                                                                                <Checkbox
-                                                                                    defaultChecked={a.value}
-                                                                                    onChange={
-                                                                                        ()=>{
-                                                                                            this.checkedChange(a.name)
-                                                                                        }
-                                                                                    }
-                                                                                >
-                                                                                </Checkbox>
-                                                                                <input
-                                                                                    ref={a.name}
-                                                                                    type="hidden"
-                                                                                    value={a.value}
-                                                                                />
-                                                                            </div>
-                                                                        )
-                                                                    }
-                                                                })
-                                                            }
-                                                        </div>
-                                                    )
-                                                } else if (v.name === 'tcp_section') {
-                                                    return (
-                                                        <div
-                                                            id={v.name}
-                                                            key={key}
-                                                            style={this.state.selectSection === 'socket' ? block : none}
-                                                        >
-                                                            <p className="sectionName"><span style={{padding: '0 5px'}}>|</span>{v.desc}</p>
-                                                            {
-                                                                tcp && tcp.length > 0 && tcp.map((a, index)=>{
-                                                                    if (a.type === 'boolean') {
-                                                                        return (
-                                                                            <div
-                                                                                style={{lineHeight: '50px'}}
-                                                                                key={index}
-                                                                            >
-                                                                                <span className="spanStyle">{a.desc}</span>
-                                                                                <Checkbox
-                                                                                    defaultChecked={a.value}
-                                                                                    onChange={
-                                                                                        ()=>{
-                                                                                            this.checkedChange(a.name)
-                                                                                        }
-                                                                                    }
-                                                                                >
-                                                                                </Checkbox>
-                                                                                <input
-                                                                                    ref={a.name}
-                                                                                    type="hidden"
-                                                                                    value={a.value}
-                                                                                />
-                                                                            </div>
-                                                                        )
-                                                                    } else {
-                                                                        return (
-                                                                            <div
-                                                                                style={{lineHeight: '50px'}}
-                                                                                key={index}
-                                                                            >
-                                                                                <span className="spanStyle">{a.desc}</span>
-                                                                                <Input
-                                                                                    style={{width: 320}}
-                                                                                    name={a.name}
-                                                                                    type={a.type}
-                                                                                    defaultValue={a.value}
-                                                                                />
-                                                                                <input
-                                                                                    ref={a.name}
-                                                                                    type="hidden"
-                                                                                    value={a.value}
-                                                                                />
-                                                                            </div>
-                                                                        )
-                                                                    }
-                                                                })
-                                                            }
-                                                        </div>
-                                                    )
-                                                } else if (v.name === 'template_section') {
-                                                    return (
-                                                        <div id={v.name} key={key}>
-                                                            <p className="sectionName"><span style={{padding: '0 5px'}}>|</span>{v.desc}</p>
-                                                            <Table
-                                                                rowKey="name"
-                                                                dataSource={showTempList}
-                                                                columns={showTempLists}
-                                                                pagination={false}
-                                                                style={showTempList.length > 0 ? block : none}
-                                                            />
-                                                            <Button
-                                                                onClick={this.templateShow}
-                                                                style={{margin: '10px 0'}}
-                                                            >
-                                                                添加模板
-                                                            </Button>
-                                                            <Modal
-                                                                title="添加模板"
-                                                                visible={this.state.isTemplateShow}
-                                                                onOk={this.handleCancelAddTempList}
-                                                                onCancel={this.handleCancelAddTempList}
-                                                                wrapClassName={'tableModal'}
-                                                                okText="确定"
-                                                                cancelText="取消"
-                                                            >
-                                                                <Table
-                                                                    rowKey="name"
-                                                                    dataSource={addTempList ? addTempList : []}
-                                                                    columns={addTempLists}
-                                                                    pagination={false}
-                                                                />
-                                                            </Modal>
-                                                        </div>
-                                                    )
-                                                } else if (v.name === 'device_section') {
-                                                    return <div id={v.name} key={key}>
-                                                        <p className="sectionName"><span style={{padding: '0 5px'}}>|</span>{v.desc}</p>
-                                                        <EditableTable
-                                                            deviceColumns={this.state.deviceColumns}
-                                                            deviceSource={this.state.deviceSource}
-                                                        />
-                                                    </div>
-                                                }
-                                            })
-                                        }
-                                    </div>
-                                    <Button onClick={this.submitData}>提交</Button>
-                                </div>
-                                <div style={config && config.length > 0 ? none : block}>
-                                    <p style={{winth: '100%', lineHeight: '100px', fontSize: '22px', fontWeight: 600, textAlign: 'center'}}>此应用不支持配置界面 请使用JSON格式配置</p>
-=======
                                                                 onChange={this.selectChange1}
                                                             >
                                                                 {v.value.map(w => <Option key={w}>{w}</Option>)}
@@ -814,7 +611,6 @@ class MyGatesAppsInstall extends Component {
                                             }
                                         })
                                     }
->>>>>>> cbe5136eb042275f0ba69b37844dcf27dfe754f4
                                 </div>
 
                             </TabPane>
