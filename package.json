@@ -158,6 +158,6 @@
   "devDependencies": {
     "babel-preset-mobx": "^2.0.0",
     "less-loader": "^4.1.0",
-    "mqtt": "^2.18.8"
+    "mqtt": "^2.18.1"
   }
 }

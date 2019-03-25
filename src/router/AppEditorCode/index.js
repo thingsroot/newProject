@@ -334,7 +334,6 @@ class AppEditorCode extends Component {
             this.addFolderHide();
         }
     };
-    
     //删除文件
     showConfirm = (content)=>{
         const pro = ()=>{
@@ -443,7 +442,7 @@ class AppEditorCode extends Component {
                         <Icon
                             type="delete"
                             onClick={this.deleteFileShow}
-                    />
+                        />
                     </p>
                     <p>
                         <Icon

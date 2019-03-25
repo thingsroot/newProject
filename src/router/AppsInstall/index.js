@@ -565,6 +565,7 @@ class MyGatesAppsInstall extends Component {
                             <TabPane tab="配置面板"
                                 key="1"
                             >
+<<<<<<< HEAD
                                 <div style={config && config.length > 0 ? block : none}>
                                     <p style={{lineHeight: '50px'}}>
                                         <span className="spanStyle">实例名：</span>
@@ -581,11 +582,45 @@ class MyGatesAppsInstall extends Component {
                                             config && config.length > 0 && config.map((v, key)=>{
                                                 if (v.type === 'dropdown') {
                                                     return <div id={v.name} key={key}>
+=======
+                                <p style={{lineHeight: '50px'}}>
+                                    <span className="spanStyle">实例名：</span>
+                                    <Input
+                                        type="text"
+                                        style={{width: '300px'}}
+                                        defaultValue={instName}
+                                        onChange={this.setInstName}
+                                    />
+                                    <span>{instName}</span>
+                                </p>
+                                <div>
+                                    {
+                                        config && config.length > 0 && config.map((v, key)=>{
+                                            if (v.type === 'section') {
+                                                return (
+                                                    <div
+                                                        id={v.name}
+                                                        key={key}
+                                                    >
+                                                        <p style={{lineHeight: '50px'}}>
+                                                            <span className="spanStyle">{v.desc}</span>
+
+                                                        </p>
+                                                    </div>
+                                                )
+                                            } else {
+                                                return (
+                                                    <div
+                                                        id={v.name}
+                                                        key={key}
+                                                    >
+>>>>>>> cbe5136eb042275f0ba69b37844dcf27dfe754f4
                                                         <div style={{lineHeight: '50px'}}>
                                                             <span className="spanStyle">{v.desc}：</span>
                                                             <Select
                                                                 defaultValue={v.value[0]}
                                                                 style={{ width: 300 }}
+<<<<<<< HEAD
                                                                 onChange={this.protocolChange}
                                                             >
                                                                 {v.value.map(w => <Option key={w}>{w}</Option>)}
@@ -768,6 +803,18 @@ class MyGatesAppsInstall extends Component {
                                 </div>
                                 <div style={config && config.length > 0 ? none : block}>
                                     <p style={{winth: '100%', lineHeight: '100px', fontSize: '22px', fontWeight: 600, textAlign: 'center'}}>此应用不支持配置界面 请使用JSON格式配置</p>
+=======
+                                                                onChange={this.selectChange1}
+                                                            >
+                                                                {v.value.map(w => <Option key={w}>{w}</Option>)}
+                                                            </Select>
+                                                        </div>
+                                                    </div>
+                                                )
+                                            }
+                                        })
+                                    }
+>>>>>>> cbe5136eb042275f0ba69b37844dcf27dfe754f4
                                 </div>
 
                             </TabPane>

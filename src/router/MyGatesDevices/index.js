@@ -76,13 +76,16 @@ class MyGatesDevices extends Component {
             <div >
                 <Status flag={this.visible}/>
                 <div className="mygatesdevices">
-                  <LeftNav prop={this.props.match.params} vpnflag={this.state.VPNflag}/>
+                  <LeftNav
+                      prop={this.props.match.params}
+                      vpnflag={this.state.VPNflag}
+                  />
                   {
                     flag
                     ? <Button type="primary"
                         onClick={this.showDrawer}
                         className="listbutton"
-                >
+                      >
                   <Icon type="swap"/><br />
                   网关列表
                 </Button>

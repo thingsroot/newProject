@@ -62,7 +62,8 @@ class TemplateList extends PureComponent {
                                     <p>版本号：<span className="fontColor">{v.latest_version}</span>
                                         <Button>
                                             <Link
-                                                to={`/myTemplateDetails/${v.app}/${v.name}/${v.latest_version}`}>
+                                                to={`/myTemplateDetails/${v.app}/${v.name}/${v.latest_version}`}
+                                            >
                                                 查看
                                             </Link>
                                         </Button>
@@ -73,7 +74,11 @@ class TemplateList extends PureComponent {
                                                 }
                                             }
                                         >复制</Button>
-                                        <input id="templateContent" type="hidden" value={templateContent}/>
+                                        <input
+                                            id="templateContent"
+                                            type="hidden"
+                                            value={templateContent}
+                                        />
                                     </p>
                                 </div>
                             </li>
