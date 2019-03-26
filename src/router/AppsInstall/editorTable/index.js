@@ -81,12 +81,15 @@ class EditableCell extends React.Component {
                             return (
                                 editing ? (
                                     <FormItem style={{ margin: 0 }}>
+                                        {console.log(dataIndex, record)}
                                         {form.getFieldDecorator(dataIndex, {
+
                                             rules: [{
                                                 required: true,
                                                 message: `${title} is required.`
                                             }],
-                                            initialValue: record[dataIndex]
+                                            initialValue: record ? record[dataIndex] : []
+
                                         })(
                                             <Input
                                                 ref={node => (this.input = node)}
@@ -95,6 +98,7 @@ class EditableCell extends React.Component {
                                                 type={id}
                                             />
                                         )}
+
                                     </FormItem>
                                 ) : (
                                     <div
@@ -227,11 +231,12 @@ class EditableTable extends React.Component {
 
     handleAdd = () => {
         const { count, dataSource } = this.state;
-        let deviceColumns = this.props.deviceColumns;
+        let deviceColumns = this.props.deviceColumns[0];
+        console.log(deviceColumns)
         const newData = {};
         deviceColumns && deviceColumns.length > 0 && deviceColumns.map((v, key)=>{
             key;
-            newData[v.name] = 1;
+            newData[v.dataIndex] = 1;
         });
         console.log(newData);
         newData['key'] = count;
@@ -258,18 +263,18 @@ class EditableTable extends React.Component {
         });
     };
 
-
     render () {
+        console.log(this.props);
         // const { dataSource } = this.props;
         const { deviceColumns } = this.props;
-        console.log(deviceColumns)
+        console.log(deviceColumns);
         const components = {
             body: {
                 row: EditableFormRow,
                 cell: EditableCell
             }
         };
-        const columns = deviceColumns && deviceColumns.length > 0 && deviceColumns.map((col) => {
+        let columns = deviceColumns && deviceColumns.length > 0 && deviceColumns.map((col) => {
             if (!col.editable) {
                 return col;
             }
@@ -285,6 +290,8 @@ class EditableTable extends React.Component {
                 })
             };
         });
+        columns = columns[0]
+        console.log(columns)
         return (
             <div>
                 <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>

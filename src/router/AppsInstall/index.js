@@ -428,6 +428,7 @@ class MyGatesAppsInstall extends Component {
                 });
             }
         });
+        console.log(deviceColumns)
         let columnsArr = [];
         deviceColumns && deviceColumns.length > 0 && deviceColumns.map((v, key)=>{
             key;
@@ -457,7 +458,7 @@ class MyGatesAppsInstall extends Component {
         columnsArr.map((item)=>{
             obj[Object.keys(item)] = Object.values(item)
         });
-        console.log(obj)
+        console.log(obj);
         this.setState({
             flag: false,
             item: val,
