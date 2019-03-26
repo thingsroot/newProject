@@ -261,7 +261,8 @@ class EditableTable extends React.Component {
 
     render () {
         // const { dataSource } = this.props;
-        const { deviceColumns } = this.state;
+        const { deviceColumns } = this.props;
+        console.log(deviceColumns)
         const components = {
             body: {
                 row: EditableFormRow,
