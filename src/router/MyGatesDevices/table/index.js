@@ -79,6 +79,20 @@ function getMin (i, date){
           })
       })
     }
+    handleDelete = (key) => {
+      console.log(key);
+      const dataSource = this.state.dataSource;
+      console.log(dataSource);
+      let data = [];
+      dataSource.map((v)=>{
+          console.log(v);
+          if (v.key !== key) {
+              data.push(v)
+          }
+      });
+
+      this.setState({ dataSource: data});
+  };
     showModal = (record) => {
       console.log(record)
       this.setState({

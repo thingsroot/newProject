@@ -13,7 +13,7 @@ const EditableRow = ({ form, index, ...props }) => (
         <tr {...props} />
     </EditableContext.Provider>
 );
-
+console.log(EditableRow)
 const EditableFormRow = Form.create()(EditableRow);
 @withRouter
 @inject('store')
@@ -66,6 +66,7 @@ class EditableCell extends React.Component {
             handleSave,
             ...restProps
         } = this.props;
+        console.log(this.props)
         index;
         handleSave;
         return (
@@ -81,12 +82,15 @@ class EditableCell extends React.Component {
                             return (
                                 editing ? (
                                     <FormItem style={{ margin: 0 }}>
+                                        {console.log(dataIndex, record)}
                                         {form.getFieldDecorator(dataIndex, {
+
                                             rules: [{
                                                 required: true,
                                                 message: `${title} is required.`
                                             }],
-                                            initialValue: record[dataIndex]
+                                            initialValue: record ? record[dataIndex] : []
+
                                         })(
                                             <Input
                                                 ref={node => (this.input = node)}
@@ -95,6 +99,7 @@ class EditableCell extends React.Component {
                                                 type={id}
                                             />
                                         )}
+
                                     </FormItem>
                                 ) : (
                                     <div
@@ -195,13 +200,14 @@ class EditableTable extends React.Component {
                 editable: true
             });
         });
-        console.log(data);
         data.push({
             title: '操作',
             dataIndex: 'key',
-            render: (record) => (
-                <Button onClick={() => this.handleDelete(record.key)}>删除</Button>
-            )
+            render: (record) => {
+                return (
+                    <Button onClick={() => this.handleDelete(record.key)}>删除</Button>
+                )
+            }
         });
         this.setState({
             deviceColumns: data
@@ -226,19 +232,22 @@ class EditableTable extends React.Component {
     };
 
     handleAdd = () => {
-        const { count, dataSource } = this.state;
-        let deviceColumns = this.props.deviceColumns;
+        const { dataSource } = this.state;
+        let deviceColumns = this.props.deviceColumns[0];
+        console.log(deviceColumns)
         const newData = {};
         deviceColumns && deviceColumns.length > 0 && deviceColumns.map((v, key)=>{
             key;
-            newData[v.name] = 1;
+            console.log(v.dataIndex)
+            newData[v.dataIndex] = 1;
         });
         console.log(newData);
-        newData['key'] = count;
+        newData['key'] = dataSource.length;
         this.setState({
-            dataSource: [...dataSource, newData],
-            count: count + 1
+            dataSource: [...this.props.store.codeStore.dataSource, newData],
+            count: dataSource.length + 1
         }, ()=>{
+            console.log(this.state.dataSource)
             this.props.store.codeStore.setDataSource(this.state.dataSource)
         });
     };
@@ -258,32 +267,41 @@ class EditableTable extends React.Component {
         });
     };
 
-
     render () {
+        console.log(this.props);
         // const { dataSource } = this.props;
-        const { deviceColumns } = this.state;
-        const components = {
+        const deviceColumns = this.props.deviceColumns[0];
+        console.log(deviceColumns);
+        let components = {
             body: {
                 row: EditableFormRow,
                 cell: EditableCell
             }
         };
-        const columns = deviceColumns && deviceColumns.length > 0 && deviceColumns.map((col) => {
-            if (!col.editable) {
-                return col;
-            }
-            return {
-                ...col,
-                onCell: record => ({
-                    record,
-                    id: col.id,
-                    editable: col.editable,
-                    dataIndex: col.dataIndex,
-                    title: col.title,
-                    handleSave: this.handleSave
-                })
-            };
-        });
+        let columns = [];
+        if (deviceColumns && deviceColumns.length > 0){
+            columns = deviceColumns.map(item => {
+                console.log(item.editable)
+                if (!item.editable) {
+                    return item;
+                } else {
+                    return {
+                        ...item,
+                        onCell: (record) => {
+                            return ({
+                                record,
+                                id: item.id,
+                                editable: item.editable,
+                                dataIndex: item.dataIndex,
+                                title: item.title,
+                                handleSave: this.handleSave
+                            })
+                        }
+                    };
+                }
+                
+            });
+        }
         return (
             <div>
                 <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
@@ -294,7 +312,7 @@ class EditableTable extends React.Component {
                     rowClassName={() => 'editable-row'}
                     bordered
                     pagination={false}
-                    dataSource={this.props.store.codeStore.dataSource}
+                    dataSource={this.props.store.codeStore.dataSource && this.props.store.codeStore.dataSource.length > 0 ? this.props.store.codeStore.dataSource : []}
                     columns={columns}
                 />
             </div>

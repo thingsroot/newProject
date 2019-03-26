@@ -24,6 +24,9 @@ class CodeStore {
         this.dataSource = values;
         console.log(values)
     }
+    @action delectDataSource (key){
+        this.dataSource = this.dataSource.filter(item => item.key !== key)
+    }
     @action setEditorContent (values) {
         this.editorContent = values;
     }
