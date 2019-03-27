@@ -67,6 +67,17 @@ const weekColumns = [{
     className: 'thWidth',
     key: 'today'
 }];
+function getMin (i, date){
+    console.log(i, date)
+    let Dates = new Date(date - i * 60000)
+    console.log(Dates)
+    let min = Dates.getMinutes();
+    if (min < 10){
+        return '0' + min
+    } else {
+        return min;
+    }
+}
 class Home extends PureComponent {
     state = {
         todayData: [],
@@ -121,36 +132,26 @@ class Home extends PureComponent {
                     offline.push(v.offline);
                 });
                 let myOnlineChart = echarts.init(document.getElementById('onlineMain'));
+                let data = [];
+                const date = new Date() * 1;
+                for (var i = 0;i < 143;i++){
+                    data.unshift(new Date(date - (i * 90 * 60000)).getHours() + ':' + getMin(i, date));
+                }
+                console.log(data)
                 myOnlineChart.setOption({
                     tooltip: {
-                        trigger: 'axis'
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'cross'
+                        }
                     },
                     xAxis: {
-                        type: 'time',
-                        axisLabel: {
-                            rotate: 50,
-                            interval: 0
-                        }
+                        data: data
                     },
-                    yAxis: {
-                        type: 'value',
-                        scale: true,
-                        boundaryGap: ['20%', '20%']
-                    },
-                    toolbox: {
-                        left: 'center',
-                        feature: {
-                            dataZoom: {
-                                yAxisIndex: 'none'
-                            },
-                            restore: {},
-                            saveAsImage: {}
-                        }
-                    },
+                    yAxis: {},
                     series: [{
                         name: 'Online',
                         type: 'line',
-                        smooth: true,
                         data: online,
                         lineStyle: {
                             color: '#50a3ba'
@@ -159,7 +160,6 @@ class Home extends PureComponent {
                         {
                             name: 'Offline',
                             type: 'line',
-                            smooth: true,
                             data: offline,
                             lineStyle: {
                                 color: '#eac736'

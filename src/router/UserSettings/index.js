@@ -1,20 +1,26 @@
 import React, { PureComponent } from 'react';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import './style.scss';
 import http from '../../utils/Server';
 import {_getCookie} from '../../utils/Session';
 import ResetPasswordCreateForm from './resetPassword';
+import {inject, observer} from 'mobx-react/index';
+
+@inject('store')
+@observer
 class UserSettings extends PureComponent {
     state = {
         info: {},
         company: '',
         isAdmin: '',
+        usr: '',
         visible: false
     };
     componentDidMount () {
         let usr = _getCookie('usr');
         let isAdmin = _getCookie('isAdmin');
         this.setState({
+            usr: usr,
             isAdmin: isAdmin
         });
         http.get('/api/method/iot_ui.iot_api.user_company?' + Date.parse(new Date()))
@@ -50,6 +56,32 @@ class UserSettings extends PureComponent {
             form.resetFields();
             this.setState({ visible: false });
         });
+        // let data = {
+        //     key: this.state.usr,
+        //     old_password: ,
+        //     new_password: this.props.store.codeStore.newPassword
+        // };
+        // console.log(data)
+        // console.log(typeof data)
+        // let data1 = {
+        //     old_password: this.props.store.codeStore.oldPassword
+        // };
+        // console.log(data)
+        http.postToken('/api/method/iot_ui.iot_api.verify_password?password=' + this.props.store.codeStore.oldPassword)
+            .then(res=>{
+                console.log(res.message);
+                http.postToken('/api/method/frappe.core.doctype.user.user.update_password?old_password=' +
+                    this.props.store.codeStore.oldPassword + '&new_password=' +
+                    this.props.store.codeStore.newPassword + '&key=' + res.message)
+                    .then(res=>{
+                        console.log(res)
+                    })
+            })
+            .catch(err=>{
+                console.log(err);
+                message.error('请输入正确的旧密码！')
+            });
+
     };
 
     saveFormRef = (formRef) => {

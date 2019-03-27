@@ -167,7 +167,7 @@ class MyGatesAppsInstall extends Component {
             )
         }],
         deviceColumns: [],
-        deviceSource: [],
+        // deviceSource: [],
         SourceCode: [],
         dataSourceCode: []
     };
@@ -406,6 +406,7 @@ class MyGatesAppsInstall extends Component {
         let config = JSON.parse(val.conf_template);
         let deviceColumns = [];
         let tableName = [];  //存放表名
+        let dataSource = {};
         config && config.length > 0 && config.map((v, key)=>{
             key;
             if (v.name === 'device_section') {
@@ -428,15 +429,19 @@ class MyGatesAppsInstall extends Component {
                 });
             }
         });
-        console.log(deviceColumns)
+        console.log(tableName);
+        //设置store存储数据
+        tableName && tableName.length > 0 && tableName.map((w)=>{
+            dataSource[w] = [];
+        });
+        this.props.store.codeStore.setDataSource(dataSource);
+
         let columnsArr = [];
         deviceColumns && deviceColumns.length > 0 && deviceColumns.map((v, key)=>{
             key;
-            console.log(v, key);
             let data = [];
-            let name = tableName[key]
+            let name = tableName[key];
             v[name].map((w, indexW)=>{
-                console.log(w, indexW)
                 data.push({
                     key: indexW,
                     id: w.type,
@@ -460,7 +465,6 @@ class MyGatesAppsInstall extends Component {
         columnsArr.map((item)=>{
             obj[Object.keys(item)] = Object.values(item)
         });
-        console.log(obj);
         this.setState({
             flag: false,
             item: val,
@@ -800,8 +804,8 @@ class MyGatesAppsInstall extends Component {
                                                                                 <p className="sectionName"><span
                                                                                     style={{padding: '0 5px'}}>|</span>{w.desc}</p>
                                                                                 <EditableTable
+                                                                                    tableName={w.name}
                                                                                     deviceColumns={this.state.deviceColumns[w.name]}
-                                                                                    deviceSource={this.state.deviceSource}
                                                                                 />
                                                                             </div>
                                                                         )

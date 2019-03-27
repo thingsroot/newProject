@@ -17,6 +17,16 @@ class CodeStore {
     @observable template = [];   //template选项
     @observable dataSource = [];   //templateList
 
+    @observable oldPassword = '';
+    @observable newPassword = '';
+
+    @action setOldPassword (values) {
+        this.oldPassword = values;
+    }
+    @action setNewPassword (values) {
+        this.newPassword = values;
+    }
+
     @action setTemplate (values) {
         this.template = values;
     }
